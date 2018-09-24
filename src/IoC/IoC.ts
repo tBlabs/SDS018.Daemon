@@ -14,6 +14,7 @@ import { ISample } from '../services/_samples/ISample';
 import { SampleService } from './../services/_samples/SampleService';
 import { IStartupArgs } from '../services/environment/IStartupArgs';
 import { StartupArgs } from '../services/environment/StartupArgs';
+import { Driver } from '../Driver';
 
 const IoC = new Container();
 
@@ -26,6 +27,7 @@ try
     IoC.bind<ILogger>(Types.ILogger).to(Logger).inSingletonScope().whenTargetIsDefault();
     IoC.bind<Main>(Main).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<IStartupArgs>(Types.IStartupArgs).to(StartupArgs).inSingletonScope().whenTargetIsDefault();
+    IoC.bind<Driver>(Driver).toSelf().inSingletonScope().whenTargetIsDefault();
 }
 catch (ex)
 {
