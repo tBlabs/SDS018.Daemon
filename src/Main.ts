@@ -26,7 +26,7 @@ export class Main
             const addr =  parseInt(req.params.addr);
             console.log('get', addr);
 
-            const value = this._driver.Get(addr);
+            const value = this._driver.Read(addr);
             console.log(value);
             res.send(value.toString());
         });
