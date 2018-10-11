@@ -1,0 +1,29 @@
+{
+    "0": {
+        "name": "input1",
+        "onChange": "http://localhost:3000/9/1"
+    },
+    "1": {
+        "name": "input2",
+        "onChange": "http://localhost:3000/9/0"
+    },
+    "2": {
+        "name": "input3",
+        "onChange": "http://localhost:3000/17/1234"
+    },
+    "3": {
+        "name": "input4",
+        "onChange": "http://localhost:3000/17/4321"
+    },
+    "4": {
+        "name": "adc1",
+        "onChange": "http://localhost:3000/17/{this.value}"
+    },
+    "6": {
+        "name": "temperatureSensor",
+        "onChange": "http://localhost:3000/17/{this.value}"
+    },
+    "17": {
+        "name": "temp-display"
+    }
+}

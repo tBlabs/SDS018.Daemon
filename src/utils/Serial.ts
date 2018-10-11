@@ -50,7 +50,8 @@ export class Serial
     {
         if (this.isConnected)
         {
-            this.serial.write(data);
+            if (this.serial !== undefined)
+                this.serial.write(data);        
         }
     }
 }

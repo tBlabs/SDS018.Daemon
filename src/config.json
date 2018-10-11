@@ -1,0 +1,7 @@
+[
+    {
+        "addr": 0,
+        "name": "user name",
+        "onChange": "CLI:echo {value}"
+    }
+]

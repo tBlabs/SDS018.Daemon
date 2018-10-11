@@ -3,10 +3,10 @@ import { FluentParserBuilder } from './utils/FluentParser/FluentParserBuilder';
 import { FluentBuilder } from './utils/FluentBuilder/FluentBuilder';
 import { injectable } from 'inversify';
 import 'reflect-metadata';
-import { Cache } from './Cache';
+import { IoCache } from './IoCache';
 import { ResponseFrameType } from './ResponseFrameType';
 import { RequestFrameType } from './RequestFrameType';
-import { Serial } from './utils/SerialPort';
+import { Serial } from './utils/Serial';
 
 interface AlfaBoardData
 {
@@ -19,42 +19,59 @@ interface AlfaBoardData
 
 interface IoInfo
 {
-    Addr: number;
-    Name: string;
-    Type: string;
-    Readonly: boolean;
-    MinValue: number;
-    MaxValue: number;
+    addr: number;
+    name: string;
+    type: string;
+    readonly: boolean;
+    minValue: number;
+    maxValue: number;
+    events?: string[];
 }
 
 @injectable()
 export class Driver
 {
     private serial: Serial = new Serial();
-    private isConnected: boolean = false;
-    private cache: Cache = new Cache();
+    private cache: IoCache = new IoCache();
+    private onUpdateCallback: any;
+
+    public OnUpdate(callback)
+    {
+        this.onUpdateCallback = callback;
+    }
 
     public get Info(): IoInfo[]
     {
-        let addr = 0;
         return [
-            { Addr: addr++, Name: "Input 1", Type: "INPUT", Readonly: true, MinValue: 0, MaxValue: 1 },
-            { Addr: addr++, Name: "Input 2", Type: "INPUT", Readonly: true, MinValue: 0, MaxValue: 1 },
-            { Addr: addr++, Name: "Input 3", Type: "INPUT", Readonly: true, MinValue: 0, MaxValue: 1 },
-            { Addr: addr++, Name: "Input 4", Type: "INPUT", Readonly: true, MinValue: 0, MaxValue: 1 },
-            { Addr: addr++, Name: "Adc 1", Type: "ADC", Readonly: true, MinValue: 0, MaxValue: 409 },
-            { Addr: addr++, Name: "Adc 2", Type: "ADC", Readonly: true, MinValue: 0, MaxValue: 409 },
-            { Addr: addr++, Name: "Temperature sensor 1", Type: "TEMP", Readonly: true, MinValue: 0, MaxValue: 9999 },
-            { Addr: addr++, Name: "Clock 1", Type: "RTC", Readonly: true, MinValue: 0, MaxValue: 0xFFFFFFFF },
-            { Addr: addr++, Name: "Output 1", Type: "OUTPUT", Readonly: false, MinValue: 0, MaxValue: 1 },
-            { Addr: addr++, Name: "Output 2", Type: "OUTPUT", Readonly: false, MinValue: 0, MaxValue: 1 },
-            { Addr: addr++, Name: "Output 3", Type: "OUTPUT", Readonly: false, MinValue: 0, MaxValue: 1 },
-            { Addr: addr++, Name: "Output 4", Type: "OUTPUT", Readonly: false, MinValue: 0, MaxValue: 1 },
-            { Addr: addr++, Name: "Pwm 1", Type: "PWM", Readonly: false, MinValue: 0, MaxValue: 1024 },
-            { Addr: addr++, Name: "Pwm 2", Type: "PWM", Readonly: false, MinValue: 0, MaxValue: 1024 },
-            { Addr: addr++, Name: "Pwm 3", Type: "PWM", Readonly: false, MinValue: 0, MaxValue: 1024 },
-            { Addr: addr++, Name: "Pwm 4", Type: "PWM", Readonly: false, MinValue: 0, MaxValue: 1024 },
-        ];
+            { addr: 0, name: "Input1", type: "INPUT", readonly: true, minValue: 0, maxValue: 1, events: ['onChange'] },
+            { addr: 1, name: "Input2", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
+            { addr: 2, name: "Input3", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
+            { addr: 3, name: "Input4", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
+            { addr: 4, name: "Adc1", type: "ADC", readonly: true, minValue: 0, maxValue: 409 },
+            { addr: 5, name: "Adc2", type: "ADC", readonly: true, minValue: 0, maxValue: 409 },
+            { addr: 6, name: "TemperatureSensor1", type: "TEMP", readonly: true, minValue: 0, maxValue: 9999 },
+            { addr: 7, name: "Clock1", type: "RTC", readonly: true, minValue: 0, maxValue: 0xFFFFFFFF },
+            { addr: 8, name: "Clock1Setter", type: "RTC", readonly: false, minValue: 0, maxValue: 0xFFFFFFFF },
+            { addr: 9, name: "Output1", type: "OUTPUT", readonly: false, minValue: 0, maxValue: 1 },
+            { addr: 10, name: "Output2", type: "OUTPUT", readonly: false, minValue: 0, maxValue: 1 },
+            { addr: 11, name: "Output3", type: "OUTPUT", readonly: false, minValue: 0, maxValue: 1 },
+            { addr: 12, name: "Output4", type: "OUTPUT", readonly: false, minValue: 0, maxValue: 1 },
+            { addr: 13, name: "Pwm1", type: "PWM", readonly: false, minValue: 0, maxValue: 1024 },
+            { addr: 14, name: "Pwm2", type: "PWM", readonly: false, minValue: 0, maxValue: 1024 },
+            { addr: 15, name: "Pwm3", type: "PWM", readonly: false, minValue: 0, maxValue: 1024 },
+            { addr: 16, name: "Pwm4", type: "PWM", readonly: false, minValue: 0, maxValue: 1024 },
+            { addr: 17, name: "Display1", type: "DISPLAY", readonly: false, minValue: 0, maxValue: 9999 },
+            { addr: 18, name: "Display1Dot", type: "DISPLAY_DOT", readonly: false, minValue: 0, maxValue: 4 },
+            { addr: 19, name: "Display2", type: "DISPLAY", readonly: false, minValue: 0, maxValue: 9999 },
+            { addr: 20, name: "Display2Dot", type: "DISPLAY_DOT", readonly: false, minValue: 0, maxValue: 4 },
+            { addr: 21, name: "Display3", type: "DISPLAY", readonly: false, minValue: 0, maxValue: 9999 },
+            { addr: 22, name: "Display3Dot", type: "DISPLAY_DOT", readonly: false, minValue: 0, maxValue: 4 },
+            { addr: 23, name: "Display4", type: "DISPLAY", readonly: false, minValue: 0, maxValue: 9999 },
+            { addr: 24, name: "Display4Dot", type: "DISPLAY_DOT", readonly: false, minValue: 0, maxValue: 4 },
+            { addr: 25, name: "Buzzer1Volume", type: "BUZZER_VOLUME", readonly: false, minValue: 0, maxValue: 1024 },
+            { addr: 26, name: "Buzzer1Frequency", type: "BUZZER_FREQ", readonly: false, minValue: 0, maxValue: 1024 },
+            { addr: 27, name: "DAC1", type: "DAC", readonly: false, minValue: 0, maxValue: 1024 },
+        ]; 
     }
 
     public Connect(port: string): void
@@ -67,6 +84,7 @@ export class Driver
         {
             data.forEach(b => parser.Parse(b));
         });
+        if (0)
         setInterval(() =>
         {
             this.GetAll();
@@ -106,7 +124,17 @@ export class Driver
                     this.cache.Update(7, out.rtc);
 
                     if (this.cache.HasChanged())
-                        console.log(this.cache.toString());
+                    {
+                        // console.log(this.cache.toString());
+
+                        this.cache.Entries.forEach(({ addr, oldValue, currentValue }) =>
+                        {
+                            if (oldValue !== currentValue)
+                            {
+                                this.onUpdateCallback(addr, oldValue, currentValue);
+                            }
+                        });
+                    }
                     break;
                 case ResponseFrameType.Error:
                     console.log('error', out.err);
@@ -131,7 +159,7 @@ export class Driver
             console.log('FAULT', reason, frame);
         });
 
-     
+
     }
 
     public Set(addr: number, value: number): void
@@ -187,8 +215,6 @@ export class Driver
 
     private PushEnable(enable: boolean, interval: number): void
     {
-        console.log('Push enable');
-
         const frame = (new FluentBuilder())
             .Word2LE(0xAABB)
             .Byte(RequestFrameType.PushStateSet)
