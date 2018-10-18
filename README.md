@@ -40,3 +40,5 @@ Where:
 Example:
 `"onFalling": "GET:{host}/{this.name}/{this.event}/{this.value}"`
 will hit `http://myhost:1234/input1/onFalling/4` endpoint with GET HTTP method
+
+BASH:{takePicture}|BASH:{sendPicture}

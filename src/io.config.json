@@ -2,7 +2,9 @@
     "0": {
         "name": "input1",
         "events": {
-            "onChange": "http://localhost:3000/9/1"
+             
+            "onPress": "onpress/{foo}",
+            "onLongPress": "onlongpress"
         }
     },
     "1": {

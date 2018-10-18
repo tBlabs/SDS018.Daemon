@@ -5,4 +5,9 @@ export class IoState
     public previousValueUpdateTimestamp: number = 0;
     public currentValue: number = (-1);
     public currentValueUpdateTimestamp: number = 0;
+
+    public IsNotInitialValue(): boolean
+    {
+        return this.previousValue !== (-1);
+    }
 }

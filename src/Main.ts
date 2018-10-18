@@ -5,13 +5,13 @@ import { Types } from './IoC/Types';
 import { IStartupArgs } from './services/environment/IStartupArgs';
 import * as express from 'express';
 import { Driver } from './Driver';
-import axios from 'axios';
 import * as fs from 'fs';
 import { IoState } from "./IoState";
 import { exec } from 'child_process';
 import { IoConfig } from './CommandRunner';
 import { Event } from './Event';
 import { EventsDeterminator } from './EventsDeterminator';
+import { CommandResolver } from './CommandResolver';
 
 @injectable()
 export class Main
@@ -19,6 +19,8 @@ export class Main
     constructor(
         @inject(Types.IStartupArgs) private _args: IStartupArgs,
         @inject(Types.IRunMode) private _runMode: IRunMode,
+        private _eventsDeterminator: EventsDeterminator,
+        private _executor: CommandResolver,
         private _driver: Driver)
     { }
 
@@ -96,26 +98,28 @@ export class Main
         // this._driver.Connect(this._args.Args.port);
 
         const configFileContent = fs.readFileSync('./src/io.config.json', 'utf8');
-        const config: { [key: string]: IoConfigStruct } = JSON.parse(configFileContent);
+        const iosConfig: { [key: string]: IoConfigStruct } = JSON.parse(configFileContent);
         // console.log(config);
 
 
-        this._driver.OnUpdate(async (ioState: IoState) =>
+        this._driver.OnUpdate((ioState: IoState) =>
         {
-            if (ioState.addr === 7) return;
+            if (ioState.addr == 7) return;
             console.log(`${ ioState.addr }: ${ ioState.previousValue } --> ${ ioState.currentValue }`);
 
             // EventExecutor(ioConfig, ioState)
             const ioAddr = ioState.addr;
-            const ioConfig = config[ioAddr];
+            const ioConfig = iosConfig[ioAddr];
 
-            const determinator = new EventsDeterminator();
-            const eventsToExecute: Event[] = determinator.Determine(ioConfig.events, ioState);
+            if (ioConfig === undefined) return;
 
-            eventsToExecute.forEach((event: Event) =>
+            const eventsToExecute: Event[] = this._eventsDeterminator.Determine(ioConfig.events, ioState);
+
+            eventsToExecute.forEach((eventName: Event) =>
             {
-                const command: Command = ioConfig.events[event];
-                this._executor.Execute(command, ioState);
+                const command: Command = ioConfig.events[eventName];
+                console.log('  ', eventName, ':', command);
+                this._executor.Resolve(eventName, command, ioState);
             });
         });
 
@@ -134,25 +138,4 @@ export interface IoConfigStruct
     events: IoEvents;
 }
 
-export class Executor
-{
-    constructor(private _config: Config)
-    { }
 
-    public async Execute(eventName, cmd, ioState: IoState): Promise<void>
-    {
-        let url = cmd;
-        // if (0)
-        url = url
-            // .replace("{this.name}", ioState.name.toString())
-            .replace("{this.value}", ioState.currentValue.toString())
-            .replace("{this.previousValue}", ioState.previousValue.toString())
-            .replace("{this.event}", eventName)
-            .replace("{this.addr}", ioState.addr.toString())
-
-        url = this._config.ApplyOnString(url);
-
-        console.log(url);
-        await axios.get(url);
-    }
-}

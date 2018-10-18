@@ -15,10 +15,11 @@ export class FluentParser<T>
     }
 
     private operationsCopy: OperationsList;
-    private onCompleteCallback;
-    private onFaultCallback = (reason, frame?) => console.log('FRAME PARSE FAULT', reason);
-    private out = <T>{};
-    private bufferVarName = '';
+    private onCompleteCallback?: (out: T, rawFrame: byte[]) => void;
+    private onFaultCallback: (reason: string, rawFrame: byte[]) => void = (reason, frame?) => console.log('FRAME PARSE FAULT', reason);
+   private out: T = <T>{};
+//    private out: any;
+    private bufferVarName: string = '';
     private buffer: ByteBuffer = new ByteBuffer();
     private frame: byte[] = [];
 
@@ -36,11 +37,11 @@ export class FluentParser<T>
         this.frame.push(b);
 
         const op = this._operations.Current;
-//  console.log('op', this._operations.toString());
+        //  console.log('op', this._operations.toString());
         switch (op.type) // if switch by object type is possible then .type could be removed
         {
             case OperationType.IsXor:
-                const dataForXor = this.frame.slice(0, this.frame.length-1);
+                const dataForXor = this.frame.slice(0, this.frame.length - 1);
                 // console.log('for xor', dataForXor);
                 const xor = this.Xor(dataForXor);
                 // console.log('xor', xor);
@@ -59,8 +60,8 @@ export class FluentParser<T>
                 const toCompare = (op as IsOperation).toCompare;
                 if (b === toCompare)
                 {
-                // console.log('is ok');
-                 this.Next();
+                    // console.log('is ok');
+                    this.Next();
                 }
                 else this.Reset(b.toString() + ' is not ' + toCompare);
                 break;
@@ -79,16 +80,16 @@ export class FluentParser<T>
                 this.bufferVarName = (op as StartBufferingOperation).varName;
                 const varSize = (op as StartBufferingOperation).varSize;
                 const endian = (op as StartBufferingOperation).endian;
-            //    console.log('endian', endian);
+                //    console.log('endian', endian);
                 this.buffer = new ByteBuffer(varSize, endian);
-             //   console.log(this.buffer);
+                //   console.log(this.buffer);
                 this.buffer.Add(b);
                 // console.log('buffering', b);
                 this.Next();
                 break;
 
             case OperationType.Buffering:
-            // console.log('buffering', b);
+                // console.log('buffering', b);
                 this.buffer.Add(b);
                 if (this.buffer.IsFull)
                 {
@@ -114,16 +115,16 @@ export class FluentParser<T>
                         const varName = (this._operations.Current as IfOperation).varName;
                         this.out[varName] = b;
                         let toRemove = this._operations.CountType(OperationType.If);
-                        if (toRemove===0) toRemove=1;
+                        if (toRemove === 0) toRemove = 1;
                         //  console.log('before',this._operations.List);
                         //  console.log('toremove', toRemove);
                         this._operations.Remove(toRemove);
                         this._operations.InsertAfterCurrent(list);
-                      //  this.Next();
+                        //  this.Next();
                         //  console.log('after insert',this._operations.List);
                         break;
                     }
-                   
+
                     this.Next();
 
                     if (this._operations.IsLast)
@@ -186,12 +187,12 @@ export class FluentParser<T>
         this.CleanUp();
     }
 
-    public OnComplete(callback)
+    public OnComplete(callback: (out: T, rawFrame: byte[]) => void): void
     {
         this.onCompleteCallback = callback;
     }
 
-    public OnFault(callback)
+    public OnFault(callback: (reason: string, rawFrame: byte[]) => void): void
     {
         this.onFaultCallback = callback;
     }

@@ -15,13 +15,17 @@ describe(EventsDeterminator.name, () =>
             [Event.OnFalling]: "on-falling-action",
             [Event.OnZero]: "on-zero-action",
             [Event.OnNonZero]: "on-nonZero-action",
+            [Event.OnPress]: "on-press-action",
+            [Event.OnLongPress]: "on-longPress-action",
         }
+
         const ioState: IoState = new IoState();
         ioState.previousValue = 1;
         ioState.currentValue = 2;
+
         const pressDeterminatorMock = new Mock<IPressDeterminator>()
-            .setup(i=>i.IsPress)
-            .returns(true);
+            .setup(i => i.IsPress)
+            .returns(() => false);
 
         const sut = new EventsDeterminator(pressDeterminatorMock.object());
 

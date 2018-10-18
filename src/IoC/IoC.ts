@@ -15,6 +15,12 @@ import { SampleService } from './../services/_samples/SampleService';
 import { IStartupArgs } from '../services/environment/IStartupArgs';
 import { StartupArgs } from '../services/environment/StartupArgs';
 import { Driver } from '../Driver';
+import { EventsDeterminator } from '../EventsDeterminator';
+import { PressDeterminator } from '../EventDeterminators/PressDeterminator';
+import { Config } from '../Config';
+import { StringKeyValuePairs } from "../StringKeyValuePairs";
+import { CommandResolver } from '../CommandResolver';
+import { Storage } from './../Storage';
 
 const IoC = new Container();
 
@@ -28,6 +34,11 @@ try
     IoC.bind<Main>(Main).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<IStartupArgs>(Types.IStartupArgs).to(StartupArgs).inSingletonScope().whenTargetIsDefault();
     IoC.bind<Driver>(Driver).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind<EventsDeterminator>(EventsDeterminator).toSelf().inTransientScope().whenTargetIsDefault();
+    IoC.bind<PressDeterminator>(PressDeterminator).toSelf().inTransientScope().whenTargetIsDefault();
+    IoC.bind<Config>(Config).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind<CommandResolver>(CommandResolver).toSelf().inTransientScope().whenTargetIsDefault();
+    IoC.bind<Storage<StringKeyValuePairs>>(Types.IStorage).to(Storage).inTransientScope().whenTargetIsDefault();
 }
 catch (ex)
 {

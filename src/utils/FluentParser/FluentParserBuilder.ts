@@ -18,7 +18,7 @@ export class FluentParserBuilder<T>
 
     public Build()
     {
-        return new FluentParser(this.operations);
+        return new FluentParser<T>(this.operations);
     }
 
     public Is(b)

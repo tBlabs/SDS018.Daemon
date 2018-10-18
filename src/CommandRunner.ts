@@ -1,23 +1,23 @@
-export class IoConfig
-{
-    private config;
+// export class IoConfig
+// {
+//     private config;
 
-    constructor()
-    {
-        const configFileContent = fs.readFileSync('./src/io.config.json', 'utf8');
-        this.config = JSON.parse(configFileContent);
-    }
+//     constructor()
+//     {
+//         const configFileContent = fs.readFileSync('./src/io.config.json', 'utf8');
+//         this.config = JSON.parse(configFileContent);
+//     }
     
-    public Get(addr: number): string
-    {
-        return this.config[addr.toString()];
-    }
-}
+//     public Get(addr: number): string
+//     {
+//         return this.config[addr.toString()];
+//     }
+// }
 
-export class CommandRunner
-{
-    public Run(updateDto: UpdateDto)
-    {
-        this._ioConfig.Get(updateDto.addr)
-    }
-}
+// export class CommandRunner
+// {
+//     public Run(updateDto: UpdateDto)
+//     {
+//         this._ioConfig.Get(updateDto.addr)
+//     }
+// }

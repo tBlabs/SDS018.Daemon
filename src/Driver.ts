@@ -16,6 +16,14 @@ interface AlfaBoardParserData
     err: number;
     addr: number;
     value: number;
+    input1: number;
+    input2: number;
+    input3: number;
+    input4: number;
+    adc1: number;
+    adc2: number;
+    temp1: number;
+    rtc: number;
 }
 
 interface IoInfo
@@ -35,7 +43,7 @@ export class Driver
 {
     private serial: Serial = new Serial();
     private cache: IoCache = new IoCache(this.SensorsCount);
-    private onUpdateCallback: any;
+    private onUpdateCallback?: (ioState: IoState) => void;
 
     private get SensorsCount(): number
     {
@@ -119,39 +127,37 @@ export class Driver
             switch (out.type)
             {
                 case ResponseFrameType.PushStateUpdate:
-                    console.log('PUSH', out.push);
+                    console.log('PUSH IS', out.push ? 'ON' : 'OFF');
                     break;
 
                 case ResponseFrameType.UpdateAll:
-                    // TODO: this could be change into .......
-                    this.cache.Update(0, out.input1);
-                    this.cache.Update(1, out.input2);
-                    this.cache.Update(2, out.input3);
-                    this.cache.Update(3, out.input4);
-                    this.cache.Update(4, out.adc1);
-                    this.cache.Update(5, out.adc2);
-                    this.cache.Update(6, out.temp1);
-                    this.cache.Update(7, out.rtc);
+                    const sensors = [out.input1, out.input2, out.input3, out.input4, out.adc1, out.adc2, out.temp1, out.rtc];
 
-                    if (this.cache.HasChanged())
+                    sensors.forEach((value, addr) =>
                     {
-                        // console.log(this.cache.toString());
-
-                        this.cache.Entries.forEach((ioState: IoState) =>
+                        if (this.cache.HasChanged(addr, value))
                         {
-                            if (ioState.previousValue !== ioState.currentValue)
+                            this.cache.Update(addr, value);
+
+                            if (this.onUpdateCallback)
                             {
-                                this.onUpdateCallback(ioState);
+                                const ioState: IoState = this.cache.Entries[addr];
+
+                                if (ioState.IsNotInitialValue())
+                                    this.onUpdateCallback(ioState);
                             }
-                        });
-                    }
+                        }
+                    })
                     break;
+
                 case ResponseFrameType.Error:
                     console.log('board error', out.err);
                     break;
+
                 case ResponseFrameType.Pong:
                     console.log('pong from board');
                     break;
+                    
                 case ResponseFrameType.Update:
                     if (this.cache[out.addr] !== out.value)
                     {
