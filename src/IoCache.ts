@@ -1,23 +1,37 @@
 import { circularDependencyToException } from "inversify/dts/utils/serialization";
+import { IoState } from "./IoState";
 
 export class IoCache
 {
     // private cache: { [addr: number]: IoState } = {};
     private cache: IoState[] = [];
 
-    public Update(addr: number, value: number): void
+    constructor(ioCount: number)
+    {
+        this.cache = new Array(ioCount);
+    }
+
+    private FindIo(addr: number): IoState
     {
         const io: IoState | undefined = this.cache.find(e => e.addr === addr);
 
         if (io === undefined)
         {
-            this.cache.push(new IoState(addr, value));
+            throw new Error("IO not found");
         }
-        else
-        {
-            io.oldValue = io.currentValue;
-            io.currentValue = value;
-        }
+
+        return io;
+    }
+
+    public Update(addr: number, value: number): void
+    {
+        const io: IoState = this.FindIo(addr);
+
+        io.addr = addr;
+        io.previousValue = io.currentValue;
+        io.previousValueUpdateTimestamp = io.currentValueUpdateTimestamp;
+        io.currentValue = value;
+        io.currentValueUpdateTimestamp = +(new Date());
     }
 
     private previousHash = 0;
@@ -56,14 +70,4 @@ export class IoCache
     {
         return this.cache;
     }
-}
-
-export class IoState
-{
-    constructor(
-        public addr: number,
-        public oldValue: number)
-    { }
-
-    public currentValue: number = (-1);
 }

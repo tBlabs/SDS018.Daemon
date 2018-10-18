@@ -4,11 +4,12 @@ import { FluentBuilder } from './utils/FluentBuilder/FluentBuilder';
 import { injectable } from 'inversify';
 import 'reflect-metadata';
 import { IoCache } from './IoCache';
+import { IoState } from "./IoState";
 import { ResponseFrameType } from './ResponseFrameType';
 import { RequestFrameType } from './RequestFrameType';
 import { Serial } from './utils/Serial';
 
-interface AlfaBoardData
+interface AlfaBoardParserData
 {
     type: ResponseFrameType;
     push: boolean;
@@ -28,12 +29,18 @@ interface IoInfo
     events?: string[];
 }
 
+
 @injectable()
 export class Driver
 {
     private serial: Serial = new Serial();
-    private cache: IoCache = new IoCache();
+    private cache: IoCache = new IoCache(this.SensorsCount);
     private onUpdateCallback: any;
+
+    private get SensorsCount(): number
+    {
+        return this.Info.filter(io => io.readonly).length;
+    }
 
     public OnUpdate(callback)
     {
@@ -71,7 +78,7 @@ export class Driver
             { addr: 25, name: "Buzzer1Volume", type: "BUZZER_VOLUME", readonly: false, minValue: 0, maxValue: 1024 },
             { addr: 26, name: "Buzzer1Frequency", type: "BUZZER_FREQ", readonly: false, minValue: 0, maxValue: 1024 },
             { addr: 27, name: "DAC1", type: "DAC", readonly: false, minValue: 0, maxValue: 1024 },
-        ]; 
+        ];
     }
 
     public Connect(port: string): void
@@ -85,14 +92,14 @@ export class Driver
             data.forEach(b => parser.Parse(b));
         });
         if (0)
-        setInterval(() =>
-        {
-            this.GetAll();
-        },
-            333);
+            setInterval(() =>
+            {
+                this.GetAll();
+            },
+                333);
         this.serial.Connect(port, 19200);
 
-        const parserBuilder = new FluentParserBuilder<AlfaBoardData>();
+        const parserBuilder = new FluentParserBuilder<AlfaBoardParserData>();
         const parser = parserBuilder
             .Is(0xAB)
             .If(ResponseFrameType.Pong, 'type', _ => _) // TODO: change to isPong
@@ -102,10 +109,12 @@ export class Driver
             .If(ResponseFrameType.UpdateAll, 'type', _ => _
                 .Get4LE('input1').Get4LE('input2').Get4LE('input3').Get4LE('input4')
                 .Get4LE('adc1').Get4LE('adc2').Get4LE('temp1').Get4LE('rtc'))
+            // TODO: That would be nice
+            // .If(ResponseFrameType.UpdateAll, 'type', _ => _.ReadMany4LE(8, 'allSensors')
             .IsXor()
             .Build();
 
-        parser.OnComplete((out, frame) =>
+        parser.OnComplete((out, rawFrame) =>
         {
             switch (out.type)
             {
@@ -114,6 +123,7 @@ export class Driver
                     break;
 
                 case ResponseFrameType.UpdateAll:
+                    // TODO: this could be change into .......
                     this.cache.Update(0, out.input1);
                     this.cache.Update(1, out.input2);
                     this.cache.Update(2, out.input3);
@@ -127,26 +137,27 @@ export class Driver
                     {
                         // console.log(this.cache.toString());
 
-                        this.cache.Entries.forEach(({ addr, oldValue, currentValue }) =>
+                        this.cache.Entries.forEach((ioState: IoState) =>
                         {
-                            if (oldValue !== currentValue)
+                            if (ioState.previousValue !== ioState.currentValue)
                             {
-                                this.onUpdateCallback(addr, oldValue, currentValue);
+                                this.onUpdateCallback(ioState);
                             }
                         });
                     }
                     break;
                 case ResponseFrameType.Error:
-                    console.log('error', out.err);
+                    console.log('board error', out.err);
                     break;
                 case ResponseFrameType.Pong:
-                    console.log('test ok');
+                    console.log('pong from board');
                     break;
                 case ResponseFrameType.Update:
                     if (this.cache[out.addr] !== out.value)
                     {
-                        console.log('Update', out.addr, out.value);
+                        // console.log('Update', out.addr, out.value);
                         this.cache[out.addr] = out.value;
+                        // TODO: do the same what for UpdateAll
                     }
                     break;
                 default:

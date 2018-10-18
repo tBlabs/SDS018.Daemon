@@ -21,3 +21,22 @@
 
 `io.config.json`
 
+Single IO config:
+```
+ "0": {
+        "name": "input1",
+        "events": {
+            "onChange": "http://localhost:3000/9/1",
+            "onRising": "rise",
+            "onFalling": "{host}/{this.name}/{this.event}/{this.value}"
+        }
+    }
+```
+Where:
+| SYMBOL | Meaning |
+| ---- | ---- |
+| {this.value} | Value of this IO |
+
+Example:
+`"onFalling": "GET:{host}/{this.name}/{this.event}/{this.value}"`
+will hit `http://myhost:1234/input1/onFalling/4` endpoint with GET HTTP method
