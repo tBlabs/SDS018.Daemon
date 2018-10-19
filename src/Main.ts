@@ -13,6 +13,7 @@ import { CommandExecutor } from './Executor';
 import { IoConfigStruct } from './IoConfigStruct';
 import { Command } from './Command';
 import { IOsConfig } from './IOsConfig';
+import { IoEvents } from './IoEvents';
 
 @injectable()
 export class Main
@@ -46,7 +47,7 @@ export class Main
 
         server.all('/ioconfig', (req, res) =>
         {
-            res.send(this._iosConfig.Entries);
+            res.send(this._iosConfig.ToString());
         });
 
         server.all(/^\/config\/([a-z0-9_\-]+)\/([\/\-a-z0-9:?]+)$/, (req, res) =>
@@ -107,7 +108,8 @@ export class Main
 
         server.use((err, req, res, next) =>
         {
-            console.log('globally catched error', err.message);
+            console.log('Globally catched error:', err.message);
+
             res.send(err.message);
         });
 
@@ -120,27 +122,20 @@ export class Main
 
         this._driver.OnUpdate((ioState: IoState) =>
         {
-            // if (ioState.addr == 7) return;
-            
             const ioAddr: number = ioState.addr;
-            const ioConfig = this._iosConfig.Entries[ioAddr];
-            
-            if (ioConfig === undefined) return;
-            
-            const ioEvents = ioConfig.events;
-            
-            if (ioEvents === undefined) return;
+            const ioEvents: IoEvents = this._iosConfig.IoEvents(ioAddr);
             
             const eventsToExecute: Event[] = this._eventsDeterminator.Determine(ioEvents, ioState);
-            
+
+            if (eventsToExecute.length > 0)
+                console.log(`${ ioState.addr }: ${ ioState.previousValue } --> ${ ioState.currentValue }`);
+
             eventsToExecute.forEach(async (eventName: Event) =>
             {
-                const command: Command = ioEvents[eventName];
-                // console.log('  ', eventName, ':', command);
-                const cmd = this._commandResolver.Resolve(eventName, command, ioState);
-                console.log(`${ ioState.addr }: ${ ioState.previousValue } --> ${ ioState.currentValue }`);
-                console.log('  ', eventName, cmd);
-                await this._commandExecutor.Execute(cmd);
+                const rawCommand: Command = ioEvents[eventName];
+                const commandToExecute = this._commandResolver.Resolve(eventName, rawCommand, ioState);
+                console.log('  ', eventName, commandToExecute);
+                await this._commandExecutor.Execute(commandToExecute);
             });
         });
 

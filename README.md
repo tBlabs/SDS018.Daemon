@@ -4,21 +4,30 @@
 
 | Operation                    | URL                           | Example request  | Example response   |
 | ---------------------------- | ----------------------------- | ---------------- |------------------ |
-| Get IO value by IO name         | /`ioName`                     | /door-sensor     | 1 |
-| Set IO value by IO name         | /`ioName`/`value`             | /main-light/123  | *none* |
-| Get IO value by IO addr         | /get/`addr`                   | /get/4           | 12 |
-| Set IO value by IO addr         | /set/`addr`/`value`           | /set/2/1         | *none* |
+| Get IO value by IO name      | /`ioName`                     | /door-sensor     | 1 |
+| Set IO value by IO name      | /`ioName`/`value`             | /main-light/123  | *none* |
+| Get IO value by IO addr      | /get/`addr`                   | /get/4           | 12 |
+| Set IO value by IO addr      | /set/`addr`/`value`           | /set/2/1         | *none* |
 | Board info                   | /boardinfo | | |
 | IO config                    | /ioconfig | | |
 | IO rename                    | /`ioName`/rename/`newName` | /adc1/rename/light-sensor | [HTTP 200] |
-| Edit IO event                | /`ioName`/rename/`newName` | /adc1/rename/light-sensor | [HTTP 200] |
-| Set IO name  **[TODO]**      | `/{ioName}/name/{newName}`    |
-| Set IO event **[TODO]**      | `/{ioName}/{eventName}/{action}`    | /light-sensor/onRising/GET:http://localhost:3001/set/4/4????
-| Read IO info **[TODO]**      | `/{ioName}/info`              | /fan/info | { "name": "fan", "value": 123, "minValue": 0, ... }
+| Edit or Add IO event         | /`ioName`/`eventName`/`newName` | /adc1/onChange/{pwmUpdate} | [HTTP 200] |
 | Add config variable                 | `/config/{varName}/{value}`        | host/http://localhost:5000 | *none*  |
 | Read config variable                | `/config/{varName}`     |  |
 | Remove config variable              | `/config/{varName}/`     |   |
 | Use config variable                 |                   | /door-sensor/onChange/{lightsDriver}/on  |   |
+
+## Variables resolving order
+
+User variables (from `user.config.json`) are resolved first. They may contain `{this.x}` placeholders.
+
+## Config files
+
+| File | Use | Structure |
+| --- | --- | --- |
+| `io.config.json` | IO Configuration | Json array |
+| `user.config.json` | User variables | Key-value pairs as json object |
+| `app.config.json` | Place for `httpPort`, `usbPort` etc | Key-value pairs as json object |
 
 ## IO Config
 

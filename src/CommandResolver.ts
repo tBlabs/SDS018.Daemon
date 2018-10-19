@@ -11,14 +11,14 @@ export class CommandResolver
 
     public Resolve(eventName, cmd, ioState: IoState): string
     {
+        cmd = this._config.ApplyOnString(cmd);
+
         cmd = cmd
             .replace("{this.event}", eventName)
             .replace("{this.value}", ioState.currentValue.toString())
             .replace("{this.previousValue}", ioState.previousValue.toString())
             .replace("{this.event}", eventName)
             .replace("{this.addr}", ioState.addr.toString());
-
-        cmd = this._config.ApplyOnString(cmd);
 
         return cmd;
     }

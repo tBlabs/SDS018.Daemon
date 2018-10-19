@@ -25,8 +25,11 @@ export class EventsDeterminator
     public Determine(ioEvents: IoEvents, ioState: IoState): Event[]
     {
         const toExecute: Event[] = [];
-        if (ioEvents === undefined)
+        
+        if ((ioEvents === undefined) || (ioEvents === {}))
+        {
             return toExecute;
+        }
 
         const ioEventsNames: Event[] = Object.keys(ioEvents) as Event[];
         ioEventsNames.forEach((ioEventName: Event) =>
