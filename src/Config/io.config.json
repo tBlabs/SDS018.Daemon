@@ -1,1 +1,103 @@
-[{"addr":0,"name":"input1","events":{"onPress":"{host}/led1/1","onLongPress":"{host}/led1/0"}},{"addr":1,"name":"input2","events":{"onPress":"{host}/led2/toggle"}},{"addr":4,"name":"adc1","events":{"onChange":"{host}/display1/{this.value}"}},{"addr":5,"name":"adc2","events":{"onChange":"{host}/display1/{this.value}"}},{"addr":6,"name":"temperatureSensor","events":{"onChange":"http://localhost:3000/display1/{this.value}","onRising":"http://localhost:3000/pwm2/{this.value}"}},{"addr":9,"name":"led1"},{"addr":10,"name":"led2"},{"addr":14,"name":"pwm2"},{"addr":17,"name":"display1"}]
+[
+    {
+        "addr": 0,
+        "name": "input1",
+        "events": {
+            "onPress": "{host}/led1/1",
+            "onLongPress": "{host}/led1/0"
+        }
+    },
+    {
+        "addr": 1,
+        "name": "input2",
+        "events": {
+            "onPress": "{host}/led2/toggle"
+        }
+    },
+    {
+        "addr": 2,
+        "name": "input3",
+        "events": {
+        }
+    },
+    {
+        "addr": 3,
+        "name": "input4",
+        "events": {
+        }
+    },
+    {
+        "addr": 4,
+        "name": "adc1",
+        "events": {
+            "onChange": "{host}/display1/{this.value}"
+        }
+    },
+    {
+        "addr": 5,
+        "name": "adc2",
+        "events": {
+            "onChange": "{host}/display1/{this.value}"
+        }
+    },
+    {
+        "addr": 6,
+        "name": "temp",
+        "events": {
+            "onChange": "http://localhost:3000/display1/{this.value}",
+            "onRising": "http://localhost:3000/pwm2/{this.value}"
+        }
+    },
+    {
+        "addr": 7,
+        "name": "rtc",
+        "events": {
+        }
+    },
+    {
+        "addr": 8,
+        "name": "rtcset",
+        "events": {
+        }
+    },
+    {
+        "addr": 9,
+        "name": "led1"
+    },
+    {
+        "addr": 10,
+        "name": "led2"
+    },
+    {
+        "addr": 11,
+        "name": "led3"
+    },
+    {
+        "addr": 12,
+        "name": "led4"
+    },
+    {
+        "addr": 13,
+        "name": "pwm1"
+    },
+    {
+        "addr": 14,
+        "name": "pwm2"
+    },
+    {
+        "addr": 15,
+        "name": "pwm3"
+    },
+    {
+        "addr": 16,
+        "name": "pwm4"
+    },
+    {
+        "addr": 17,
+        "name": "display1"
+    },
+    {
+        "addr": 18,
+        "name": "display1dot"
+    }
+]

@@ -27,17 +27,6 @@ export class IOsConfig
         this.entries = this._storage.Read();
     }
 
-    // public AddrByName(name: string): number
-    // {
-    //     const addr: number | undefined = this.entries.find(io => io.name === name);
-
-    //     if (addr === undefined)
-    //     {
-    //         throw new Error('Not found');
-    //     }
-
-    //     return parseInt(addr);
-    // }
     private FindByName(name: string): IoConfigStruct
     {
         const ioConfig: IoConfigStruct | undefined = this.entries.find(io => io.name === name);
@@ -56,8 +45,6 @@ export class IOsConfig
 
         if (ioConfig === undefined)
         {
-            // throw new Error(`Can not find IO config with addr ${ addr }`);
-            // return ({ addr: (-1), name: '', events: {}});
             return IoConfigStruct.Empty;
         }
 
@@ -69,7 +56,7 @@ export class IOsConfig
         const events = this.FindByAddr(addr).events;
         if (events === undefined) return {};
         else return events;
-        // return this.FindByAddr(addr).events;
+        // return this.FindByAddr(addr).events; // Why this produce error?
     }
 
     public AddrByName(name: string): number

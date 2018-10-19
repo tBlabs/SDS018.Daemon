@@ -18,7 +18,9 @@ export class CommandResolver
             .replace("{this.value}", ioState.currentValue.toString())
             .replace("{this.previousValue}", ioState.previousValue.toString())
             .replace("{this.event}", eventName)
-            .replace("{this.addr}", ioState.addr.toString());
+            .replace("{this.addr}", ioState.addr.toString())
+            .replace("{this.timestamp}", ioState.currentValueUpdateTimestamp.toString())
+            .replace("{this.previousTimestamp}", ioState.previousValueUpdateTimestamp.toString());
 
         return cmd;
     }

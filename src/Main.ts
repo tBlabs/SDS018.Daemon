@@ -42,12 +42,12 @@ export class Main
             res.send('http pong (not from board)');
         });
 
-        server.all('/boardinfo', (req, res) =>
+        server.all('/boardInfo', (req, res) =>
         {
             res.send(this._driver.Info);
         });
 
-        server.all('/ioconfig', (req, res) =>
+        server.all('/ioConfig', (req, res) =>
         {
             console.log(this._iosConfig.Entries);
             res.send(this._iosConfig.Entries);
@@ -69,7 +69,7 @@ export class Main
 
         const ioNameRegexString = '[a-z.0-9_\-]{1,100}';
         const eventsRegexString = Object.keys(Event).join('|');
-        const eventCommandRegexString = '[a-z.0-9%_/:{}\-]+';
+        const eventCommandRegexString = '[a-z.0-9%_/:{}\-]+'; // % must be there because browser will turn { sign into %7B and there is no way to prevent it
 
         server.all(new RegExp('^/(' + ioNameRegexString + ')/(' + eventsRegexString + ')/(' + eventCommandRegexString + ')$', 'i'), (req, res) =>
         {
@@ -77,9 +77,8 @@ export class Main
             const eventName = req.params[1];
             const command = req.params[2];
 
-            console.log(ioName, eventName, command);
             this._iosConfig.UpdateEvent(ioName, eventName, command);
-            // res.send(req.params[0] + ' | ' + req.params[1] + ' | ' + req.params[2] );
+
             res.sendStatus(200);
         });
 
@@ -87,7 +86,6 @@ export class Main
         {
             const key = req.params[0];
             const value = req.params[1];
-            // const queryObj = req.query; // TODO: handling for "?foo=bar"
 
             this._userConfig.AddOrUpdate(key, value);
 
