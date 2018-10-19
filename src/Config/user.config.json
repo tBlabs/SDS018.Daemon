@@ -1,1 +1,1 @@
-{"host":"http://localhost:3000"}
+{"host":"http://localhost:3000","led2on":"{host}/led2/1"}

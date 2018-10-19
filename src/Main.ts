@@ -76,13 +76,13 @@ export class Main
             const ioName = req.params[0];
             const eventName = req.params[1];
             const command = req.params[2];
-
+            
             this._iosConfig.UpdateEvent(ioName, eventName, command);
-
+            
             res.sendStatus(200);
         });
-
-        server.all(/^\/config\/([a-z0-9_\-]+)\/([a-z0-9_/:%\-]+)$/, (req, res) =>
+        
+        server.all(new RegExp('^/config/([a-z0-9_\-]+)/(' + eventCommandRegexString + ')$', 'i'), (req, res) =>
         {
             const key = req.params[0];
             const value = req.params[1];
@@ -139,8 +139,6 @@ export class Main
             res.send(value.toString());
         });
 
-
-
         server.all('/:ioName/:value', (req, res) =>
         {
             const ioName = req.params.ioName;
@@ -153,7 +151,7 @@ export class Main
 
         server.use((err, req, res, next) =>
         {
-            console.log('Globally catched error:', err.message);
+            console.log('Globally caught server error:', err.message);
 
             res.send(err.message);
         });

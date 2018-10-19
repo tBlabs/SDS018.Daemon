@@ -12,6 +12,9 @@ export class CommandResolver
     public Resolve(eventName, cmd, ioState: IoState): string
     {
         cmd = this._config.ApplyOnString(cmd);
+        
+        // Second resolve (for variables of variables)
+        cmd = this._config.ApplyOnString(cmd); 
 
         cmd = cmd
             .replace("{this.event}", eventName)
