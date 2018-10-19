@@ -306,7 +306,13 @@ describe('FluentParser', () =>
             // 0xbb, 0xaa, 0x02, 0x01, 0xde, 0xcd, 0xbc, 0xab, 0x16
         ];
 
-        const parser = parserBuilder
+        interface RealLifeFrameData
+        {
+            type: number;
+            addr: number;
+            value: number;
+        }
+        const parser = (new FluentParserBuilder<RealLifeFrameData>())
             .Is(0xBB).Is(0xAA)
             .If(0x01, 'type', _ => _)
             .If(0x02, 'type', _ => _.Get('addr').Get4LE('value'))

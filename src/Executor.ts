@@ -33,7 +33,14 @@ export class CommandExecutor
         switch (commandType)
         {
             case CommandType.HttpGet:
-                axios.get(cmd);
+                try
+                {
+                    await axios.get(cmd);
+                } 
+                catch (error)
+                {
+                    console.log(error.message);
+                }
                 break;
         }
     }

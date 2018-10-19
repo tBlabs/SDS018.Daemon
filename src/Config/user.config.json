@@ -1,4 +1,1 @@
-{
-    "example": "exampleValue",
-    "foo": "bar"
-}
+{"host":"http://localhost:3000"}

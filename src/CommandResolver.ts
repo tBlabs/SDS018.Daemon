@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { IoState } from "./IoState";
-import { Config } from './Config';
+import { UserConfig } from './UserConfig';
 import { injectable } from 'inversify';
 
 @injectable()
 export class CommandResolver
 {
-    constructor(private _config: Config) 
+    constructor(private _config: UserConfig) 
     { }
 
     public Resolve(eventName, cmd, ioState: IoState): string

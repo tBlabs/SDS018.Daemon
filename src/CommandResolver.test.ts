@@ -1,6 +1,6 @@
 import { CommandResolver } from "./CommandResolver";
 import { Mock, It } from "moq.ts";
-import { Config } from "./Config";
+import { UserConfig } from "./UserConfig";
 import { IoState } from "./IoState";
 import { StringKeyValuePairs } from "./StringKeyValuePairs";
 import { IStorage } from "./IStorage";
@@ -13,7 +13,7 @@ describe(CommandResolver.name, () =>
         const _storageMock = new Mock<IStorage<StringKeyValuePairs>>()
             .setup(i => i.Read).returns(() => ({ host: "localhost:1234" }))
             .setup(i => i.Write(It.IsAny<string>())).callback(() => { });
-        const _config = new Config(_storageMock.object());
+        const _config = new UserConfig(_storageMock.object());
         const sut = new CommandResolver(_config);
         const ioState = new IoState();
         ioState.addr = 1;

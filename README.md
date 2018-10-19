@@ -1,5 +1,10 @@
 # AlfaBoard.Driver
 
+## TODO
+
+- make actuators values readable
+- handling for query params (?foo=bar) // hidden in req.query
+
 ## API
 
 | Operation                    | URL                           | Example request  | Example response   |
@@ -54,3 +59,9 @@ Example:
 will hit `http://myhost:1234/input1/onFalling/4` endpoint with GET HTTP method
 
 BASH:{takePicture}|BASH:{sendPicture}
+
+
+# Why this is builded this way
+Such code construction has few advantages:
+- driver can work on any platform supporting node.js (PC, Raspberry Pi etc)
+- it's easy to test because board is a USB device (not builded in some platform)

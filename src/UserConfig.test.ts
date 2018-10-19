@@ -1,4 +1,4 @@
-import { Config } from "./Config";
+import { UserConfig } from "./UserConfig";
 import { StringKeyValuePairs } from "./StringKeyValuePairs";
 import { IStorage } from "./IStorage";
 import { Mock, It } from "moq.ts";
@@ -12,9 +12,9 @@ interface ITestObject
     method(): void;
 }
 
-describe(Config.name, () =>
+describe(UserConfig.name, () =>
 {
-    let config: Config;
+    let config: UserConfig;
 
         beforeEach(() =>
         {
@@ -22,7 +22,7 @@ describe(Config.name, () =>
                 .setup(i=>i.Read).returns(()=>({}))
                 .setup(i=>i.Write(It.IsAny<string>())).callback(()=>{});
 
-            config = new Config(_storageMock.object());
+            config = new UserConfig(_storageMock.object());
         });
 
     it('FindPlaceholders should return placeholders', () =>

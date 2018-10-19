@@ -63,7 +63,7 @@ export class IoCache
 
         if (io === undefined)
         {
-            throw new Error('addr not found');
+            throw new Error(`Addr ${addr} not found in sensors cache`);
         }
 
         return io.currentValue;

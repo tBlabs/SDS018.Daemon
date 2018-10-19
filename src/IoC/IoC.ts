@@ -17,7 +17,7 @@ import { StartupArgs } from '../services/environment/StartupArgs';
 import { Driver } from '../Driver';
 import { EventsDeterminator } from '../EventsDeterminator';
 import { PressDeterminator } from '../EventDeterminators/PressDeterminator';
-import { Config } from '../Config';
+import { UserConfig } from '../UserConfig';
 import { StringKeyValuePairs } from "../StringKeyValuePairs";
 import { CommandResolver } from '../CommandResolver';
 import { Storage } from './../Storage';
@@ -38,7 +38,7 @@ try
     IoC.bind<Driver>(Driver).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<EventsDeterminator>(EventsDeterminator).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind<PressDeterminator>(PressDeterminator).toSelf().inTransientScope().whenTargetIsDefault();
-    IoC.bind<Config>(Config).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind<UserConfig>(UserConfig).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<IOsConfig>(IOsConfig).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<CommandResolver>(CommandResolver).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind<CommandExecutor>(CommandExecutor).toSelf().inTransientScope().whenTargetIsDefault();

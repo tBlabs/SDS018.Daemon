@@ -1,6 +1,6 @@
 import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
-import { IConfig } from './IConfig';
+import { IUserConfig } from './IConfig';
 import { IStorage } from './IStorage';
 import { StringKeyValuePairs } from './StringKeyValuePairs';
 import { Types } from './IoC/Types';
@@ -16,7 +16,7 @@ export class IOsConfig
     private readonly configFileDir = './src/Config/io.config.json';
     private entries: IoConfigStruct[] = [];
 
-    public ToString(): string
+    public get Entries(): IoConfigStruct[]
     {
         return this.entries;
     }
@@ -44,7 +44,7 @@ export class IOsConfig
 
         if (ioConfig === undefined)
         {
-            throw new Error(`Can not find "${ name }"`);
+            throw new Error(`Can not find "${ name }" in config`);
         }
 
         return ioConfig;
@@ -66,10 +66,10 @@ export class IOsConfig
 
     public IoEvents(addr: number): IoEvents
     {
-        // const events = this.FindByAddr(addr).events;
-        // if (events === undefined) return {};
-        // else return events;
-        return this.FindByAddr(addr).events;
+        const events = this.FindByAddr(addr).events;
+        if (events === undefined) return {};
+        else return events;
+        // return this.FindByAddr(addr).events;
     }
 
     public AddrByName(name: string): number
@@ -98,24 +98,31 @@ export class IOsConfig
     public Rename(name: string, newName: string): void
     {
         const ioConfig: IoConfigStruct = this.FindByName(name);
-
+        
         if (this.ValidateName(name) === false)
         {
             throw new Error(`Name "${ name }" is invalid`);
         }
-
+        
         if (this.NameExists(newName))
         {
             throw new Error(`Name "${ newName }" is already taken`);
         }
-
+        
         ioConfig.name = newName;
-
+        
         this._storage.Write(this.entries);
     }
-
+    
     public UpdateEvent(ioName: string, event: Event, command: Command): void
     {
+        const ioConfig: IoConfigStruct = this.FindByName(ioName);
 
+        if (ioConfig.events === undefined)
+            ioConfig.events = {};
+
+        ioConfig.events[event.toString()] = command;
+        
+        this._storage.Write(this.entries);
     }
 }

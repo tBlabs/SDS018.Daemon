@@ -14,6 +14,7 @@ import { IoConfigStruct } from './IoConfigStruct';
 import { Command } from './Command';
 import { IOsConfig } from './IOsConfig';
 import { IoEvents } from './IoEvents';
+import { UserConfig } from './UserConfig';
 
 @injectable()
 export class Main
@@ -21,6 +22,7 @@ export class Main
     constructor(
         @inject(Types.IStartupArgs) private _args: IStartupArgs,
         private _iosConfig: IOsConfig,
+        private _userConfig: UserConfig,
         private _eventsDeterminator: EventsDeterminator,
         private _commandResolver: CommandResolver,
         private _commandExecutor: CommandExecutor,
@@ -47,16 +49,49 @@ export class Main
 
         server.all('/ioconfig', (req, res) =>
         {
-            res.send(this._iosConfig.ToString());
+            console.log(this._iosConfig.Entries);
+            res.send(this._iosConfig.Entries);
         });
 
-        server.all(/^\/config\/([a-z0-9_\-]+)\/([\/\-a-z0-9:?]+)$/, (req, res) =>
+        server.all('/config', (req, res) =>
+        {
+            res.send(this._userConfig.ToString());
+        });
+
+        server.all(/^\/config\/([a-z0-9_\-]+)\/$/, (req, res) =>
+        {
+            const key = req.params[0];
+
+            this._userConfig.Delete(key);
+
+            res.sendStatus(200);
+        });
+
+        const ioNameRegexString = '[a-z.0-9_\-]{1,100}';
+        const eventsRegexString = Object.keys(Event).join('|');
+        const eventCommandRegexString = '[a-z.0-9%_/:{}\-]+';
+
+        server.all(new RegExp('^/(' + ioNameRegexString + ')/(' + eventsRegexString + ')/(' + eventCommandRegexString + ')$', 'i'), (req, res) =>
+        {
+            const ioName = req.params[0];
+            const eventName = req.params[1];
+            const command = req.params[2];
+
+            console.log(ioName, eventName, command);
+            this._iosConfig.UpdateEvent(ioName, eventName, command);
+            // res.send(req.params[0] + ' | ' + req.params[1] + ' | ' + req.params[2] );
+            res.sendStatus(200);
+        });
+
+        server.all(/^\/config\/([a-z0-9_\-]+)\/([a-z0-9_/:%\-]+)$/, (req, res) =>
         {
             const key = req.params[0];
             const value = req.params[1];
+            // const queryObj = req.query; // TODO: handling for "?foo=bar"
 
-            // res.status(200).send(key+"="+value+", "+JSON.stringify(req.query));
-            res.status(200).send(key + "=" + value + ", " + req.query.toString());
+            this._userConfig.AddOrUpdate(key, value);
+
+            res.send(key + "=" + value);
         });
 
         server.all('/get/:addr', (req, res) =>
@@ -87,6 +122,16 @@ export class Main
             res.sendStatus(200);
         });
 
+        // TODO: toggle is not possible because state of actuator can not be read from board
+        // server.all('/:ioName/toggle', (req, res) =>
+        // {
+        //     const ioName = req.params.ioName;
+        //     const addr = this._iosConfig.AddrByName(ioName);
+        //     const currentValue = this._driver.Read(addr);
+        //     this._driver.Set(addr, 1 - currentValue);
+
+        //     res.sendStatus(202);
+        // });
         server.all('/:ioName', (req, res) =>
         {
             const ioName = req.params.ioName;
@@ -95,6 +140,8 @@ export class Main
 
             res.send(value.toString());
         });
+
+
 
         server.all('/:ioName/:value', (req, res) =>
         {
@@ -122,24 +169,28 @@ export class Main
 
         this._driver.OnUpdate((ioState: IoState) =>
         {
-            const ioAddr: number = ioState.addr;
-            const ioEvents: IoEvents = this._iosConfig.IoEvents(ioAddr);
-            
-            const eventsToExecute: Event[] = this._eventsDeterminator.Determine(ioEvents, ioState);
-
-            if (eventsToExecute.length > 0)
-                console.log(`${ ioState.addr }: ${ ioState.previousValue } --> ${ ioState.currentValue }`);
-
-            eventsToExecute.forEach(async (eventName: Event) =>
-            {
-                const rawCommand: Command = ioEvents[eventName];
-                const commandToExecute = this._commandResolver.Resolve(eventName, rawCommand, ioState);
-                console.log('  ', eventName, commandToExecute);
-                await this._commandExecutor.Execute(commandToExecute);
-            });
+            this.EventsExecutor(ioState);
         });
 
         // this._driver.Connect(this._args.Args.port);
-        this._driver.Connect('/dev/ttyUSB0'); // TODO: move to config
+       this._driver.Connect('/dev/ttyUSB0'); // TODO: move to config
+    }
+
+    private EventsExecutor(ioState: IoState)
+    {
+        const ioAddr: number = ioState.addr;
+        const ioEvents: IoEvents = this._iosConfig.IoEvents(ioAddr);
+        const eventsToExecute: Event[] = this._eventsDeterminator.Determine(ioEvents, ioState);
+
+        if (eventsToExecute.length > 0)
+            console.log(`${ ioState.addr }: ${ ioState.previousValue } --> ${ ioState.currentValue }`);
+
+        eventsToExecute.forEach(async (eventName: Event) =>
+        {
+            const rawCommand: Command = ioEvents[eventName];
+            const commandToExecute = this._commandResolver.Resolve(eventName, rawCommand, ioState);
+            console.log('  ', eventName, commandToExecute);
+            await this._commandExecutor.Execute(commandToExecute);
+        });
     }
 }
