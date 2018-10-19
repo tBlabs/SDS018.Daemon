@@ -18,7 +18,7 @@ export class Serial
 
         this.serial.on('open', () =>
         {
-            console.log('SERIAL OPEN');
+            console.log('SERIAL OPEN @', port);
             this.isConnected = true;
             this.onConnectionCallback();
         });

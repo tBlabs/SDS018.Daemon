@@ -15,12 +15,14 @@ import { Command } from './Command';
 import { IOsConfig } from './IOsConfig';
 import { IoEvents } from './IoEvents';
 import { UserConfig } from './UserConfig';
+import { AppConfig } from './AppConfig';
 
 @injectable()
 export class Main
 {
     constructor(
         @inject(Types.IStartupArgs) private _args: IStartupArgs,
+        private _appConfig: AppConfig,
         private _iosConfig: IOsConfig,
         private _userConfig: UserConfig,
         private _eventsDeterminator: EventsDeterminator,
@@ -49,7 +51,6 @@ export class Main
 
         server.all('/ioConfig', (req, res) =>
         {
-            console.log(this._iosConfig.Entries);
             res.send(this._iosConfig.Entries);
         });
 
@@ -156,12 +157,12 @@ export class Main
             res.send(err.message);
         });
 
-        const boardDriverPort = 3000;
+        const boardDriverPort = this._appConfig.Host;
 
         server.listen(boardDriverPort, async () => 
         {
-            console.log('SERVER STARTED');
-        }); // TODO: move to config
+            console.log('SERVER STARTED @', boardDriverPort);
+        });
 
         this._driver.OnUpdate((ioState: IoState) =>
         {
@@ -169,7 +170,7 @@ export class Main
         });
 
         // this._driver.Connect(this._args.Args.port);
-       this._driver.Connect('/dev/ttyUSB0'); // TODO: move to config
+       this._driver.Connect(this._appConfig.Usb); // TODO: move to config
     }
 
     private EventsExecutor(ioState: IoState)

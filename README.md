@@ -83,3 +83,12 @@ BASH:{takePicture}|BASH:{sendPicture}
 Such code construction has few advantages:
 - driver can work on any platform supporting node.js (PC, Raspberry Pi etc)
 - it's easy to test because board is a USB device (not builded in some platform)
+
+## Deploy on Raspberry Pi Zero
+- install `git`, `node.js v9+`, `npm`
+- `git clone {this repo}`
+- `npm i`
+- configure `app.config.json`
+- connect driver to USB
+- add privileges for USB if required
+- `npm run run`
