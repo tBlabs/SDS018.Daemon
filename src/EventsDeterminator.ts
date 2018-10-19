@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { injectable } from "inversify";
 import { IoState } from "./IoState";
 import { Event } from './Event';
-import { IoEvents } from './Main';
+import { IoEvents } from "./IoEvents";
 import { PressDeterminator } from './EventDeterminators/PressDeterminator';
 
 @injectable()

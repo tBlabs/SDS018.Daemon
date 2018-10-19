@@ -4,14 +4,17 @@
 
 | Operation                    | URL                           | Example request  | Example response   |
 | ---------------------------- | ----------------------------- | ---------------- |------------------ |
-| Get value by IO name         | /`ioName`                     | /door-sensor     | 1 |
-| Set value by IO name         | /`ioName`/`value`             | /main-light/123  | *none* |
-| Get value by IO addr         | /get/`addr`                   | /get/4           | 12 |
-| Set value by IO addr         | /set/`addr`/`value`           | /set/2/1         | *none* |
+| Get IO value by IO name         | /`ioName`                     | /door-sensor     | 1 |
+| Set IO value by IO name         | /`ioName`/`value`             | /main-light/123  | *none* |
+| Get IO value by IO addr         | /get/`addr`                   | /get/4           | 12 |
+| Set IO value by IO addr         | /set/`addr`/`value`           | /set/2/1         | *none* |
+| Board info                   | /boardinfo | | |
+| IO config                    | /ioconfig | | |
+| IO rename                    | /`ioName`/rename/`newName` | /adc1/rename/light-sensor | [HTTP 200] |
+| Edit IO event                | /`ioName`/rename/`newName` | /adc1/rename/light-sensor | [HTTP 200] |
 | Set IO name  **[TODO]**      | `/{ioName}/name/{newName}`    |
 | Set IO event **[TODO]**      | `/{ioName}/{eventName}/{action}`    | /light-sensor/onRising/GET:http://localhost:3001/set/4/4????
 | Read IO info **[TODO]**      | `/{ioName}/info`              | /fan/info | { "name": "fan", "value": 123, "minValue": 0, ... }
-| All IO info **[TODO]**       | `/ioinfo` |  |   |
 | Add config variable                 | `/config/{varName}/{value}`        | host/http://localhost:5000 | *none*  |
 | Read config variable                | `/config/{varName}`     |  |
 | Remove config variable              | `/config/{varName}/`     |   |

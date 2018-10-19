@@ -58,7 +58,7 @@ export class Driver
     public get Info(): IoInfo[]
     {
         return [
-            { addr: 0, name: "Input1", type: "INPUT", readonly: true, minValue: 0, maxValue: 1, events: ['onChange'] },
+            { addr: 0, name: "Input1", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
             { addr: 1, name: "Input2", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
             { addr: 2, name: "Input3", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
             { addr: 3, name: "Input4", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
@@ -157,7 +157,7 @@ export class Driver
                 case ResponseFrameType.Pong:
                     console.log('pong from board');
                     break;
-                    
+
                 case ResponseFrameType.Update:
                     if (this.cache[out.addr] !== out.value)
                     {
@@ -179,8 +179,37 @@ export class Driver
 
     }
 
+
+    public ValidateValue(addr: number, value: number): void
+    {
+        const io: IoInfo | undefined = this.Info.find(io => io.addr === addr);
+
+        if (io === undefined)
+        {
+            throw new Error('Not found');
+        }
+
+        if (io.readonly)
+        {
+            throw new Error('Can not write to sensor');
+        }
+
+        if (value > io.maxValue)
+        {
+            throw new Error('Out of range. Max value is ' + io.maxValue.toString());
+        }
+
+        if (value < io.minValue)
+        {
+            throw new Error('Out of range. Min value is ' + io.minValue.toString());
+        }
+
+    }
+
     public Set(addr: number, value: number): void
     {
+        this.ValidateValue(addr, value);
+
         const frame = (new FluentBuilder())
             .Word2LE(0xAABB)
             .Byte(RequestFrameType.Set)
