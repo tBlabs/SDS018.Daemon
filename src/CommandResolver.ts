@@ -17,11 +17,10 @@ export class CommandResolver
         cmd = this._config.ApplyOnString(cmd); 
 
         cmd = cmd
+            .replace("{this.value}", ioState.currentValue.toString())
             .replace("{this.name}", ioName)
             .replace("{this.event}", eventName)
-            .replace("{this.value}", ioState.currentValue.toString())
             .replace("{this.previousValue}", ioState.previousValue.toString())
-            .replace("{this.event}", eventName)
             .replace("{this.addr}", ioState.addr.toString())
             .replace("{this.timestamp}", ioState.currentValueUpdateTimestamp.toString())
             .replace("{this.previousTimestamp}", ioState.previousValueUpdateTimestamp.toString());
