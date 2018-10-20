@@ -9,7 +9,7 @@ export class CommandResolver
     constructor(private _config: UserConfig) 
     { }
 
-    public Resolve(eventName, cmd, ioState: IoState): string
+    public Resolve(eventName: string, cmd: string, ioState: IoState, ioName: string): string
     {
         cmd = this._config.ApplyOnString(cmd);
         
@@ -17,6 +17,7 @@ export class CommandResolver
         cmd = this._config.ApplyOnString(cmd); 
 
         cmd = cmd
+            .replace("{this.name}", ioName)
             .replace("{this.event}", eventName)
             .replace("{this.value}", ioState.currentValue.toString())
             .replace("{this.previousValue}", ioState.previousValue.toString())

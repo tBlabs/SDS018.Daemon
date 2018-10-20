@@ -1,16 +1,13 @@
-import { IRunMode } from './services/runMode/IRunMode';
 import { injectable, inject } from 'inversify';
 import { Types } from './IoC/Types';
 import { IStartupArgs } from './services/environment/IStartupArgs';
 import * as express from 'express';
 import { Driver } from './Driver';
-import * as fs from 'fs';
 import { IoState } from "./IoState";
 import { Event } from './Event';
 import { EventsDeterminator } from './EventsDeterminator';
 import { CommandResolver } from './CommandResolver';
 import { CommandExecutor } from './Executor';
-import { IoConfigStruct } from './IoConfigStruct';
 import { Command } from './Command';
 import { IOsConfig } from './IOsConfig';
 import { IoEvents } from './IoEvents';
@@ -77,12 +74,22 @@ export class Main
             const ioName = req.params[0];
             const eventName = req.params[1];
             const command = req.params[2];
-            
+
             this._iosConfig.UpdateEvent(ioName, eventName, command);
-            
+
             res.sendStatus(200);
         });
-        
+
+        server.all(new RegExp('^/(' + ioNameRegexString + ')/(' + eventsRegexString + ')/$', 'i'), (req, res) =>
+        {
+            const ioName = req.params[0];
+            const eventName = req.params[1];
+
+            this._iosConfig.DeleteEvent(ioName, eventName);
+
+            res.sendStatus(200);
+        });
+
         server.all(new RegExp('^/config/([a-z0-9_\-]+)/(' + eventCommandRegexString + ')$', 'i'), (req, res) =>
         {
             const key = req.params[0];
@@ -121,16 +128,6 @@ export class Main
             res.sendStatus(200);
         });
 
-        // TODO: toggle is not possible because state of actuator can not be read from board
-        // server.all('/:ioName/toggle', (req, res) =>
-        // {
-        //     const ioName = req.params.ioName;
-        //     const addr = this._iosConfig.AddrByName(ioName);
-        //     const currentValue = this._driver.Read(addr);
-        //     this._driver.Set(addr, 1 - currentValue);
-
-        //     res.sendStatus(202);
-        // });
         server.all('/:ioName', (req, res) =>
         {
             const ioName = req.params.ioName;
@@ -145,6 +142,7 @@ export class Main
             const ioName = req.params.ioName;
             const value = req.params.value;
             const addr = this._iosConfig.AddrByName(ioName);
+
             this._driver.Set(addr, value);
 
             res.sendStatus(202);
@@ -157,11 +155,9 @@ export class Main
             res.send(err.message);
         });
 
-        const boardDriverPort = this._appConfig.Host;
-
-        server.listen(boardDriverPort, async () => 
+        server.listen(this._appConfig.Host, async () => 
         {
-            console.log('SERVER STARTED @', boardDriverPort);
+            console.log('SERVER STARTED @', this._appConfig.Host);
         });
 
         this._driver.OnUpdate((ioState: IoState) =>
@@ -169,8 +165,7 @@ export class Main
             this.EventsExecutor(ioState);
         });
 
-        // this._driver.Connect(this._args.Args.port);
-       this._driver.Connect(this._appConfig.Usb); // TODO: move to config
+        this._driver.Connect(this._appConfig.Usb);
     }
 
     private EventsExecutor(ioState: IoState)
@@ -178,14 +173,15 @@ export class Main
         const ioAddr: number = ioState.addr;
         const ioEvents: IoEvents = this._iosConfig.IoEvents(ioAddr);
         const eventsToExecute: Event[] = this._eventsDeterminator.Determine(ioEvents, ioState);
-
+        
         if (eventsToExecute.length > 0)
-            console.log(`${ ioState.addr }: ${ ioState.previousValue } --> ${ ioState.currentValue }`);
-
+        console.log(`${ ioState.addr }: ${ ioState.previousValue } --> ${ ioState.currentValue }`);
+        
         eventsToExecute.forEach(async (eventName: Event) =>
         {
+            const ioName: string = this._iosConfig.IoName(ioAddr);
             const rawCommand: Command = ioEvents[eventName];
-            const commandToExecute = this._commandResolver.Resolve(eventName, rawCommand, ioState);
+            const commandToExecute = this._commandResolver.Resolve(eventName, rawCommand, ioState, ioName);
             console.log('  ', eventName, commandToExecute);
             await this._commandExecutor.Execute(commandToExecute);
         });

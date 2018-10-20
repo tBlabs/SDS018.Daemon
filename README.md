@@ -2,37 +2,41 @@
 
 ## TODO
 
-- make actuators values readable
+- make actuators values readable (need changes in board firmware)
 - handling for query params (?foo=bar) // hidden in req.query
+- events disabling (needs changes in io.config structure + new endpoints)
+- bash commands interpreter
+- parallel commands
+- default io.config generation
 
 ## API
 
-| Operation                    | URL                           | Example request  | Example response   |
-| ---------------------------- | ----------------------------- | ---------------- |------------------ |
-| Get IO value by IO name      | /`ioName`                     | /door-sensor     | 1 |
-| Set IO value by IO name      | /`ioName`/`value`             | /main-light/123  | *HTTP 202* |
-| Get IO value by IO addr      | /get/`addr`                   | /get/4           | 12 |
-| Set IO value by IO addr      | /set/`addr`/`value`           | /set/2/1         | *HTTP 202* |
-| Board info                   | /boardInfo | /boardinfo | *HTTP 200* |
-| IO config                    | /ioConfig | /ioconfig | *HTTP 200* |
-| IO rename                    | /`ioName`/rename/`newName` | /adc1/rename/light-sensor | *HTTP 200* |
-| Edit or Add IO event         | /`ioName`/`eventName`/`newName` | /adc1/onChange/{pwmUpdate} | *HTTP 200* |
-| Read config variable              | /config/`varName`     |  |
-| Add or update config variable     | /config/`varName`/`value`        | host/http://localhost:5000 | *HTTP 200*  |
-| Remove config variable            | /config/`varName`/     |   |
-| Use config variable               |                   | /door-sensor/onChange/{lightsDriver}/on  |   |
+| Operation                      | URL                             | Example request             | Example response   |
+| ------------------------------ | ------------------------------- | --------------------------- | ------------------ |
+| Get IO value by IO name        | /`ioName`                       | /door-sensor                | 1                  |
+| Set IO value by IO name        | /`ioName`/`value`               | /main-light/123             | *HTTP 202*         |
+| Get IO value by IO addr        | /get/`addr`                     | /get/4                      | 12                 |
+| Set IO value by IO addr        | /set/`addr`/`value`             | /set/2/1                    | *HTTP 202*         |
+| IO rename                      | /`ioName`/rename/`newName`      | /adc1/rename/light-sensor   | *HTTP 200*         |
+| Add or update IO event         | /`ioName`/`eventName`/`newName` | /adc1/onChange/{pwmUpdate}  | *HTTP 200*         |
+| Delete IO event                | /`ioName`/`eventName`/          | /adc1/onChange/             | *HTTP 200*         |
+| Board info                     | /boardInfo                      | /boardinfo                  | (...) *HTTP 200*   |
+| IO config                      | /ioConfig                       | /ioconfig                   | (...) *HTTP 200*   |
+| Add or update config variable  | /config/`varName`/`value`       | host/foo/bar                | foo=bar            |
+| Read config variable           | /config/`varName`               | /config/foo                 | bar                |
+| Remove config variable         | /config/`varName`/              | /config/foo/                | *HTTP 200*         |
 
 ## Variables resolving order
 
-User variables (from `user.config.json`) are resolved first. They may contain `{this.x}` placeholders.
+User variables (from `user.config.json`) are resolved first (two times). They may contain `{this.x}` placeholders and another variables.
 
 ## Config files
 
-| File | Use | Structure |
-| --- | --- | --- |
-| `io.config.json` | IO Configuration | Json array |
-| `user.config.json` | User variables | Key-value pairs as json object |
-| `app.config.json` | Place for `httpPort`, `usbPort` etc | Key-value pairs as json object |
+| File                | Use                                 | Structure                      |
+| ------------------- | ----------------------------------- | ------------------------------ |
+| `app.config.json`   | Place for `httpPort`, `usbPort` etc | Key-value pairs as json object |
+| `io.config.json`    | IO Configuration                    | Json array                     |
+| `user.config.json`  | User variables                      | Key-value pairs as json object |
 
 ## IO Config
 
@@ -55,9 +59,9 @@ Single IO config example:
 By default every command is `HTTP GET` action. `GET:` prefix can be added to emphasize that.
 There can be other prefixes used in future (like `BASH` etc).
 
-| Prefix | Action |
-| --- | --- |
-| GET   | HTTP GET |
+| Prefix  | Action   |
+| ------- | -------- |
+| GET     | HTTP GET |
 | *none*  | HTTP GET |
 
 Available commands symbols:
@@ -84,11 +88,11 @@ Such code construction has few advantages:
 - driver can work on any platform supporting node.js (PC, Raspberry Pi etc)
 - it's easy to test because board is a USB device (not builded in some platform)
 
-## Deploy on Raspberry Pi Zero
-- install `git`, `node.js v9+`, `npm`
+## Deploy
+- install `git`, `node.js 9+`, `npm`
 - `git clone {this repo}`
 - `npm i`
 - configure `app.config.json`
 - connect driver to USB
-- add privileges for USB if required
-- `npm run run`
+- add privileges for USB if required (`sudo usermod -a -G dialout $USER`)
+- `npm start` or `npm run run` if rebuild is needed (but it's not because repo contains `js` files)

@@ -58,6 +58,11 @@ export class IOsConfig
         else return events;
         // return this.FindByAddr(addr).events; // Why this produce error?
     }
+    
+    public IoName(addr: number): string
+    {
+        return this.FindByAddr(addr).name;
+    }
 
     public AddrByName(name: string): number
     {
@@ -109,6 +114,18 @@ export class IOsConfig
             ioConfig.events = {};
 
         ioConfig.events[event.toString()] = command;
+        
+        this._storage.Write(this.entries);
+    }
+
+    public DeleteEvent(ioName: string, event: Event): void
+    {
+        const ioConfig: IoConfigStruct = this.FindByName(ioName);
+
+        if (ioConfig.events === undefined)
+            ioConfig.events = {};
+
+        delete ioConfig.events[event.toString()];
         
         this._storage.Write(this.entries);
     }

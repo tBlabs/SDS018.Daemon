@@ -173,7 +173,7 @@ export class Driver
 
         parser.OnFault((reason, frame) =>
         {
-            console.log('FAULT', reason, frame);
+            console.log('FAULT', reason);
         });
 
 
