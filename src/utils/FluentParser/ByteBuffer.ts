@@ -27,9 +27,6 @@ export class ByteBuffer
                 }
 
             case 4:
-            // console.log('ToValue', this.buffer);
-            // console.log('le', this.BufferTo32bitLE(this.buffer));
-            // console.log('be', this.BufferTo32bitBE(this.buffer));
                 switch (this.endian)
                 {
                     case Endian.Little: return this.BufferTo32bitLE(this.buffer);
@@ -42,14 +39,13 @@ export class ByteBuffer
 
     private BufferTo32bitLE(buffer)
     {
-        return (buffer[3] << 24 | buffer[2] << 16 | buffer[1] << 8 | buffer[0])>>>0;
+        return (buffer[3] << 24 | buffer[2] << 16 | buffer[1] << 8 | buffer[0]) >>> 0;
     }
 
     private BufferTo32bitBE(buffer)
     {
-        return ((buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3])>>>0;
+        return ((buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3]) >>> 0;
     }
-
 
     public Add(b: byte)
     {

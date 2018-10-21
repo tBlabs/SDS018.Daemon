@@ -4,12 +4,13 @@ import { IsOperation } from "./Operations/IsOperation";
 import { IfOperation } from "./Operations/IfOperation";
 import { GetOperation } from "./Operations/GetOperation";
 
-interface Dummy {}
+interface Dummy { }
+
 export class OperationsList
 {
     private list: Operation[] = [];
     private currentIndex: number = 0;
-    
+
     public get List()
     {
         return this.list;
@@ -20,19 +21,17 @@ export class OperationsList
         if (operationsList)
         {
             this.list = [];
-            operationsList.List.forEach(i=>this.list.push(i));
+            operationsList.List.forEach(i => this.list.push(i));
         }
         this.currentIndex = 0;
     }
     public toString()
     {
-        return this.currentIndex+'/'+this.Size+' '+this.CurrentType+' '
-        +(this.CurrentType===OperationType.Is?'0x'+(this.Current as IsOperation).toCompare.toString(16):'')
-        +(this.CurrentType===OperationType.If?'0x'+(this.Current as IfOperation).toCompare.toString(16):'')
-        +(this.CurrentType===OperationType.Get?(this.Current as GetOperation<Dummy>).varName:'');
-        //+' | '+JSON.stringify(this.list);
+        return this.currentIndex + '/' + this.Size + ' ' + this.CurrentType + ' '
+            + (this.CurrentType === OperationType.Is ? '0x' + (this.Current as IsOperation).toCompare.toString(16) : '')
+            + (this.CurrentType === OperationType.If ? '0x' + (this.Current as IfOperation).toCompare.toString(16) : '')
+            + (this.CurrentType === OperationType.Get ? (this.Current as GetOperation<Dummy>).varName : '');
     }
-
 
     public Add(operation: Operation)
     {

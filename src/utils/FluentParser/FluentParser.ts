@@ -17,7 +17,7 @@ export class FluentParser<T>
     private operationsCopy: OperationsList;
     private onCompleteCallback?: (out: T, rawFrame: byte[]) => void;
     private onFaultCallback: (reason: string, rawFrame: byte[]) => void = (reason, frame?) => console.log('FRAME PARSE FAULT', reason);
-   private out: T = <T>{};
+    private out: T = <T>{};
     private bufferVarName: string = '';
     private buffer: ByteBuffer = new ByteBuffer();
     private frame: byte[] = [];

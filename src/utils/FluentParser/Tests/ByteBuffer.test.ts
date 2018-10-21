@@ -34,4 +34,4 @@ describe('ByteBuffer', () =>
         const value = buffer.ToValue();
         expect(value).toBe(0xA1A2A3A4);
     });
-})
+});

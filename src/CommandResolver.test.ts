@@ -20,7 +20,7 @@ describe(CommandResolver.name, () =>
         ioState.currentValue = 123;
 
         // When
-        const ret = sut.Resolve("onChange", "http://{host}/{this.event}/{this.addr}/{this.value}", ioState);
+        const ret = sut.Resolve("onChange", "http://{host}/{this.event}/{this.addr}/{this.value}", ioState, 'ioName');
 
         // Then
         expect(ret).toBe('http://localhost:1234/onChange/1/123');

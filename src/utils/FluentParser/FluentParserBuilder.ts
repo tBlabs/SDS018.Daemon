@@ -24,7 +24,7 @@ export class FluentParserBuilder<T>
     public Is(b)
     {
         this.operations.Add(new IsOperation(b));
-        
+
         return this;
     }
 
@@ -77,12 +77,6 @@ export class FluentParserBuilder<T>
 
         return this;
     }
-
-    // public ReadMany4LE(count, arrayName)
-    // {
-    //     while (count--)
-    //         this.Get4LE();
-    // }
 
     public If(toCompare: byte, varName: string, builderCallback: (builder: FluentParserBuilder<T>) => FluentParserBuilder<T>)
     {
