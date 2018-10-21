@@ -16,7 +16,7 @@ export class Storage<T> implements IStorage<T>
             return JSON.parse(configFileContent);
         }
         
-        return <T>{};
+        return {} as T;
     }
 
     public Write(obj: T): void

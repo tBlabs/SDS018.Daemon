@@ -1,6 +1,6 @@
 import { byte } from "./Types/byte";
 import { Endian } from "./Types/Endian";
-import { OperationsList } from "./OperationsList";
+import { OperationsList } from "./Utils/OperationsList";
 import { Operation } from "./Operations/Operation";
 import { IsOperation } from "./Operations/IsOperation";
 import { AnyOperation } from "./Operations/AnyOperation";

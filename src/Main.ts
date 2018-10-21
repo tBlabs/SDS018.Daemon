@@ -102,7 +102,7 @@ export class Main
 
         server.all('/get/:addr', (req, res) =>
         {
-            const addr: number = parseInt(req.params.addr);
+            const addr: number = parseInt(req.params.addr, 10);
             const value = this._driver.Read(addr);
 
             res.send(value.toString());
@@ -110,8 +110,8 @@ export class Main
 
         server.all('/set/:addr/:value', (req, res) =>
         {
-            const addr = parseInt(req.params.addr);
-            const value = parseInt(req.params.value);
+            const addr = parseInt(req.params.addr, 10);
+            const value = parseInt(req.params.value, 10);
 
             this._driver.Set(addr, value);
 

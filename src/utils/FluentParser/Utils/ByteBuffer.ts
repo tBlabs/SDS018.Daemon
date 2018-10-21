@@ -1,5 +1,5 @@
-import { Endian } from "./Types/Endian";
-import { byte } from "./Types/byte";
+import { Endian } from "../Types/Endian";
+import { byte } from "../Types/byte";
 
 export class ByteBuffer
 {
@@ -55,6 +55,6 @@ export class ByteBuffer
 
     public get IsFull()
     {
-        return this.counter == 0;
+        return this.counter === 0;
     }
 }

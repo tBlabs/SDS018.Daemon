@@ -205,9 +205,8 @@ testCases.forEach(test =>
         }
 
         test.inputStream.forEach(b => parser.Parse(b));
-    })
-})
-
+    });
+});
 
 describe('FluentParser', () =>
 {
@@ -258,7 +257,6 @@ describe('FluentParser', () =>
 
     it('should detect frames with Ifs', () =>
     {
-        // const inputStream = [0x01, 0x11, 0x02, 0x01, 0x12, 0x02];
         const inputStream = [0x01, 0x11, 0x02, 0x01, 0x12, 0x02, 0x01, 0x12, 0x02];
 
         const parser = parserBuilder
@@ -278,7 +276,8 @@ describe('FluentParser', () =>
 
         expect(framesCount).toBe(3);
     });
-    it('vary simple if', () =>
+
+    it('simple if', () =>
     {
         const inputStream = [0x01, 0x02];
 
@@ -299,12 +298,7 @@ describe('FluentParser', () =>
 
     it('real life test', () =>
     {
-        // const inputStream = [0x01, 0x11, 0x02, 0x01, 0x12, 0x02];
-        const inputStream = [0xbb, 0xaa, 0x02, 0x01, 0xde, 0xcd, 0xbc, 0xab, 0x16,
-            0xbb, 0xaa, 0x02, 0x01, 0xde, 0xcd, 0xbc, 0xab, 0x16,
-            // 0xbb, 0xaa, 0x02, 0x01, 0xde, 0xcd, 0xbc, 0xab, 0x16,
-            // 0xbb, 0xaa, 0x02, 0x01, 0xde, 0xcd, 0xbc, 0xab, 0x16
-        ];
+        const inputStream = [0xbb, 0xaa, 0x02, 0x01, 0xde, 0xcd, 0xbc, 0xab, 0x16, 0xbb, 0xaa, 0x02, 0x01, 0xde, 0xcd, 0xbc, 0xab, 0x16];
 
         interface RealLifeFrameData
         {
@@ -312,6 +306,7 @@ describe('FluentParser', () =>
             addr: number;
             value: number;
         }
+
         const parser = (new FluentParserBuilder<RealLifeFrameData>())
             .Is(0xBB).Is(0xAA)
             .If(0x01, 'type', _ => _)
@@ -322,12 +317,9 @@ describe('FluentParser', () =>
         let framesCount = 0;
         parser.OnComplete(({ type, addr, value }) =>
         {
-            // console.log('frame', framesCount);
-            // console.log(type, addr, value);
             expect(type).toBe(0x02);
             expect(addr).toBe(0x01);
             expect(value).toBe(0xABBCCDDE);
-            // expect(value).toBe(0xDECDBCAB);
             framesCount++;
         });
 

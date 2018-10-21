@@ -1,4 +1,4 @@
-import { ByteBuffer } from "../ByteBuffer";
+import { ByteBuffer } from "../Utils/ByteBuffer";
 import { Endian } from "../Types/Endian";
 
 describe('ByteBuffer', () =>

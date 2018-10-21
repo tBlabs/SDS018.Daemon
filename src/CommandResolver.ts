@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { IoState } from "./IoState";
 import { UserConfig } from './UserConfig';
 import { injectable } from 'inversify';

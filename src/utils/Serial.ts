@@ -4,54 +4,66 @@ export class Serial
 {
     private serial?: SerialPort;
     private isConnected: boolean = false;
-    private onConnectionCallback;
-    private onDataCallback;
+    private onConnectionCallback?: () => void;
+    private onDataCallback?: (data: Buffer) => void;
 
-    public Connect(port: string, baudRate: number)    
+    public Connect(port: string, baudRate: number): void  
     {
         this.serial = new SerialPort(port, { baudRate: baudRate });
- 
+
         this.serial.on('data', (data: Buffer) =>
         {
-            this.onDataCallback(data);
+            if (this.onDataCallback)
+            {
+                this.onDataCallback(data);
+            }
         });
 
         this.serial.on('open', () =>
         {
             console.log('SERIAL OPEN @', port);
+
             this.isConnected = true;
-            this.onConnectionCallback();
+
+            if (this.onConnectionCallback)
+            {
+                this.onConnectionCallback();
+            }
         });
 
-        this.serial.on('error', (err) =>
+        this.serial.on('error', (err: any) =>
         {
-            console.log("SERIAL ERROR", err);
+            console.log('SERIAL ERROR', err);
+
             this.isConnected = false;
         });
 
         this.serial.on('close', () =>
         {
             console.log('SERIAL CLOSE');
+
             this.isConnected = false;
         });
     }
 
-    public OnData(onDataCallback)
+    public OnData(onDataCallback: (data: Buffer) => void): void
     {
         this.onDataCallback = onDataCallback;
     }
 
-    public OnConnection(onConnectionCallback)
+    public OnConnection(onConnectionCallback: () => void): void
     {
         this.onConnectionCallback = onConnectionCallback;
     }
 
-    public Send(data)
+    public Send(data): void
     {
         if (this.isConnected)
         {
             if (this.serial !== undefined)
-                this.serial.write(data);        
+            {
+                this.serial.write(data);
+            }
         }
     }
 }

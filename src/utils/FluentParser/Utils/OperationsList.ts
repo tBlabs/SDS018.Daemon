@@ -1,8 +1,8 @@
-import { Operation } from "./Operations/Operation";
-import { OperationType } from "./Types/OperationType";
-import { IsOperation } from "./Operations/IsOperation";
-import { IfOperation } from "./Operations/IfOperation";
-import { GetOperation } from "./Operations/GetOperation";
+import { Operation } from "../Operations/Operation";
+import { OperationType } from "../Types/OperationType";
+import { IsOperation } from "../Operations/IsOperation";
+import { IfOperation } from "../Operations/IfOperation";
+import { GetOperation } from "../Operations/GetOperation";
 
 interface Dummy { }
 

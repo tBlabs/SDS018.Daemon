@@ -1,4 +1,4 @@
-import { FluentBuilder } from "./FluentBuilder";
+import { FluentBuilder } from "../FluentBuilder";
 
 describe('FluentBuilder', () =>
 {

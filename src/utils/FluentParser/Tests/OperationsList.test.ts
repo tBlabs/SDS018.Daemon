@@ -1,4 +1,4 @@
-import { OperationsList } from "../OperationsList";
+import { OperationsList } from "../Utils/OperationsList";
 import { IsOperation } from "../Operations/IsOperation";
 import { IfOperation } from "../Operations/IfOperation";
 import { AnyOperation } from "../Operations/AnyOperation";
