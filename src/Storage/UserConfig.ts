@@ -1,9 +1,9 @@
 import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
 import { IUserConfig } from './IConfig';
-import { IStorage } from './IStorage';
-import { StringKeyValuePairs } from './StringKeyValuePairs';
-import { Types } from './IoC/Types';
+import { IStorage } from '../IStorage';
+import { StringKeyValuePairs } from '../StringKeyValuePairs';
+import { Types } from '../IoC/Types';
 
 @injectable()
 export class UserConfig implements IUserConfig

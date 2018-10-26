@@ -1,6 +1,6 @@
 import { UserConfig } from "./UserConfig";
-import { StringKeyValuePairs } from "./StringKeyValuePairs";
-import { IStorage } from "./IStorage";
+import { StringKeyValuePairs } from "../StringKeyValuePairs";
+import { IStorage } from "../IStorage";
 import { Mock, It } from "moq.ts";
 
 describe(UserConfig.name, () =>

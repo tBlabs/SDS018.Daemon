@@ -1,12 +1,12 @@
-import { FluentParserBuilder } from './utils/FluentParser/FluentParserBuilder';
-import { FluentBuilder } from './utils/FluentBuilder/FluentBuilder';
+import { FluentParserBuilder } from '../utils/FluentParser/FluentParserBuilder';
+import { FluentBuilder } from '../utils/FluentBuilder/FluentBuilder';
 import { injectable } from 'inversify';
 import 'reflect-metadata';
 import { IoCache } from './IoCache';
 import { IoState } from "./IoState";
 import { ResponseFrameType } from './ResponseFrameType';
 import { RequestFrameType } from './RequestFrameType';
-import { Serial } from './utils/Serial';
+import { Serial } from './Serial';
 
 interface AlfaBoardParserData
 {
@@ -41,19 +41,14 @@ export class Driver
 {
     private RequestHeader = 0xAABB;
     private serial: Serial = new Serial();
-    private cache: IoCache = new IoCache(this.SensorsCount);
+    private cache: IoCache = new IoCache();
     private onUpdateCallback?: (ioState: IoState) => void;
 
-    private get SensorsCount(): number
+    constructor()
     {
-        return this.Info.filter(io => io.readonly).length;
+        
     }
-
-    public OnUpdate(callback)
-    {
-        this.onUpdateCallback = callback;
-    }
-
+    
     public get Info(): IoInfo[]
     {
         return [
@@ -88,106 +83,109 @@ export class Driver
             { addr: 27, name: "DAC1", type: "DAC", readonly: false, minValue: 0, maxValue: 1024 },
         ];
     }
-
+    
     public Connect(port: string): void
     {
         this.serial.OnConnection(() =>
         {
-            this.PushEnable(true, 20);
+            this.SetPush(true, 20);
         });
+
         this.serial.OnData((data) =>
         {
             data.forEach(b => parser.Parse(b));
         });
-        if (0) // TODO: this should be automatically enabled if auto push is not on ???
-            setInterval(() =>
-            {
-                this.GetAll();
-            },
-                333);
-        this.serial.Connect(port, 19200);
-
+        
         const parserBuilder = new FluentParserBuilder<AlfaBoardParserData>();
         const parser = parserBuilder
-            .Is(0xAB)
-            .If(ResponseFrameType.Pong, 'type', _ => _) // TODO: change to isPong
-            .If(ResponseFrameType.PushStateUpdate, 'type', _ => _.Get('push'))
-            .If(ResponseFrameType.Error, 'type', _ => _.Get('err'))
-            .If(ResponseFrameType.Update, 'type', _ => _.Get('addr').Get4LE('value'))
-            .If(ResponseFrameType.UpdateAll, 'type', _ => _
-                .Get4LE('input1').Get4LE('input2').Get4LE('input3').Get4LE('input4')
-                .Get4LE('adc1').Get4LE('adc2').Get4LE('temp1').Get4LE('rtc'))
-            // TODO: That would be nice
-            // .If(ResponseFrameType.UpdateAll, 'type', _ => _.ReadMany4LE(8, 'allSensors')
-            .IsXor()
-            .Build();
-
-        parser.OnComplete((out, rawFrame) =>
+        .Is(0xAB)
+        .If(ResponseFrameType.Pong, 'type', _ => _) // TODO: change to isPong
+        .If(ResponseFrameType.PushStateUpdate, 'type', _ => _.Get('push'))
+        .If(ResponseFrameType.Error, 'type', _ => _.Get('err'))
+        .If(ResponseFrameType.Update, 'type', _ => _.Get('addr').Get4LE('value'))
+        .If(ResponseFrameType.UpdateAll, 'type', _ => _
+        .Get4LE('input1').Get4LE('input2').Get4LE('input3').Get4LE('input4')
+        .Get4LE('adc1').Get4LE('adc2').Get4LE('temp1').Get4LE('rtc'))
+        .IsXor()
+        .Build();
+        
+        parser.OnComplete((out: AlfaBoardParserData) =>
         {
             switch (out.type)
             {
                 case ResponseFrameType.PushStateUpdate:
-                    console.log('PUSH IS', out.push ? 'ON' : 'OFF');
-                    break;
-
+                console.log('PUSH IS', out.push ? 'ON' : 'OFF');
+                break;
+                
                 case ResponseFrameType.UpdateAll:
-                    const sensors = [out.input1, out.input2, out.input3, out.input4, out.adc1, out.adc2, out.temp1, out.rtc];
-
-                    sensors.forEach((value, addr) =>
-                    {
-                        if (this.cache.HasChanged(addr, value))
-                        {
-                            this.cache.Update(addr, value);
-
-                            if (this.onUpdateCallback)
-                            {
-                                const ioState: IoState = this.cache.Entries[addr];
-
-                                if (ioState.IsNotInitialValue())
-                                {
-                                    this.onUpdateCallback(ioState);
-                                }
-                            }
-                        }
-                    })
-                    break;
-
+                const sensors: number[] = [out.input1, out.input2, out.input3, out.input4, out.adc1, out.adc2, out.temp1, out.rtc];         
+                sensors.forEach((value, addr) =>
+                {
+                    this.UpdateCache(addr, value);
+                })
+                break;
+                
                 case ResponseFrameType.Error:
-                    console.log('board error', out.err);
-                    break;
-
+                console.log('board error', out.err);
+                break;
+                
                 case ResponseFrameType.Pong:
-                    console.log('pong from board');
-                    break;
-
+                console.log('pong from board');
+                break;
+                
                 case ResponseFrameType.Update:
-                    if (this.cache[out.addr] !== out.value)
-                    {
-                        // console.log('Update', out.addr, out.value);
-                        this.cache[out.addr] = out.value;
-                        // TODO: do the same what for UpdateAll
-                    }
-                    break;
+                // if (this.cache[out.addr] !== out.value)
+                // {
+                //     // console.log('Update', out.addr, out.value);
+                //     this.cache[out.addr] = out.value;
+                //     // TODO: do the same what for UpdateAll
+                // }
+                this.UpdateCache(out.addr, out.value);
+                break;
                 default:
-                    throw new Error('Unknown response');
+                throw new Error('Unknown response');
             }
         });
-
+        
         parser.OnFault((reason, frame) =>
         {
             console.log('FAULT', reason);
         });
+
+        this.serial.Connect(port, 19200);
+    }
+    
+    private UpdateCache(addr: number, value: number) {
+        if (this.cache.HasChanged(addr, value)) {
+            this.cache.Update(addr, value);
+            if (this.onUpdateCallback) {
+                const ioState: IoState = this.cache.Entries[addr];
+                if (ioState.IsNotInitialValue()) {
+                    this.onUpdateCallback(ioState);
+                }
+            }
+        }
+    }
+
+    public Read(addr: number): number
+    {
+        return this.cache.Get(addr);
+    }
+    
+    public OnUpdate(callback)
+    {
+        this.onUpdateCallback = callback;
     }
 
     public ValidateValue(addr: number, value: number): void
     {
         const io: IoInfo | undefined = this.Info.find(io => io.addr === addr);
-
+        
         if (io === undefined)
         {
             throw new Error('Not found');
         }
-
+        
         if (io.readonly)
         {
             throw new Error('Can not write to sensor');
@@ -202,7 +200,18 @@ export class Driver
         {
             throw new Error('Out of range. Min value is ' + io.minValue.toString());
         }
+    }
 
+    public Ping(): void
+    {
+        const frame = (new FluentBuilder())
+            .Word2LE(this.RequestHeader)
+            .Byte(RequestFrameType.Ping)
+            .Byte(0) // frame size
+            .Xor()
+            .Build();
+
+        this.serial.Send(frame);
     }
 
     public Set(addr: number, value: number): void
@@ -215,18 +224,6 @@ export class Driver
             .Byte(5) // frame size
             .Byte(addr)
             .Word4LE(value)
-            .Xor()
-            .Build();
-
-        this.serial.Send(frame);
-    }
-
-    public Ping(): void
-    {
-        const frame = (new FluentBuilder())
-            .Word2LE(this.RequestHeader)
-            .Byte(RequestFrameType.Ping)
-            .Byte(0) // frame size
             .Xor()
             .Build();
 
@@ -258,7 +255,7 @@ export class Driver
         this.serial.Send(frame);
     }
 
-    private PushEnable(enable: boolean, interval: number): void
+    private SetPush(enable: boolean, interval: number): void
     {
         const frame = (new FluentBuilder())
             .Word2LE(this.RequestHeader)
@@ -270,10 +267,5 @@ export class Driver
             .Build();
 
         this.serial.Send(frame);
-    }
-
-    public Read(addr: number): number
-    {
-        return this.cache.Get(addr);
     }
 }

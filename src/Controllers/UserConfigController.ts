@@ -1,11 +1,7 @@
 import { injectable, inject } from "inversify";
-import { UserConfig } from "../UserConfig";
+import { UserConfig } from "../Storage/UserConfig";
 import { Types } from "../IoC/Types";
-
-export interface IController
-{
-    RegisterRoutes(): void;
-}
+import { IController } from "./IController";
 
 @injectable()
 export class UserConfigController implements IController

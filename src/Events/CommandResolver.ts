@@ -1,6 +1,6 @@
-import { IoState } from "./IoState";
-import { UserConfig } from './UserConfig';
 import { injectable } from 'inversify';
+import { UserConfig } from '../Storage/UserConfig';
+import { IoState } from '../Driver/IoState';
 
 @injectable()
 export class CommandResolver

@@ -1,7 +1,8 @@
 import { injectable, inject } from "inversify";
 import { Types } from "../IoC/Types";
 import { IOsConfig } from "../IOsConfig";
-import { Driver } from "../Driver";
+import { Driver } from "../Driver/Driver";
+import { IController } from "./IController";
 
 @injectable()
 export class DriverController implements IController

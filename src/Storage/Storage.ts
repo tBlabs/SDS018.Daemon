@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import 'reflect-metadata';
-import { IStorage } from './IStorage';
+import { IStorage } from '../IStorage';
 import * as fs from 'fs';
 
 @injectable()

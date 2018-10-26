@@ -4,10 +4,6 @@ export class IoCache
 {
     private cache: IoState[] = [];
 
-    constructor(ioCount: number)
-    {
-    }
-
     private FindIo(addr: number): IoState
     {
         const io: IoState | undefined = this.cache.find(ioState => ioState.addr === addr);
@@ -17,7 +13,7 @@ export class IoCache
             const ioState = new IoState();
             ioState.addr = addr;
             this.cache.push(ioState);
-            // throw new Error("IO not found");
+
             return ioState;
         }
 
@@ -41,21 +37,6 @@ export class IoCache
         io.currentValueUpdateTimestamp = +(new Date());
     }
 
-    // private previousHash = 0;
-    // public HasChanged(): boolean
-    // {
-    //     let hash = 0;
-    //     this.cache.forEach(e => hash ^= e.currentValue);
-
-    //     if (this.previousHash != hash)
-    //     {
-    //         this.previousHash = hash;
-
-    //         return true;
-    //     }
-
-    //     return false;
-    // }
     public Get(addr)
     {
         const io: IoState | undefined = this.cache.find(e => e.addr === addr);

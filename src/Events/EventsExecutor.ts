@@ -1,12 +1,12 @@
-import { IoState } from "./IoState";
-import { IoEvents } from "./IoEvents";
-import { Command } from "./Command";
-import { IOsConfig } from "./IOsConfig";
 import { EventsDeterminator } from "./EventsDeterminator";
 import { CommandResolver } from "./CommandResolver";
 import { CommandExecutor } from "./Executor";
 import { Event } from './Event';
 import { injectable, inject } from 'inversify';
+import { IOsConfig } from "../Storage/IOsConfig";
+import { IoState } from "../Driver/IoState";
+import { IoEvents } from "./IoEvents";
+import { Command } from "./Command";
 
 @injectable()
 export class EventsExecutor
@@ -25,7 +25,7 @@ export class EventsExecutor
         const eventsToExecute: Event[] = this._eventsDeterminator.Determine(ioEvents, ioState);
         
         if (eventsToExecute.length > 0)
-        console.log(`${ ioState.addr }: ${ ioState.previousValue } --> ${ ioState.currentValue }`);
+            console.log(`${ ioState.addr }: ${ ioState.previousValue } --> ${ ioState.currentValue }`);
         
         eventsToExecute.forEach(async (eventName: Event) =>
         {

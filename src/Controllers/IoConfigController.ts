@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 import { Types } from "../IoC/Types";
-import { IOsConfig } from "../IOsConfig";
-import { Event } from './Event';
+import { IController } from "./IController";
+import { IOsConfig } from "../Storage/IOsConfig";
 
 @injectable()
 export class IoConfigController implements IController

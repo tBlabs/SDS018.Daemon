@@ -1,4 +1,4 @@
-import { Event } from './Event';
+import { Event } from '../Events/Event';
 import { Command } from "./Command";
 
 export type IoEvents = {

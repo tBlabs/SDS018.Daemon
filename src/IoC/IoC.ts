@@ -3,40 +3,30 @@ import 'reflect-metadata';
 import { Types } from './Types';
 import { Container } from 'inversify';
 
-import { ILogger } from './../services/logger/ILogger';
-import { IRunMode } from './../services/runMode/IRunMode';
-import { RunMode } from './../services/runMode/RunMode';
-import { IEnvironment } from './../services/environment/IEnvironment';
-import { Environment } from './../services/environment/Environment';
-import { Logger } from '../services/logger/Logger';
 import { Main } from '../Main';
-import { ISample } from '../services/_samples/ISample';
-import { SampleService } from './../services/_samples/SampleService';
 import { IStartupArgs } from '../services/environment/IStartupArgs';
 import { StartupArgs } from '../services/environment/StartupArgs';
-import { Driver } from '../Driver';
-import { EventsDeterminator } from '../EventsDeterminator';
+import { Driver } from '../Driver/Driver';
+import { EventsDeterminator } from '../Events/EventsDeterminator';
 import { PressDeterminator } from '../EventDeterminators/PressDeterminator';
-import { UserConfig } from '../UserConfig';
-import { StringKeyValuePairs } from "../StringKeyValuePairs";
-import { CommandResolver } from '../CommandResolver';
-import { Storage } from './../Storage';
-import { IOsConfig } from '../IOsConfig';
-import { CommandExecutor } from '../Executor';
-import { AppConfig } from '../AppConfig';
-import { EventsExecutor } from '../EventsExecutor';
+import { UserConfig } from '../Storage/UserConfig';
+import { Storage } from '../Storage/Storage';
+import { AppConfig } from '../Storage/AppConfig';
+import { EventsExecutor } from '../Events/EventsExecutor';
 import * as express from 'express';
-import { IController, UserConfigController } from '../Controllers/UserConfigController';
+import { UserConfigController } from '../Controllers/UserConfigController';
+import { IEnvironment } from '../services/environment/IEnvironment';
+import { Environment } from '../services/environment/Environment';
+import { IOsConfig } from '../Storage/IOsConfig';
+import { CommandResolver } from '../Events/CommandResolver';
+import { StringKeyValuePairs } from '../Storage/StringKeyValuePairs';
+import { IController } from '../Controllers/IController';
 
 const IoC = new Container();
 
 try
 {
-    IoC.bind<SampleService>(SampleService).toSelf().whenTargetIsDefault(); // can be injected in constructor with any special helpers
-    IoC.bind<ISample>(Types.ISample).to(SampleService).whenTargetIsDefault(); // can be injected with @inject(Types.ISample) in class constructor
     IoC.bind<IEnvironment>(Types.IEnvironment).to(Environment).whenTargetIsDefault();
-    IoC.bind<IRunMode>(Types.IRunMode).to(RunMode).whenTargetIsDefault();
-    IoC.bind<ILogger>(Types.ILogger).to(Logger).inSingletonScope().whenTargetIsDefault();
     IoC.bind<Main>(Main).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<IStartupArgs>(Types.IStartupArgs).to(StartupArgs).inSingletonScope().whenTargetIsDefault();
     IoC.bind<Driver>(Driver).toSelf().inSingletonScope().whenTargetIsDefault();

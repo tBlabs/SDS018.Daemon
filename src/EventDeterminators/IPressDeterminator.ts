@@ -1,4 +1,4 @@
-import { IoState } from "../IoState";
+import { IoState } from "../Driver/IoState";
 
 export interface IPressDeterminator
 {

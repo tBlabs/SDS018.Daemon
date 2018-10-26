@@ -1,9 +1,9 @@
 import { injectable, inject, multiInject } from 'inversify';
 import { Types } from './IoC/Types';
-import { Driver } from './Driver';
+import { Driver } from './Driver/Driver';
 import { IoState } from "./IoState";
-import { AppConfig } from './AppConfig';
-import { EventsExecutor } from './EventsExecutor';
+import { AppConfig } from './Storage/AppConfig';
+import { EventsExecutor } from './Events/EventsExecutor';
 import { IController } from './Controllers/UserConfigController';
 
 @injectable()

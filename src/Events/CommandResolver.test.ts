@@ -1,9 +1,9 @@
-import { CommandResolver } from "./CommandResolver";
 import { Mock, It } from "moq.ts";
-import { UserConfig } from "./UserConfig";
-import { IoState } from "./IoState";
-import { StringKeyValuePairs } from "./StringKeyValuePairs";
-import { IStorage } from "./IStorage";
+import { UserConfig } from "../Storage/UserConfig";
+import { CommandResolver } from "./CommandResolver";
+import { IStorage } from "../Storage/IStorage";
+import { StringKeyValuePairs } from "../Storage/StringKeyValuePairs";
+import { IoState } from "../Driver/IoState";
 
 describe(CommandResolver.name, () =>
 {

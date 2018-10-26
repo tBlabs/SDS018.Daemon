@@ -1,8 +1,8 @@
-import { IoState } from "./IoState";
 import { EventsDeterminator } from "./EventsDeterminator";
 import { Event } from './Event';
 import { Mock } from 'moq.ts';
-import { IPressDeterminator } from './EventDeterminators/IPressDeterminator';
+import { IPressDeterminator } from '../EventDeterminators/IPressDeterminator';
+import { IoState } from "../Driver/IoState";
 
 describe(EventsDeterminator.name, () =>
 {

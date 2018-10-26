@@ -1,12 +1,5 @@
 import { IoEvents } from "./IoEvents";
 
-// export interface IoConfigStruct
-// {
-//     addr: number;
-//     name: string;
-//     events?: IoEvents;
-// }
-
 export class IoConfigStruct
 {
     public addr: number = (-1);

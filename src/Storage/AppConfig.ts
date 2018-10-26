@@ -2,7 +2,7 @@ import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
 import { IStorage } from './IStorage';
 import { StringKeyValuePairs } from './StringKeyValuePairs';
-import { Types } from './IoC/Types';
+import { Types } from '../IoC/Types';
 
 interface AppConfigVariables
 {
@@ -33,14 +33,14 @@ export class AppConfig
         this.entries = this._storage.Read();
     }
 
-    public AddOrUpdate(key: string, value: string): void
+    public AddOrUpdate(key: keyof AppConfigVariables, value: string): void
     {
         this.entries[key] = value;
 
         this._storage.Write(this.entries);
     }
 
-    public Delete(name: string): void
+    public Delete(name: keyof AppConfigVariables): void
     {
         delete this.entries[name];
 

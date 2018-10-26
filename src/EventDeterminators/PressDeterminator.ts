@@ -1,5 +1,5 @@
-import { IoState } from "../IoState";
 import { injectable } from "inversify";
+import { IoState } from "../Driver/IoState";
 
 @injectable()
 export class PressDeterminator
