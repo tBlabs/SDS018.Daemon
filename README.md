@@ -1,13 +1,19 @@
 # AlfaBoard.Driver
 
-## TODO
+## What is that for?
 
-- make actuators values readable (need changes in board firmware)
-- handling for query params (?foo=bar) // hidden in req.query
-- events disabling (needs changes in io.config structure + new endpoints)
-- bash commands interpreter
-- parallel commands
-- default io.config generation
+This is a HTTP driven "driver" for USB or serial connected dedicated board with many IO (called AlfaBoard).
+
+## How to run it?
+
+Plug AlfaBoard, set it's port in `app.config.json` under `usb` section and run this program (`npm start`).
+Now you can play with board with simply calling REST API described below.
+
+## How to call some action when sensor state change?
+
+Look at the `io.config.json`. In that file we can define few types of events, like: OnChange, OnRising, OnPress etc.
+Every command assigned to event should be a HTTP GET call. 
+To make life easier we can define things called "variables" and use them in events commands. More in **IO Config** section.
 
 ## API
 
@@ -26,13 +32,13 @@
 | Read config variable           | /config/`varName`               | /config/foo                 | bar                |
 | Remove config variable         | /config/`varName`/              | /config/foo/                | *HTTP 200*         |
 
-## Variables resolving order
+### Variables resolving order
 
 User variables (from `user.config.json`) are resolved first (two times). They may contain `{this.x}` placeholders and another variables.
 
-## Config files
+# Config files
 
-| File                | Use                                 | Structure                      |
+| File                | Used for                            | Structure                      |
 | ------------------- | ----------------------------------- | ------------------------------ |
 | `app.config.json`   | Place for `httpPort`, `usbPort` etc | Key-value pairs as json object |
 | `io.config.json`    | IO Configuration                    | Json array                     |
@@ -43,10 +49,11 @@ User variables (from `user.config.json`) are resolved first (two times). They ma
 `io.config.json`
 
 Single IO config example:
+
 ```
 {
-    "addr": 0,
-    "name": "input1",
+    "addr": 0,          <--- this is constant, do not touch it!
+    "name": "input1",   
     "events": {
         "onChange": "http://localhost:3000/9/1",
         "onRising": "{action_defined_in_user.config.json}",
@@ -63,8 +70,9 @@ There can be other prefixes used in future (like `BASH` etc).
 | ------- | -------- |
 | GET     | HTTP GET |
 | *none*  | HTTP GET |
+| BASH    | Call script in bash **TO DO** |
 
-Available commands symbols:
+Predefined commands symbols:
 
 | Symbol                    | Meaning                   |
 | ------------------------- | ------------------------- |
@@ -96,3 +104,13 @@ Such code construction has few advantages:
 - connect driver to USB
 - add privileges for USB if required (`sudo usermod -a -G dialout $USER`)
 - `npm start` or `npm run run` if rebuild is needed (but it's not because repo contains `js` files)
+
+
+## TODO/Possible improvements
+
+- make actuators values readable (need changes in board firmware)
+- handling for query params (?foo=bar) // hidden in req.query
+- events disabling (needs changes in io.config structure + new endpoints)
+- bash commands interpreter
+- parallel commands
+- default io.config generation

@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import { injectable } from "inversify";
 import { Event } from './Event';
-import { PressDeterminator } from '../EventDeterminators/PressDeterminator';
 import { IoState } from '../Driver/IoState';
 import { IoEvents } from './IoEvents';
+import { PressDeterminator } from './EventDeterminators/PressDeterminator';
 
 @injectable()
 export class EventsDeterminator

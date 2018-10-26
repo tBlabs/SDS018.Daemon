@@ -58,4 +58,9 @@ export class IoCache
     {
         return this.cache;
     }
+
+    public GetIoState(addr: number): IoState
+    {
+        return this.cache[addr];
+    }
 }

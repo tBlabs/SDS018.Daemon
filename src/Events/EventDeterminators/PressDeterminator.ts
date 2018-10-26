@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import { IoState } from "../Driver/IoState";
+import { IoState } from "../../Driver/IoState";
 
 @injectable()
 export class PressDeterminator
 {
-    public IsPress(ioState: IoState, min, max): boolean
+    public IsPress(ioState: IoState, min: number, max: number): boolean
     {
         if ((ioState.previousValue === 1) && (ioState.currentValue === 0))
         {

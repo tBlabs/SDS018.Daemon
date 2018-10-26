@@ -155,12 +155,18 @@ export class Driver
         this.serial.Connect(port, 19200);
     }
     
-    private UpdateCache(addr: number, value: number) {
-        if (this.cache.HasChanged(addr, value)) {
+    private UpdateCache(addr: number, value: number) 
+    {
+        if (this.cache.HasChanged(addr, value)) 
+        {
             this.cache.Update(addr, value);
-            if (this.onUpdateCallback) {
-                const ioState: IoState = this.cache.Entries[addr];
-                if (ioState.IsNotInitialValue()) {
+
+            if (this.onUpdateCallback) 
+            {
+                const ioState: IoState = this.cache.GetIoState(addr);
+
+                if (ioState.IsNotInitialValue()) 
+                {
                     this.onUpdateCallback(ioState);
                 }
             }
