@@ -24,6 +24,7 @@ import { Storage } from './../Storage';
 import { IOsConfig } from '../IOsConfig';
 import { CommandExecutor } from '../Executor';
 import { AppConfig } from '../AppConfig';
+import { EventsExecutor } from '../EventsExecutor';
 
 const IoC = new Container();
 
@@ -43,7 +44,8 @@ try
     IoC.bind<IOsConfig>(IOsConfig).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<AppConfig>(AppConfig).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<CommandResolver>(CommandResolver).toSelf().inTransientScope().whenTargetIsDefault();
-    IoC.bind<CommandExecutor>(CommandExecutor).toSelf().inTransientScope().whenTargetIsDefault();
+    IoC.bind<CommandResolver>(CommandResolver).toSelf().inTransientScope().whenTargetIsDefault();
+    IoC.bind<EventsExecutor>(EventsExecutor).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind<Storage<StringKeyValuePairs>>(Types.IStorage).to(Storage).inTransientScope().whenTargetIsDefault();
 }
 catch (ex)

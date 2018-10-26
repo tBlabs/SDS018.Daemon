@@ -21,7 +21,6 @@ export class EventsDeterminator
         [Event.OnLongPress]: (ioState: IoState) => this._pressDeterminator.IsPress(ioState, 300, 2000),
     };
 
-
     public Determine(ioEvents: IoEvents, ioState: IoState): Event[]
     {
         const toExecute: Event[] = [];
@@ -34,10 +33,8 @@ export class EventsDeterminator
         const ioEventsNames: Event[] = Object.keys(ioEvents) as Event[];
         ioEventsNames.forEach((ioEventName: Event) =>
         {
-            // encapsulate in IsCommandDefined
-            const eventCommand = ioEvents[ioEventName];
-            if (eventCommand.trim().length === 0)
-                return; // IsDefined
+            if (this.IsCommandDefined(ioEvents, ioEventName)) return;
+
             const eventDef = this.eventsDefs[ioEventName];
             const canExecuteCommand = eventDef(ioState);
 
@@ -48,5 +45,14 @@ export class EventsDeterminator
         });
 
         return toExecute;
+    }
+
+    private IsCommandDefined(ioEvents: IoEvents, eventName: string): boolean
+    {
+        const eventCommand = ioEvents[eventName];
+
+        // TODO: we can do more checks here
+
+        return (eventCommand.trim().length !== 0);
     }
 }

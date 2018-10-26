@@ -9,7 +9,7 @@ export class PressDeterminator
         if ((ioState.previousValue === 1) && (ioState.currentValue === 0))
         {
             const timeSpan: number = ioState.currentValueUpdateTimestamp - ioState.previousValueUpdateTimestamp;
-// console.log(timeSpan);
+
             return (timeSpan > min) && (timeSpan <= max);
         }
 

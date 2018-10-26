@@ -2,15 +2,6 @@ import { UserConfig } from "./UserConfig";
 import { StringKeyValuePairs } from "./StringKeyValuePairs";
 import { IStorage } from "./IStorage";
 import { Mock, It } from "moq.ts";
-import { IEnvironment } from "./services/environment/IEnvironment";
-interface ITestObject
-{
-    property1: number;
-    property2: number;
-    property3: number;
-    property4: number;
-    method(): void;
-}
 
 describe(UserConfig.name, () =>
 {

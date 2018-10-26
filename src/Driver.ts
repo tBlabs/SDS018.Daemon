@@ -1,4 +1,3 @@
-import * as SerialPort from 'serialport';
 import { FluentParserBuilder } from './utils/FluentParser/FluentParserBuilder';
 import { FluentBuilder } from './utils/FluentBuilder/FluentBuilder';
 import { injectable } from 'inversify';
@@ -37,10 +36,10 @@ interface IoInfo
     events?: string[];
 }
 
-
 @injectable()
 export class Driver
 {
+    private RequestHeader = 0xAABB;
     private serial: Serial = new Serial();
     private cache: IoCache = new IoCache(this.SensorsCount);
     private onUpdateCallback?: (ioState: IoState) => void;
@@ -99,7 +98,7 @@ export class Driver
         {
             data.forEach(b => parser.Parse(b));
         });
-        if (0)
+        if (0) // TODO: this should be automatically enabled if auto push is not on ???
             setInterval(() =>
             {
                 this.GetAll();
@@ -144,7 +143,9 @@ export class Driver
                                 const ioState: IoState = this.cache.Entries[addr];
 
                                 if (ioState.IsNotInitialValue())
+                                {
                                     this.onUpdateCallback(ioState);
+                                }
                             }
                         }
                     })
@@ -175,10 +176,7 @@ export class Driver
         {
             console.log('FAULT', reason);
         });
-
-
     }
-
 
     public ValidateValue(addr: number, value: number): void
     {
@@ -211,7 +209,7 @@ export class Driver
         this.ValidateValue(addr, value);
 
         const frame = (new FluentBuilder())
-            .Word2LE(0xAABB)
+            .Word2LE(this.RequestHeader)
             .Byte(RequestFrameType.Set)
             .Byte(5) // frame size
             .Byte(addr)
@@ -225,7 +223,7 @@ export class Driver
     public Ping(): void
     {
         const frame = (new FluentBuilder())
-            .Word2LE(0xAABB)
+            .Word2LE(this.RequestHeader)
             .Byte(RequestFrameType.Ping)
             .Byte(0) // frame size
             .Xor()
@@ -237,7 +235,7 @@ export class Driver
     private Get(addr: number): void
     {
         const frame = (new FluentBuilder())
-            .Word2LE(0xAABB)
+            .Word2LE(this.RequestHeader)
             .Byte(RequestFrameType.Get)
             .Byte(1) // frame size
             .Byte(addr)
@@ -250,7 +248,7 @@ export class Driver
     private GetAll(): void
     {
         const frame = (new FluentBuilder())
-            .Word2LE(0xAABB)
+            .Word2LE(this.RequestHeader)
             .Byte(RequestFrameType.GetAll)
             .Byte(0) // frame size
             .Xor()
@@ -262,7 +260,7 @@ export class Driver
     private PushEnable(enable: boolean, interval: number): void
     {
         const frame = (new FluentBuilder())
-            .Word2LE(0xAABB)
+            .Word2LE(this.RequestHeader)
             .Byte(RequestFrameType.PushStateSet)
             .Byte(2) // frame size
             .Byte(enable ? 1 : 0)
