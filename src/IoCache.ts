@@ -27,15 +27,14 @@ export class IoCache
     public HasChanged(addr: number, value: number): boolean
     {
         const io: IoState = this.FindIo(addr);
-// console.log('has', io.previousValue, value);
-        // if (io.currentValue === (-1)) return false;
+
         return io.currentValue !== value;
     }
 
     public Update(addr: number, value: number): void
     {
         const io: IoState = this.FindIo(addr);
-// console.log('upd', io.addr);
+
         io.previousValue = io.currentValue;
         io.previousValueUpdateTimestamp = io.currentValueUpdateTimestamp;
         io.currentValue = value;

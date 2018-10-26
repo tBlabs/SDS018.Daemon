@@ -25,6 +25,8 @@ import { IOsConfig } from '../IOsConfig';
 import { CommandExecutor } from '../Executor';
 import { AppConfig } from '../AppConfig';
 import { EventsExecutor } from '../EventsExecutor';
+import * as express from 'express';
+import { IController, UserConfigController } from '../Controllers/UserConfigController';
 
 const IoC = new Container();
 
@@ -47,6 +49,8 @@ try
     IoC.bind<CommandResolver>(CommandResolver).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind<EventsExecutor>(EventsExecutor).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind<Storage<StringKeyValuePairs>>(Types.IStorage).to(Storage).inTransientScope().whenTargetIsDefault();
+    IoC.bind<IController>(Types.IController).to(UserConfigController).inSingletonScope().whenTargetIsDefault();
+    IoC.bind(Types.ExpressServer).toConstantValue(express()).whenTargetIsDefault();
 }
 catch (ex)
 {

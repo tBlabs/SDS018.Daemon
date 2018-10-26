@@ -5,5 +5,7 @@ export const Types =
     ILogger: Symbol('ILogger'),
     IRunMode: Symbol('IRunMode'),
     IStartupArgs: Symbol('IStartupArgs'),
-    IStorage: Symbol('IStorage')
+    IStorage: Symbol('IStorage'),
+    IController: Symbol('IController'),
+    ExpressServer: Symbol('ExpressServer')
 };

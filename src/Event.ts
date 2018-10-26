@@ -7,7 +7,4 @@ export enum Event
     OnNonZero = "onNonZero",
     OnPress = "onPress",
     OnLongPress = "onLongPress"
-    // OnMax
-    // OnHalf
-    // On90Percent
 }

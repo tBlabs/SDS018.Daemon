@@ -84,6 +84,7 @@ export class Driver
             { addr: 24, name: "Display4Dot", type: "DISPLAY_DOT", readonly: false, minValue: 0, maxValue: 4 },
             { addr: 25, name: "Buzzer1Volume", type: "BUZZER_VOLUME", readonly: false, minValue: 0, maxValue: 1024 },
             { addr: 26, name: "Buzzer1Frequency", type: "BUZZER_FREQ", readonly: false, minValue: 0, maxValue: 1024 },
+            // TODO: Change to Buzzer1Enable
             { addr: 27, name: "DAC1", type: "DAC", readonly: false, minValue: 0, maxValue: 1024 },
         ];
     }

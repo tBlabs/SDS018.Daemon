@@ -32,6 +32,11 @@ export class UserConfig implements IUserConfig
 
     public Delete(name: string): void
     {
+        if (!Object.keys(this.entries).includes(name))
+        {
+            throw new Error(`Entry "${name}" not exists`);
+        }
+
         delete this.entries[name];
 
         this._storage.Write(this.entries);
