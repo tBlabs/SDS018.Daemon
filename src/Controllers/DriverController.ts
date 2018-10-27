@@ -1,8 +1,8 @@
-import { injectable, inject } from "inversify";
-import { Types } from "../IoC/Types";
-import { IOsConfig } from "../IOsConfig";
-import { Driver } from "../Driver/Driver";
-import { IController } from "./IController";
+import { IOsConfig } from './../Storage/IOsConfig';
+import { injectable, inject } from 'inversify';
+import { Types } from '../IoC/Types';
+import { Driver } from '../Driver/Driver';
+import { IController } from './IController';
 
 @injectable()
 export class DriverController implements IController
@@ -37,7 +37,7 @@ export class DriverController implements IController
 
             res.sendStatus(202);
         });
-        
+
         this._server.all('/:ioName', (req, res) =>
         {
             const ioName = req.params.ioName;

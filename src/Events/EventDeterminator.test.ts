@@ -1,8 +1,9 @@
-import { EventsDeterminator } from "./EventsDeterminator";
+import { IPressDeterminator } from './EventDeterminators/IPressDeterminator';
+import { IEventsDeterminator } from './IEventsDeterminator';
+import { EventsDeterminator } from './EventsDeterminator';
 import { Event } from './Event';
 import { Mock } from 'moq.ts';
-import { IPressDeterminator } from '../EventDeterminators/IPressDeterminator';
-import { IoState } from "../Driver/IoState";
+import { IoState } from '../Driver/IoState';
 
 describe(EventsDeterminator.name, () =>
 {
@@ -10,13 +11,13 @@ describe(EventsDeterminator.name, () =>
     {
         // Given
         const ioEvents = {
-            [Event.OnChange]: "on-change-action",
-            [Event.OnRising]: "on-rising-action",
-            [Event.OnFalling]: "on-falling-action",
-            [Event.OnZero]: "on-zero-action",
-            [Event.OnNonZero]: "on-nonZero-action",
-            [Event.OnPress]: "on-press-action",
-            [Event.OnLongPress]: "on-longPress-action",
+            [Event.OnChange]: 'on-change-action',
+            [Event.OnRising]: 'on-rising-action',
+            [Event.OnFalling]: 'on-falling-action',
+            [Event.OnZero]: 'on-zero-action',
+            [Event.OnNonZero]: 'on-nonZero-action',
+            [Event.OnPress]: 'on-press-action',
+            [Event.OnLongPress]: 'on-longPress-action',
         }
 
         const ioState: IoState = new IoState();

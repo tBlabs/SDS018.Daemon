@@ -1,20 +1,20 @@
-import { UserConfig } from "./UserConfig";
-import { StringKeyValuePairs } from "../StringKeyValuePairs";
-import { IStorage } from "../IStorage";
-import { Mock, It } from "moq.ts";
+import { UserConfig } from './UserConfig';
+import { Mock, It } from 'moq.ts';
+import { IStorage } from './IStorage';
+import { StringKeyValuePairs } from './StringKeyValuePairs';
 
 describe(UserConfig.name, () =>
 {
     let config: UserConfig;
 
-        beforeEach(() =>
-        {
-            const _storageMock = new Mock<IStorage<StringKeyValuePairs>>()
-                .setup(i=>i.Read).returns(()=>({}))
-                .setup(i=>i.Write(It.IsAny<string>())).callback(()=>{});
+    beforeEach(() =>
+    {
+        const _storageMock = new Mock<IStorage<StringKeyValuePairs>>()
+            .setup(i => i.Read).returns(() => ({}))
+            .setup(i => i.Write(It.IsAny<string>())).callback(() => {});
 
-            config = new UserConfig(_storageMock.object());
-        });
+        config = new UserConfig(_storageMock.object());
+    });
 
     it('FindPlaceholders should return placeholders', () =>
     {

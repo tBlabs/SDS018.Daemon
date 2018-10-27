@@ -1,3 +1,4 @@
+import { PressDeterminator } from './../Events/EventDeterminators/PressDeterminator';
 // These two imports must go first!
 import 'reflect-metadata';
 import { Types } from './Types';
@@ -8,7 +9,6 @@ import { IStartupArgs } from '../services/environment/IStartupArgs';
 import { StartupArgs } from '../services/environment/StartupArgs';
 import { Driver } from '../Driver/Driver';
 import { EventsDeterminator } from '../Events/EventsDeterminator';
-import { PressDeterminator } from '../EventDeterminators/PressDeterminator';
 import { UserConfig } from '../Storage/UserConfig';
 import { Storage } from '../Storage/Storage';
 import { AppConfig } from '../Storage/AppConfig';

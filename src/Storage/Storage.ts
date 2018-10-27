@@ -1,12 +1,12 @@
+import { IStorage } from './IStorage';
 import { injectable } from 'inversify';
 import 'reflect-metadata';
-import { IStorage } from '../IStorage';
 import * as fs from 'fs';
 
 @injectable()
-export class Storage<T> implements IStorage<T> 
+export class Storage<T> implements IStorage<T>
 {
-    public File: string = "";
+    public File: string = '';
 
     public Read(): T
     {

@@ -1,8 +1,10 @@
-import { injectable } from "inversify";
-import { IoState } from "../../Driver/IoState";
+import 'reflect-metadata';
+import { IPressDeterminator } from './IPressDeterminator';
+import { injectable } from 'inversify';
+import { IoState } from '../../Driver/IoState';
 
 @injectable()
-export class PressDeterminator
+export class PressDeterminator implements IPressDeterminator
 {
     public IsPress(ioState: IoState, min: number, max: number): boolean
     {

@@ -1,17 +1,17 @@
+import { IoState } from './Driver/IoState';
+import { IController } from './Controllers/IController';
 import { injectable, inject, multiInject } from 'inversify';
 import { Types } from './IoC/Types';
 import { Driver } from './Driver/Driver';
-import { IoState } from "./IoState";
 import { AppConfig } from './Storage/AppConfig';
 import { EventsExecutor } from './Events/EventsExecutor';
-import { IController } from './Controllers/UserConfigController';
 
 @injectable()
 export class Main
 {
     constructor(
         private _appConfig: AppConfig,
-        @inject(Types.ExpressServer) private _server,        
+        @inject(Types.ExpressServer) private _server,
         @multiInject(Types.IController) private _controllers: IController[],
         private _driver: Driver,
         private _eventsExecutor: EventsExecutor)

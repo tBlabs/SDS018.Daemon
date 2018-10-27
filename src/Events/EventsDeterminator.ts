@@ -1,12 +1,13 @@
+import { IEventsDeterminator } from './IEventsDeterminator';
 import 'reflect-metadata';
-import { injectable } from "inversify";
+import { injectable } from 'inversify';
 import { Event } from './Event';
 import { IoState } from '../Driver/IoState';
 import { IoEvents } from './IoEvents';
 import { PressDeterminator } from './EventDeterminators/PressDeterminator';
 
 @injectable()
-export class EventsDeterminator
+export class EventsDeterminator implements IEventsDeterminator
 {
     constructor(private _pressDeterminator: PressDeterminator)
     { }
@@ -24,7 +25,7 @@ export class EventsDeterminator
     public Determine(ioEvents: IoEvents, ioState: IoState): Event[]
     {
         const toExecute: Event[] = [];
-        
+
         if ((ioEvents === undefined) || (ioEvents === {}))
         {
             return toExecute;
@@ -33,7 +34,7 @@ export class EventsDeterminator
         const ioEventsNames: Event[] = Object.keys(ioEvents) as Event[];
         ioEventsNames.forEach((ioEventName: Event) =>
         {
-            if (this.IsCommandDefined(ioEvents, ioEventName)) return;
+            if (this.IsCommandDefined(ioEvents, ioEventName)) { return; }
 
             const eventDef = this.eventsDefs[ioEventName];
             const canExecuteCommand = eventDef(ioState);

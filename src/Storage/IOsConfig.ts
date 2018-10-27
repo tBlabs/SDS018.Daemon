@@ -1,14 +1,10 @@
+import { Types } from './../IoC/Types';
+import { Command } from './../Events/Command';
+import { IoEvents } from './../Events/IoEvents';
 import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
-import { IUserConfig } from './IConfig';
 import { IStorage } from './IStorage';
-import { StringKeyValuePairs } from './StringKeyValuePairs';
-import { Types } from './IoC/Types';
 import { IoConfigStruct } from './IoConfigStruct';
-import { Command } from './Command';
-import { IoEvents } from './IoEvents';
-
-export type IoConfigEntries = { [ioAddr: string]: IoConfigStruct };
 
 @injectable()
 export class IOsConfig
@@ -38,7 +34,7 @@ export class IOsConfig
 
         return ioConfig;
     }
-    
+
     private FindByAddr(addr: number): IoConfigStruct
     {
         const ioConfig: IoConfigStruct | undefined = this.entries.find(io => io.addr === addr);
@@ -58,7 +54,7 @@ export class IOsConfig
         else return events;
         // return this.FindByAddr(addr).events; // Why this produce error?
     }
-    
+
     public IoName(addr: number): string
     {
         return this.FindByAddr(addr).name;
@@ -75,7 +71,7 @@ export class IOsConfig
         {
             this.FindByName(name);
             return true;
-        } 
+        }
         catch (err)
         {
             return false;
@@ -90,12 +86,12 @@ export class IOsConfig
     public Rename(name: string, newName: string): void
     {
         const ioConfig: IoConfigStruct = this.FindByName(name);
-        
+
         if (this.ValidateName(name) === false)
         {
             throw new Error(`Name "${ name }" is invalid`);
         }
-        
+
         if (this.NameExists(newName))
         {
             throw new Error(`Name "${ newName }" is already taken`);
