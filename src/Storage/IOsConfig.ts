@@ -23,9 +23,9 @@ export class IOsConfig
         this.entries = this._storage.Read();
     }
 
-    private FindByName(name: string): IoConfigStruct
+    private IoConfigByName(name: string): IoConfigStruct
     {
-        const ioConfig: IoConfigStruct | undefined = this.entries.find(io => io.name === name);
+        const ioConfig: IoConfigStruct | undefined = this.entries.find(e => e.name === name);
 
         if (ioConfig === undefined)
         {
@@ -37,7 +37,7 @@ export class IOsConfig
 
     private FindByAddr(addr: number): IoConfigStruct
     {
-        const ioConfig: IoConfigStruct | undefined = this.entries.find(io => io.addr === addr);
+        const ioConfig: IoConfigStruct | undefined = this.entries[addr];
 
         if (ioConfig === undefined)
         {
@@ -50,26 +50,26 @@ export class IOsConfig
     public IoEvents(addr: number): IoEvents
     {
         const events = this.FindByAddr(addr).events;
-        if (events === undefined) return {};
+        if (events === undefined)
+            return {};
         else return events;
-        // return this.FindByAddr(addr).events; // Why this produce error?
     }
 
-    public IoName(addr: number): string
+    public IoNameByAddr(addr: number): string
     {
-        return this.FindByAddr(addr).name;
+        return this.entries[addr].name;
     }
 
     public AddrByName(name: string): number
     {
-        return this.FindByName(name).addr;
+        return this.entries.findIndex(e => e.name === name);
     }
 
     private NameExists(name: string): boolean
     {
         try
         {
-            this.FindByName(name);
+            this.IoConfigByName(name);
             return true;
         }
         catch (err)
@@ -85,7 +85,7 @@ export class IOsConfig
 
     public Rename(name: string, newName: string): void
     {
-        const ioConfig: IoConfigStruct = this.FindByName(name);
+        const ioConfig: IoConfigStruct = this.IoConfigByName(name);
 
         if (this.ValidateName(name) === false)
         {
@@ -96,33 +96,33 @@ export class IOsConfig
         {
             throw new Error(`Name "${ newName }" is already taken`);
         }
-        
+
         ioConfig.name = newName;
-        
+
         this._storage.Write(this.entries);
     }
-    
+
     public UpdateEvent(ioName: string, event: Event, command: Command): void
     {
-        const ioConfig: IoConfigStruct = this.FindByName(ioName);
+        const ioConfig: IoConfigStruct = this.IoConfigByName(ioName);
 
         if (ioConfig.events === undefined)
             ioConfig.events = {};
 
         ioConfig.events[event.toString()] = command;
-        
+
         this._storage.Write(this.entries);
     }
 
     public DeleteEvent(ioName: string, event: Event): void
     {
-        const ioConfig: IoConfigStruct = this.FindByName(ioName);
+        const ioConfig: IoConfigStruct = this.IoConfigByName(ioName);
 
         if (ioConfig.events === undefined)
             ioConfig.events = {};
 
         delete ioConfig.events[event.toString()];
-        
+
         this._storage.Write(this.entries);
     }
 }

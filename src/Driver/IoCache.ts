@@ -4,20 +4,25 @@ export class IoCache
 {
     private cache: IoState[] = [];
 
+    constructor(ioCount: number)
+    {
+        for (let io = 0; io < ioCount; io++)
+        {
+            this.cache.push(new IoState(io));
+        }
+        // console.log(this.cache );
+    }
+
     private FindIo(addr: number): IoState
     {
-        const io: IoState | undefined = this.cache.find(ioState => ioState.addr === addr);
+        const ioState: IoState | undefined = this.cache.find(ioState => ioState.addr === addr);
 
-        if (io === undefined)
+        if (ioState === undefined)
         {
-            const ioState = new IoState();
-            ioState.addr = addr;
-            this.cache.push(ioState);
-
-            return ioState;
+            throw new Error(`IO with addr ${addr} not found`);
         }
 
-        return io;
+        return ioState;
     }
 
     public HasChanged(addr: number, value: number): boolean
@@ -37,9 +42,10 @@ export class IoCache
         io.currentValueUpdateTimestamp = +(new Date());
     }
 
-    public Get(addr)
+    public Get(addr: number): number
     {
-        const io: IoState | undefined = this.cache.find(e => e.addr === addr);
+        console.log('HERE!!!!!', addr);
+        const io: IoState | undefined = this.cache[addr];
 
         if (io === undefined)
         {

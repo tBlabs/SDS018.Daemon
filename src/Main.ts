@@ -23,11 +23,10 @@ export class Main
 
         this._server.all('/ping', (req, res) =>
         {
-            res.send('pong');
+            res.send('pong'); 
         });
 
-        // Kolejność rutów ma znaczenie!!!!!
-        this._controllers.forEach(c=>c.RegisterRoutes());
+        this._controllers.forEach(c => c.RegisterRoutes());
 
         this._server.use((err, req, res) =>
         {
@@ -36,6 +35,7 @@ export class Main
             res.send(err.message);
         });
 
+        if (0)
         this._server.listen(this._appConfig.Host, async () => 
         {
             console.log('SERVER STARTED @', this._appConfig.Host);

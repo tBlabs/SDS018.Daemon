@@ -2,6 +2,7 @@ import { injectable, inject } from "inversify";
 import { Types } from "../IoC/Types";
 import { IController } from "./IController";
 import { IOsConfig } from "../Storage/IOsConfig";
+import { Event } from "./../Events/Event";
 
 @injectable()
 export class IoConfigController implements IController
@@ -13,7 +14,7 @@ export class IoConfigController implements IController
 
     public RegisterRoutes()
     {
-        this._server.all('/ioConfig', (req, res) =>
+        this._server.all('/IoConfig', (req, res) =>
         {
             res.send(this._iosConfig.Entries);
         });

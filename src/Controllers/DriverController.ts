@@ -15,7 +15,7 @@ export class DriverController implements IController
 
     public RegisterRoutes()
     {
-        this._server.all('/boardInfo', (req, res) =>
+        this._server.all('/BoardInfo', (req, res) =>
         {
             res.send(this._driver.Info);
         });
@@ -41,7 +41,9 @@ export class DriverController implements IController
         this._server.all('/:ioName', (req, res) =>
         {
             const ioName = req.params.ioName;
+            // console.log(ioName);
             const addr = this._iosConfig.AddrByName(ioName);
+            // console.log(addr);
             const value = this._driver.Read(addr);
 
             res.send(value.toString());

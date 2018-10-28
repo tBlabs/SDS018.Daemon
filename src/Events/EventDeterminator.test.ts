@@ -1,5 +1,4 @@
 import { IPressDeterminator } from './EventDeterminators/IPressDeterminator';
-import { IEventsDeterminator } from './IEventsDeterminator';
 import { EventsDeterminator } from './EventsDeterminator';
 import { Event } from './Event';
 import { Mock } from 'moq.ts';
@@ -20,7 +19,7 @@ describe(EventsDeterminator.name, () =>
             [Event.OnLongPress]: 'on-longPress-action',
         }
 
-        const ioState: IoState = new IoState();
+        const ioState: IoState = new IoState(0);
         ioState.previousValue = 1;
         ioState.currentValue = 2;
 

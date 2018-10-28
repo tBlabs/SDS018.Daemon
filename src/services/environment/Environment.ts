@@ -32,7 +32,7 @@ export class Environment implements IEnvironment
             throw new Error('Environment variable "' + key + '" not exists');
         }
 
-        return process.env[key];
+        return process.env[key] || '';
     }
 
     public ValueOrDefault(key: string, defaultValue: string): string

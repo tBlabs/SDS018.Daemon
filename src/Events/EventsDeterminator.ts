@@ -34,7 +34,7 @@ export class EventsDeterminator implements IEventsDeterminator
         const ioEventsNames: Event[] = Object.keys(ioEvents) as Event[];
         ioEventsNames.forEach((ioEventName: Event) =>
         {
-            if (this.IsCommandDefined(ioEvents, ioEventName)) { return; }
+            if (!this.IsCommandDefined(ioEvents, ioEventName)) { return; }
 
             const eventDef = this.eventsDefs[ioEventName];
             const canExecuteCommand = eventDef(ioState);

@@ -15,8 +15,7 @@ describe(CommandResolver.name, () =>
             .setup(i => i.Write(It.IsAny<string>())).callback(() => { });
         const _config = new UserConfig(_storageMock.object());
         const sut = new CommandResolver(_config);
-        const ioState = new IoState();
-        ioState.addr = 1;
+        const ioState = new IoState(1);
         ioState.currentValue = 123;
 
         // When

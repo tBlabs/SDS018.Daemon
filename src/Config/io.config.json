@@ -1,100 +1,96 @@
 [
     {
-        "addr": 0,
         "name": "input1",
         "events": {
-            "onPress": "{me}/led1/1",
-            "onLongPress": "{me}/led1/0"
         }
     },
     {
-        "addr": 1,
-        "name": "key2",
-        "events": {
-        }
+        "name": "input2",
+        "events": {}
     },
     {
-        "addr": 2,
-        "name": "key3",
-        "events": {
-            "onChange": "{me}/led3/{this.value}"
-        }
+        "name": "input3",
+        "events": {}
     },
     {
-        "addr": 3,
         "name": "input4",
         "events": {}
     },
     {
-        "addr": 4,
-        "name": "air-sensor",
+        "name": "input5",
+        "events": {}
+    },
+    {
+        "name": "input6",
+        "events": {}
+    },
+    {
+        "name": "adc1",
         "events": {
-            "onChange": "{host}/{this.name}/{this.value}"
+            "onChange": "BASH:echo \"hi there!\""
         }
     },
     {
-        "addr": 5,
         "name": "adc2",
         "events": {
-            "onChange": "{me}/pwm4/{this.value}"
+            "onChange": "BASH:./"
         }
     },
     {
-        "addr": 6,
-        "name": "temp",
-        "events": {
-            "onChange": "http://localhost:3000/display1/{this.value}",
-            "onRising": "http://localhost:3000/pwm2/{this.value}"
-        }
+        "name": "adc3",
+        "events": {}
     },
     {
-        "addr": 7,
+        "name": "adc4",
+        "events": {}
+    },
+    {
         "name": "rtc",
         "events": {}
     },
     {
-        "addr": 8,
-        "name": "rtcset",
-        "events": {}
+        "name": "output1"
     },
     {
-        "addr": 9,
-        "name": "led1"
+        "name": "output2"
     },
     {
-        "addr": 10,
-        "name": "led2"
+        "name": "output3"
     },
     {
-        "addr": 11,
-        "name": "led3"
+        "name": "output4"
     },
     {
-        "addr": 12,
-        "name": "led4"
+        "name": "output5"
     },
     {
-        "addr": 13,
+        "name": "output6"
+    },
+    {
         "name": "pwm1"
     },
     {
-        "addr": 14,
         "name": "pwm2"
     },
     {
-        "addr": 15,
         "name": "pwm3"
     },
     {
-        "addr": 16,
         "name": "pwm4"
     },
     {
-        "addr": 17,
         "name": "display1"
     },
     {
-        "addr": 18,
         "name": "display1dot"
+    },
+    {
+        "name": "buzzer-enable"
+    },
+    {
+        "name": "buzzer-freq"
+    },
+    {
+        "name": "buzzer-volume"
     }
 ]
