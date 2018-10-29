@@ -44,7 +44,6 @@ export class IoCache
 
     public Get(addr: number): number
     {
-        console.log('HERE!!!!!', addr);
         const io: IoState | undefined = this.cache[addr];
 
         if (io === undefined)

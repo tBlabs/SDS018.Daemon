@@ -36,12 +36,7 @@ export class Driver
     private serial: Serial = new Serial();
     private cache: IoCache = new IoCache(this.IoCount);
     private onUpdateCallback?: (ioState: IoState) => void;
-
-    private get IoCount(): number
-    {
-        return this.Info.length;
-    }
-
+    
     public get Info(): IoInfo[]
     {
         let addr = 0;
@@ -74,6 +69,11 @@ export class Driver
             { addr: addr++, name: "Buzzer1Volume", type: "BUZZER_VOLUME", readonly: false, minValue: 0, maxValue: 1024 },
             { addr: addr++, name: "Buzzer1Frequency", type: "BUZZER_FREQ", readonly: false, minValue: 0, maxValue: 1024 },
         ];
+    }
+
+    public get IoCount(): number
+    {
+        return this.Info.length;
     }
 
     public Connect(port: string): void

@@ -22,12 +22,6 @@ export class ProcessRunner
     {
         return new Promise<string>((resolve, reject) => 
         {
-            // THIS WILL WORK BUT NOT WITH PIPES:
-            // const chunks = rawCmd.split(' ');
-            // const app = chunks[0];
-            // const args = chunks.splice(1);
-            // const process = spawn(app, args);
-
             const process = spawn('sh', ['-c', rawCmd]);
 
             process.stdout.on('data', (data) =>

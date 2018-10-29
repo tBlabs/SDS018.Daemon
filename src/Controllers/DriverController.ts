@@ -20,11 +20,22 @@ export class DriverController implements IController
             res.send(this._driver.Info);
         });
 
+        this._server.all('/IoState', (req, res) =>
+        {
+            const report = {};
+            for (let addr=0; addr<this._driver.IoCount; addr++)
+            {
+                const ioName = this._iosConfig.IoNameByAddr(addr).replace('-','_');
+                report[ioName] =  this._driver.Read(addr);
+            }
+            res.send(report);
+        });
+
         this._server.all('/get/:addr', (req, res) =>
         {
             const addr: number = parseInt(req.params.addr, 10);
             const value = this._driver.Read(addr);
-
+  
             res.send(value.toString());
         });
 
@@ -41,9 +52,7 @@ export class DriverController implements IController
         this._server.all('/:ioName', (req, res) =>
         {
             const ioName = req.params.ioName;
-            // console.log(ioName);
             const addr = this._iosConfig.AddrByName(ioName);
-            // console.log(addr);
             const value = this._driver.Read(addr);
 
             res.send(value.toString());

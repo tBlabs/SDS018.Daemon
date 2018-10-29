@@ -20,6 +20,9 @@ export class EventsDeterminator implements IEventsDeterminator
         [Event.OnNonZero]: (ioState: IoState) => ioState.currentValue !== 0,
         [Event.OnPress]: (ioState: IoState) => this._pressDeterminator.IsPress(ioState, 20, 300),
         [Event.OnLongPress]: (ioState: IoState) => this._pressDeterminator.IsPress(ioState, 300, 2000),
+        [Event.OnDiff2]: (ioState: IoState) => Math.abs(ioState.currentValue - ioState.previousValue) >= 2,
+        [Event.OnDiff3]: (ioState: IoState) => Math.abs(ioState.currentValue - ioState.previousValue) >= 3,
+        [Event.OnDiff5]: (ioState: IoState) => Math.abs(ioState.currentValue - ioState.previousValue) >= 5,
     };
 
     public Determine(ioEvents: IoEvents, ioState: IoState): Event[]

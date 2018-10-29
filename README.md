@@ -12,7 +12,7 @@ Now you can play with board with simply calling REST API described below.
 | Operation                      | URL                             | Example request             | Example response   |
 | ------------------------------ | ------------------------------- | --------------------------- | ------------------ |
 | Get IO value by IO name        | /`ioName`                       | /door-sensor                | 1                  |
-| Set IO value by IO name        | /`ioName`/`value`               | /main-light/123             | *HTTP 202*         |
+| Set IO value by IO name        | /`ioName`/`value`               | /main-light/123             | *HTTP 202*         |jjjjj
 | Get IO value by IO addr        | /get/`addr`                     | /get/4                      | 12                 |
 | Set IO value by IO addr        | /set/`addr`/`value`             | /set/2/1                    | *HTTP 202*         |
 | IO rename                      | /`ioName`/rename/`newName`      | /adc1/rename/light-sensor   | *HTTP 200*         |
@@ -44,7 +44,6 @@ Single IO config example:
 
 ```
 {
-    "addr": 0,          <--- this is constant, do not touch it!
     "name": "input1",   
     "events": {
         "onChange": "http://localhost:3000/9/1",
@@ -54,10 +53,12 @@ Single IO config example:
     }
 }
 ```
+You can rename every IO directly via http by hitting `/{ioName}/rename/{newName}` endpoint.  
+Event edit: `/{ioName}/{eventName}/http://1.2.3.4:1234/endpoint/{this.value}`.
 
 By default every command is `HTTP GET` action. `GET:` prefix can be added to emphasize that.  
 
-All actions list:
+## Actions types
 
 | Prefix  | Action                |
 | ------- | --------------------- |
@@ -65,7 +66,22 @@ All actions list:
 | *none*  | HTTP GET              |
 | BASH    | Call script with bash |
 
-Predefined commands symbols:
+## Events
+
+| Name        | Activation                               |
+| ----------- | ---------------------------------------- |
+| onChange    | When value change                        |
+| onRising    | When value will grow up                  |
+| onFalling   | On value drop down                       |
+| onPress     | Value drop and rise between 20 and 300ms |
+| onLongPress | As onPress but between 300 and 2000ms    |
+| onZero      | Called when value reach zero             |
+| onNonZero   | Opposite of onZero                       |
+| onDiff2     | When value will change by at least 2     |
+| onDiff3     | When value will change by at least 3     |
+| onDiff5     | When value will change by at least 5     |  
+
+## Predefined commands symbols
 
 | Symbol                    | Meaning                   |
 | ------------------------- | ------------------------- |

@@ -19,10 +19,8 @@ export class CommandExecutor
     private DetermineCommandType(cmd: string): CommandType
     {
         if (cmd.startsWith('GET:')) return CommandType.HttpGet;
-        else
-            if (cmd.startsWith('BASH:')) return CommandType.Bash;
-            else
-                return CommandType.HttpGet;
+        if (cmd.startsWith('BASH:')) return CommandType.Bash;
+        return CommandType.HttpGet;
     }
 
     private RemoveCommandTypeMarker(cmd: string): string

@@ -27,13 +27,12 @@
     {
         "name": "adc1",
         "events": {
-            "onChange": "BASH:echo \"hi there!\""
+            "onChange": "{this}/pwm1/{this.value} "
         }
     },
     {
         "name": "adc2",
         "events": {
-            "onChange": "BASH:./"
         }
     },
     {
@@ -65,6 +64,9 @@
     },
     {
         "name": "output6"
+    },
+    {
+        "name": "output7"
     },
     {
         "name": "pwm1"

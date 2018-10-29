@@ -35,7 +35,6 @@ export class Main
             res.send(err.message);
         });
 
-        if (0)
         this._server.listen(this._appConfig.Host, async () => 
         {
             console.log('SERVER STARTED @', this._appConfig.Host);
@@ -48,5 +47,11 @@ export class Main
         });
 
         this._driver.Connect(this._appConfig.Usb);
+
+        process.on('SIGINT', () =>
+        {
+            this._server.close(() => console.log('SERVER CLOSED'));
+        });
+
     }
 }

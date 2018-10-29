@@ -6,5 +6,8 @@ export enum Event
     OnZero = "onZero",
     OnNonZero = "onNonZero",
     OnPress = "onPress",
-    OnLongPress = "onLongPress"
+    OnLongPress = "onLongPress",
+    OnDiff2 =  "onDiff2",
+    OnDiff3 =  "onDiff3",
+    OnDiff5 =  "onDiff5"
 }
