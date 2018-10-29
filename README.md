@@ -2,18 +2,12 @@
 
 ## What is that for?
 
-This is a HTTP driven "driver" for USB or serial connected dedicated board with many IO (called AlfaBoard).
+This is a HTTP driven "driver" for USB or serial connected dedicated board called **BluePill** (firmware can be found [here](https://github.com/tBlabs/BluePill.Firmware)).
 
 ## How to run it?
 
-Plug AlfaBoard, set it's port in `app.config.json` under `usb` section and run this program (`npm start`).
+Plug IO board, set it's port in `app.config.json` under `usb` section and run this program (`npm start`).  
 Now you can play with board with simply calling REST API described below.
-
-## How to call some action when sensor state change?
-
-Look at the `io.config.json`. In that file we can define few types of events, like: OnChange, OnRising, OnPress etc.
-Every command assigned to event should be a HTTP GET call. 
-To make life easier we can define things called "variables" and use them in events commands. More in **IO Config** section.
 
 ## API
 
@@ -24,7 +18,7 @@ To make life easier we can define things called "variables" and use them in even
 | Get IO value by IO addr        | /get/`addr`                     | /get/4                      | 12                 |
 | Set IO value by IO addr        | /set/`addr`/`value`             | /set/2/1                    | *HTTP 202*         |
 | IO rename                      | /`ioName`/rename/`newName`      | /adc1/rename/light-sensor   | *HTTP 200*         |
-| Add or update IO event         | /`ioName`/`eventName`/`newName` | /adc1/onChange/{pwmUpdate}  | *HTTP 200*         |
+| Add or update IO event         | /`ioName`/`eventName`/`event`   | /adc1/onChange/{pwmUpdate}  | *HTTP 200*         |
 | Delete IO event                | /`ioName`/`eventName`/          | /adc1/onChange/             | *HTTP 200*         |
 | Board info                     | /boardInfo                      | /boardinfo                  | (...) *HTTP 200*   |
 | IO config                      | /ioConfig                       | /ioconfig                   | (...) *HTTP 200*   |
@@ -63,14 +57,15 @@ Single IO config example:
 }
 ```
 
-By default every command is `HTTP GET` action. `GET:` prefix can be added to emphasize that.
-There can be other prefixes used in future (like `BASH` etc).
+By default every command is `HTTP GET` action. `GET:` prefix can be added to emphasize that.  
 
-| Prefix  | Action   |
-| ------- | -------- |
-| GET     | HTTP GET |
-| *none*  | HTTP GET |
-| BASH    | Call script in bash **TO DO** |
+All actions list:
+
+| Prefix  | Action                |
+| ------- | --------------------- |
+| GET     | HTTP GET              |
+| *none*  | HTTP GET              |
+| BASH    | Call script with bash |
 
 Predefined commands symbols:
 
@@ -88,13 +83,11 @@ Example:
 `"onFalling": "GET:{host}/{this.name}/{this.event}/{this.value}"`
 will hit `http://myhost:1234/input1/onFalling/4` endpoint with GET HTTP method
 
-BASH:{takePicture}|BASH:{sendPicture}
+## Events. How to call some action when sensor state change?
 
-
-# Why this is builded this way
-Such code construction has few advantages:
-- driver can work on any platform supporting node.js (PC, Raspberry Pi etc)
-- it's easy to test because board is a USB device (not builded in some platform)
+Look at the `io.config.json`. In that file we can define few types of events, like: OnChange, OnRising, OnPress etc.
+Every command assigned to event should be a HTTP GET call. 
+To make life easier we can define things called "variables" and use them in events commands. More in **IO Config** section.
 
 ## Deploy
 - install `git`, `node.js 9+`, `npm`
@@ -105,6 +98,10 @@ Such code construction has few advantages:
 - add privileges for USB if required (`sudo usermod -a -G dialout $USER`)
 - `npm start` or `npm run run` if rebuild is needed (but it's not because repo contains `js` files)
 
+# Why this is builded this way
+Such code construction has few advantages:
+- driver can work on any platform supporting node.js (PC, Raspberry Pi etc)
+- it's easy to test because board is a USB device (not builded in some platform)
 
 ## TODO/Possible improvements
 
