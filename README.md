@@ -1,8 +1,6 @@
-# AlfaBoard.Driver
+# BluePill.Driver
 
-## What is that for?
-
-This is a HTTP driven "driver" for USB or serial connected dedicated board called **BluePill** (firmware can be found [here](https://github.com/tBlabs/BluePill.Firmware)).
+This is a HTTP driven "driver" for serial connected (USB or UART) dedicated board called **BluePill** (firmware can be found [here](https://github.com/tBlabs/BluePill.Firmware)).
 
 ## How to run it?
 
