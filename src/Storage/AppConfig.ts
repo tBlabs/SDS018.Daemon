@@ -16,7 +16,7 @@ export class AppConfig
     private readonly configFileDir = './src/Config/app.config.json';
     private entries: AppConfigVariables;
 
-    public get Host(): number
+    public get HostPort(): number
     {
         return this.entries.port;
     }

@@ -28,16 +28,16 @@ export class Main
 
         this._controllers.forEach(c => c.RegisterRoutes());
 
-        this._server.use((err, req, res) =>
+        this._server.use((err, req, res, next) =>
         {
             console.log('Globally caught server error:', err.message);
 
             res.send(err.message);
         });
 
-        this._server.listen(this._appConfig.Host, async () => 
+        this._server.listen(this._appConfig.HostPort, async () => 
         {
-            console.log('SERVER STARTED @', this._appConfig.Host);
+            console.log('SERVER STARTED @', this._appConfig.HostPort);
         });
 
 
@@ -52,6 +52,5 @@ export class Main
         {
             this._server.close(() => console.log('SERVER CLOSED'));
         });
-
     }
 }

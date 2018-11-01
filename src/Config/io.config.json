@@ -2,15 +2,20 @@
     {
         "name": "input1",
         "events": {
+            "onChange": "aaa"
         }
     },
     {
         "name": "input2",
-        "events": {}
+        "events": {
+            "onChange": "bbb"
+        }
     },
     {
         "name": "input3",
-        "events": {}
+        "events": {
+            "onChange": "ccc"
+        }
     },
     {
         "name": "input4",
@@ -27,7 +32,7 @@
     {
         "name": "adc1",
         "events": {
-            "onChange": "{this}/pwm1/{this.value} "
+            "onDiff2": "{this}/pwm1/{this.value} "
         }
     },
     {
@@ -87,12 +92,12 @@
         "name": "display1dot"
     },
     {
-        "name": "buzzer-enable"
+        "name": "buzzer"
+    },
+    {
+        "name": "buzzer-vol"
     },
     {
         "name": "buzzer-freq"
-    },
-    {
-        "name": "buzzer-volume"
     }
 ]

@@ -67,7 +67,7 @@ export class Driver
             { addr: addr++, name: "Display1Dot", type: "DISPLAY_DOT", readonly: false, minValue: 0, maxValue: 4 },
             { addr: addr++, name: "Buzzer1Enable", type: "BUZZER_ENABLE", readonly: false, minValue: 0, maxValue: 1 },
             { addr: addr++, name: "Buzzer1Volume", type: "BUZZER_VOLUME", readonly: false, minValue: 0, maxValue: 1024 },
-            { addr: addr++, name: "Buzzer1Frequency", type: "BUZZER_FREQ", readonly: false, minValue: 0, maxValue: 1024 },
+            { addr: addr++, name: "Buzzer1Frequency", type: "BUZZER_FREQ", readonly: false, minValue: 0, maxValue: 0xFFF },
         ];
     }
 
@@ -112,6 +112,7 @@ export class Driver
 
                 case ResponseFrameType.UpdateAll:
                     const sensors: number[] = [out.input1, out.input2, out.input3, out.input4, out.input5, out.input6, out.adc1, out.adc2, out.adc3, out.adc4, out.rtc];
+                    console.log(sensors);
                     sensors.forEach((value, addr) =>
                     {
                         this.UpdateCache(addr, value);

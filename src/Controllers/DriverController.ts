@@ -64,6 +64,8 @@ export class DriverController implements IController
             const value = req.params.value;
             const addr = this._iosConfig.AddrByName(ioName);
 
+            console.log(`${ioName} = ${value}`);
+
             this._driver.Set(addr, value);
 
             res.sendStatus(202);

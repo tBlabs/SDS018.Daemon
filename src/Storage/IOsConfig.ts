@@ -62,7 +62,12 @@ export class IOsConfig
 
     public AddrByName(name: string): number
     {
-        return this.entries.findIndex(e => e.name === name);
+        const addr = this.entries.findIndex(e => e.name === name);
+        if (addr === (-1))
+        {
+            throw new Error(`"${name}" not found in io.config`);
+        }
+        return addr;
     }
 
     private NameExists(name: string): boolean
@@ -78,7 +83,7 @@ export class IOsConfig
         }
     }
 
-    private ValidateName(name: string): boolean
+    private ValidateIoName(name: string): boolean
     {
         return /[a-zA-Z0-9\-]{1,100}/.test(name);
     }
@@ -87,7 +92,7 @@ export class IOsConfig
     {
         const ioConfig: IoConfigStruct = this.IoConfigByName(name);
 
-        if (this.ValidateName(name) === false)
+        if (this.ValidateIoName(name) === false)
         {
             throw new Error(`Name "${ name }" is invalid`);
         }

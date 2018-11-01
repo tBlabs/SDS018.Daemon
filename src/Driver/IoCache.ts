@@ -10,7 +10,6 @@ export class IoCache
         {
             this.cache.push(new IoState(io));
         }
-        // console.log(this.cache );
     }
 
     private FindIo(addr: number): IoState
