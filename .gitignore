@@ -4,4 +4,3 @@
 # /bin
 /.vscode
 .env
-/config/app.config.json
