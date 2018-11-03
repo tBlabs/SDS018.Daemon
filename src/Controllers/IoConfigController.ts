@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 import { Types } from "../IoC/Types";
 import { IController } from "./IController";
-import { IOsConfig } from "../Storage/IOsConfig";
+import { IoConfig } from "../Storage/IoConfig";
 import { Event } from "./../Events/Event";
 
 @injectable()
@@ -9,7 +9,7 @@ export class IoConfigController implements IController
 {
     constructor(
         @inject(Types.ExpressServer) private _server,
-        private _iosConfig: IOsConfig)
+        private _iosConfig: IoConfig)
     { }
 
     public RegisterRoutes()

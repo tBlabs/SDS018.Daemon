@@ -1,4 +1,4 @@
-import { IOsConfig } from './../Storage/IOsConfig';
+import { IoConfig } from '../Storage/IoConfig';
 import { injectable, inject } from 'inversify';
 import { Types } from '../IoC/Types';
 import { Driver } from '../Driver/Driver';
@@ -10,7 +10,7 @@ export class DriverController implements IController
     constructor(
         @inject(Types.ExpressServer) private _server,
         private _driver: Driver,
-        private _iosConfig: IOsConfig)
+        private _iosConfig: IoConfig)
     { }
 
     public RegisterRoutes()

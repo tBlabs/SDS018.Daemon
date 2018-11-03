@@ -18,7 +18,7 @@ const Types_1 = require("../IoC/Types");
 let AppConfig = class AppConfig {
     constructor(_storage) {
         this._storage = _storage;
-        this.configFileDir = './src/Config/app.config.json';
+        this.configFileDir = './config/app.config.json';
         this._storage.File = this.configFileDir;
         this.entries = this._storage.Read();
     }

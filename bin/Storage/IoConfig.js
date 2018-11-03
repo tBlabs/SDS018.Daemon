@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Types_1 = require("./../IoC/Types");
+const Types_1 = require("../IoC/Types");
 const inversify_1 = require("inversify");
 require("reflect-metadata");
 const IoConfigStruct_1 = require("./IoConfigStruct");
@@ -102,4 +102,4 @@ IoConfig = __decorate([
     __metadata("design:paramtypes", [Object])
 ], IoConfig);
 exports.IoConfig = IoConfig;
-//# sourceMappingURL=IOsConfig.js.map
+//# sourceMappingURL=IoConfig.js.map

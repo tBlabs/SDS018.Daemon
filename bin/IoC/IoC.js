@@ -16,7 +16,7 @@ const EventsExecutor_1 = require("../Events/EventsExecutor");
 const express = require("express");
 const UserConfigController_1 = require("../Controllers/UserConfigController");
 const Environment_1 = require("../services/environment/Environment");
-const IOsConfig_1 = require("../Storage/IOsConfig");
+const IoConfig_1 = require("../Storage/IoConfig");
 const CommandResolver_1 = require("../Events/CommandResolver");
 const CommandExecutor_1 = require("../Events/CommandExecutor");
 const IoConfigController_1 = require("../Controllers/IoConfigController");
@@ -33,7 +33,7 @@ try {
     IoC.bind(EventsDeterminator_1.EventsDeterminator).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind(PressDeterminator_1.PressDeterminator).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind(UserConfig_1.UserConfig).toSelf().inSingletonScope().whenTargetIsDefault();
-    IoC.bind(IOsConfig_1.IOsConfig).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind(IoConfig_1.IoConfig).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(AppConfig_1.AppConfig).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(CommandResolver_1.CommandResolver).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind(CommandExecutor_1.CommandExecutor).toSelf().inTransientScope().whenTargetIsDefault();

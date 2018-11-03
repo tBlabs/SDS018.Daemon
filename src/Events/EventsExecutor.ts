@@ -3,7 +3,7 @@ import { CommandResolver } from "./CommandResolver";
 import { CommandExecutor } from "./CommandExecutor";
 import { Event } from './Event';
 import { injectable, inject } from 'inversify';
-import { IOsConfig } from "../Storage/IOsConfig";
+import { IoConfig } from "../Storage/IoConfig";
 import { IoState } from "../Driver/IoState";
 import { IoEvents } from "./IoEvents";
 import { Command } from "./Command";
@@ -12,7 +12,7 @@ import { Command } from "./Command";
 export class EventsExecutor
 {
     constructor(
-        private _iosConfig: IOsConfig,
+        private _iosConfig: IoConfig,
         private _eventsDeterminator: EventsDeterminator,
         private _commandResolver: CommandResolver,
         private _commandExecutor: CommandExecutor)

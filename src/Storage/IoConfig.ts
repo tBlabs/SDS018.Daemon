@@ -1,15 +1,15 @@
-import { Types } from './../IoC/Types';
-import { Command } from './../Events/Command';
-import { IoEvents } from './../Events/IoEvents';
+import { Types } from '../IoC/Types';
+import { Command } from '../Events/Command';
+import { IoEvents } from '../Events/IoEvents';
 import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
 import { IStorage } from './IStorage';
 import { IoConfigStruct } from './IoConfigStruct';
 
 @injectable()
-export class IOsConfig
+export class IoConfig
 {
-    private readonly configFileDir = './src/Config/io.config.json';
+    private readonly configFileDir = './config/io.config.json';
     private entries: IoConfigStruct[] = [];
 
     public get Entries(): IoConfigStruct[]

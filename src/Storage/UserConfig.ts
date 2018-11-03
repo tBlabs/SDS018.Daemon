@@ -8,7 +8,7 @@ import { Types } from '../IoC/Types';
 @injectable()
 export class UserConfig implements IUserConfig
 {
-    private readonly configFileDir = './src/Config/user.config.json';
+    private readonly configFileDir = './config/user.config.json';
     private entries: StringKeyValuePairs = {};
 
     public ToString(): string

@@ -13,7 +13,7 @@ const EventsDeterminator_1 = require("./EventsDeterminator");
 const CommandResolver_1 = require("./CommandResolver");
 const CommandExecutor_1 = require("./CommandExecutor");
 const inversify_1 = require("inversify");
-const IOsConfig_1 = require("../Storage/IOsConfig");
+const IoConfig_1 = require("../Storage/IoConfig");
 let EventsExecutor = class EventsExecutor {
     constructor(_iosConfig, _eventsDeterminator, _commandResolver, _commandExecutor) {
         this._iosConfig = _iosConfig;
@@ -38,7 +38,7 @@ let EventsExecutor = class EventsExecutor {
 };
 EventsExecutor = __decorate([
     inversify_1.injectable(),
-    __metadata("design:paramtypes", [IOsConfig_1.IOsConfig,
+    __metadata("design:paramtypes", [IoConfig_1.IoConfig,
         EventsDeterminator_1.EventsDeterminator,
         CommandResolver_1.CommandResolver,
         CommandExecutor_1.CommandExecutor])

@@ -1,7 +1,6 @@
 import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
 import { IStorage } from './IStorage';
-import { StringKeyValuePairs } from './StringKeyValuePairs';
 import { Types } from '../IoC/Types';
 
 interface AppConfigVariables
@@ -13,7 +12,7 @@ interface AppConfigVariables
 @injectable()
 export class AppConfig
 {
-    private readonly configFileDir = './src/Config/app.config.json';
+    private readonly configFileDir = './config/app.config.json';
     private entries: AppConfigVariables;
 
     public get HostPort(): number

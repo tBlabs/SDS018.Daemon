@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const IOsConfig_1 = require("./../Storage/IOsConfig");
+const IoConfig_1 = require("../Storage/IoConfig");
 const inversify_1 = require("inversify");
 const Types_1 = require("../IoC/Types");
 const Driver_1 = require("../Driver/Driver");
@@ -65,7 +65,7 @@ DriverController = __decorate([
     inversify_1.injectable(),
     __param(0, inversify_1.inject(Types_1.Types.ExpressServer)),
     __metadata("design:paramtypes", [Object, Driver_1.Driver,
-        IOsConfig_1.IOsConfig])
+        IoConfig_1.IoConfig])
 ], DriverController);
 exports.DriverController = DriverController;
 //# sourceMappingURL=DriverController.js.map

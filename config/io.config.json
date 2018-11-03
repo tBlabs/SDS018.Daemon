@@ -2,20 +2,16 @@
     {
         "name": "input1",
         "events": {
-            "onChange": "aaa"
+            "onChange": "{this}/output1/{this.value}"
         }
     },
     {
         "name": "input2",
-        "events": {
-            "onChange": "bbb"
-        }
+        "events": {}
     },
     {
         "name": "input3",
-        "events": {
-            "onChange": "ccc"
-        }
+        "events": {}
     },
     {
         "name": "input4",
@@ -31,20 +27,17 @@
     },
     {
         "name": "input7",
-        "events": {
-            "onRising": "xx"
-        }
+        "events": {}
     },
     {
         "name": "adc1",
         "events": {
-            "onDiff2": "{this}/pwm1/{this.value} "
+            "onDiff2": "{this}/pwm1/{this.value}"
         }
     },
     {
         "name": "adc2",
-        "events": {
-        }
+        "events": {}
     },
     {
         "name": "adc3",
@@ -56,9 +49,7 @@
     },
     {
         "name": "rtc",
-        "events": {
-            "onChange": ""
-        }
+        "events": {}
     },
     {
         "name": "output1"

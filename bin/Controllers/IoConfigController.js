@@ -14,7 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 const Types_1 = require("../IoC/Types");
-const IOsConfig_1 = require("../Storage/IOsConfig");
+const IoConfig_1 = require("../Storage/IoConfig");
 const Event_1 = require("./../Events/Event");
 let IoConfigController = class IoConfigController {
     constructor(_server, _iosConfig) {
@@ -52,7 +52,7 @@ let IoConfigController = class IoConfigController {
 IoConfigController = __decorate([
     inversify_1.injectable(),
     __param(0, inversify_1.inject(Types_1.Types.ExpressServer)),
-    __metadata("design:paramtypes", [Object, IOsConfig_1.IOsConfig])
+    __metadata("design:paramtypes", [Object, IoConfig_1.IoConfig])
 ], IoConfigController);
 exports.IoConfigController = IoConfigController;
 //# sourceMappingURL=IoConfigController.js.map

@@ -17,7 +17,7 @@ import * as express from 'express';
 import { UserConfigController } from '../Controllers/UserConfigController';
 import { IEnvironment } from '../services/environment/IEnvironment';
 import { Environment } from '../services/environment/Environment';
-import { IOsConfig } from '../Storage/IOsConfig';
+import { IoConfig } from '../Storage/IoConfig';
 import { CommandResolver } from '../Events/CommandResolver';
 import { StringKeyValuePairs } from '../Storage/StringKeyValuePairs';
 import { IController } from '../Controllers/IController';
@@ -38,7 +38,7 @@ try
     IoC.bind<EventsDeterminator>(EventsDeterminator).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind<PressDeterminator>(PressDeterminator).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind<UserConfig>(UserConfig).toSelf().inSingletonScope().whenTargetIsDefault();
-    IoC.bind<IOsConfig>(IOsConfig).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind<IoConfig>(IoConfig).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<AppConfig>(AppConfig).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<CommandResolver>(CommandResolver).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind<CommandExecutor>(CommandExecutor).toSelf().inTransientScope().whenTargetIsDefault();
