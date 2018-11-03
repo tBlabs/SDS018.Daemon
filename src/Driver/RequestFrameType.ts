@@ -2,7 +2,8 @@ export enum RequestFrameType
 {
     Ping = 1,
     Get,
-    GetAll,
+    GetAllSensors,
     Set,
-    PushStateSet
+    ConfigSet,
+    GetAll
 }

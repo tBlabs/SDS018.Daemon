@@ -30,6 +30,12 @@
         "events": {}
     },
     {
+        "name": "input7",
+        "events": {
+            "onRising": "xx"
+        }
+    },
+    {
         "name": "adc1",
         "events": {
             "onDiff2": "{this}/pwm1/{this.value} "
@@ -50,7 +56,9 @@
     },
     {
         "name": "rtc",
-        "events": {}
+        "events": {
+            "onChange": ""
+        }
     },
     {
         "name": "output1"
@@ -90,14 +98,5 @@
     },
     {
         "name": "display1dot"
-    },
-    {
-        "name": "buzzer"
-    },
-    {
-        "name": "buzzer-vol"
-    },
-    {
-        "name": "buzzer-freq"
     }
 ]
