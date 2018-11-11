@@ -8,6 +8,7 @@ import * as socketIo from 'socket.io';
 import { Socket } from 'socket.io';
 import { Addr } from './Driver/Addr';
 import { StartupArgs } from './services/environment/StartupArgs';
+import { Clients } from './Clients';
 
 @injectable()
 export class Main
@@ -57,21 +58,11 @@ export class Main
         });
 
 
-        const clients: Socket[] = [];
-
+        const clients = new Clients();
 
         socket.on('connection', (socket: Socket) =>
         {
-            console.log('client connected', socket.id);
-            clients.push(socket);
-
-            socket.on('disconnect', () =>
-            {
-                // console.log('disconnected', socket.id);
-                const clientIndex = clients.indexOf(socket);
-
-                clients.splice(clientIndex, 1);
-            })
+            clients.Add(socket);
 
             socket.on('get', (addr) =>
             {
@@ -101,26 +92,25 @@ export class Main
             });
         });
 
+
         this._driver.OnUpdate((ioState: IoState) =>
         {
-            if (ioState.addr === Addr.RTC) return;
-
-            clients.forEach((socket: Socket) =>
-            {
-                socket.emit('update', ioState);
-            });
+            clients.SendToAll('update', ioState);
         });
 
-        const port = this._args.Args.port || 3000;
-        httpServer.listen(port, () => console.log(`SERVER STARTED @ ${port}`));
 
-        const usb = this._args.Args.usb || '/dev/ttyUSB1';
+        const port = this._args.Args.port || 3000;
+        const usb = this._args.Args.usb || '/dev/ttyUSB0';
+        
+        httpServer.listen(port, () => console.log(`SERVER STARTED @ ${port}`));
         this._driver.Connect(usb);
 
-        process.on('SIGINT', () =>
+
+        process.on('SIGINT', async () =>
         {
+            clients.DisconnectAll();
             httpServer.close(() => console.log('SERVER CLOSED'));
-            this._driver.Disconnect();
+            await this._driver.Disconnect();
         });
     }
 }

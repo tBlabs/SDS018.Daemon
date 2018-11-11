@@ -15,8 +15,8 @@ const Driver_1 = require("./Driver/Driver");
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
-const Addr_1 = require("./Driver/Addr");
 const StartupArgs_1 = require("./services/environment/StartupArgs");
+const Clients_1 = require("./Clients");
 let Main = class Main {
     constructor(_args, _driver) {
         this._args = _args;
@@ -45,15 +45,9 @@ let Main = class Main {
             console.log('Globally caught server error:', err.message);
             res.send(err.message);
         });
-        const clients = [];
+        const clients = new Clients_1.Clients();
         socket.on('connection', (socket) => {
-            console.log('client connected', socket.id);
-            clients.push(socket);
-            socket.on('disconnect', () => {
-                // console.log('disconnected', socket.id);
-                const clientIndex = clients.indexOf(socket);
-                clients.splice(clientIndex, 1);
-            });
+            clients.Add(socket);
             socket.on('get', (addr) => {
                 const value = this._driver.Read(addr);
                 socket.emit('update', addr, value);
@@ -73,19 +67,17 @@ let Main = class Main {
             });
         });
         this._driver.OnUpdate((ioState) => {
-            if (ioState.addr === Addr_1.Addr.RTC)
-                return;
-            clients.forEach((socket) => {
-                socket.emit('update', ioState);
-            });
+            clients.SendToAll('update', ioState);
         });
         const port = this._args.Args.port || 3000;
+        const usb = this._args.Args.usb || '/dev/ttyUSB0';
         httpServer.listen(port, () => console.log(`SERVER STARTED @ ${port}`));
-        const usb = this._args.Args.usb || '/dev/ttyUSB1';
         this._driver.Connect(usb);
-        process.on('SIGINT', () => {
+        process.on('SIGINT', async () => {
+            clients.DisconnectAll();
             httpServer.close(() => console.log('SERVER CLOSED'));
-            this._driver.Disconnect();
+            await this._driver.Disconnect();
+            console.log('USB CLOSED');
         });
     }
 };
