@@ -7,6 +7,21 @@ export class Serial
     private onConnectionCallback?: () => void;
     private onDataCallback?: (data: Buffer) => void;
 
+    public async Disconnect(): Promise<void>
+    {
+        return new Promise<void>((resolve, reject) =>
+        {
+            if (this.serial)
+            {
+                this.serial.close((error: Error) =>
+                {
+                    resolve();
+                });
+            }
+            else reject();
+        });
+    }
+
     public Connect(port: string, baudRate: number): void  
     {
         this.serial = new SerialPort(port, { baudRate: baudRate });

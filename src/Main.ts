@@ -1,56 +1,126 @@
+import 'reflect-metadata';
+import { injectable } from 'inversify';
 import { IoState } from './Driver/IoState';
-import { IController } from './Controllers/IController';
-import { injectable, inject, multiInject } from 'inversify';
-import { Types } from './IoC/Types';
 import { Driver } from './Driver/Driver';
-import { AppConfig } from './Storage/AppConfig';
-import { EventsExecutor } from './Events/EventsExecutor';
+import * as express from 'express';
+import * as http from 'http';
+import * as socketIo from 'socket.io';
+import { Socket } from 'socket.io';
+import { Addr } from './Driver/Addr';
+import { StartupArgs } from './services/environment/StartupArgs';
 
 @injectable()
 export class Main
 {
     constructor(
-        private _appConfig: AppConfig,
-        @inject(Types.ExpressServer) private _server,
-        @multiInject(Types.IController) private _controllers: IController[],
-        private _driver: Driver,
-        private _eventsExecutor: EventsExecutor)
+        private _args: StartupArgs,
+        private _driver: Driver)
     { }
 
     public async Run(): Promise<void>
     {
-        this._server.get('/favicon.ico', (req, res) => res.status(204));
+        const server = express();
+        const httpServer = http.createServer(server);
+        const socket = socketIo(httpServer);
 
-        this._server.all('/ping', (req, res) =>
+        server.get('/favicon.ico', (req, res) => res.status(204));
+
+        server.all('/ping', (req, res) =>
         {
-            res.send('pong'); 
+            res.send('pong');
         });
 
-        this._controllers.forEach(c => c.RegisterRoutes());
+        server.all('/:addr', (req, res) =>
+        {
+            const addr: number = parseInt(req.params.addr, 10);
 
-        this._server.use((err, req, res, next) =>
+            const value = this._driver.Read(addr);
+
+            res.send(value.toString());
+        });
+
+        server.all('/:addr/:value', (req, res) =>
+        {
+            const addr: number = parseInt(req.params.addr, 10);
+            const value = parseInt(req.params.value, 10);
+
+            this._driver.Set(addr, value);
+
+            res.sendStatus(202);
+        });
+
+        server.use((err, req, res, next) =>
         {
             console.log('Globally caught server error:', err.message);
 
             res.send(err.message);
         });
 
-        this._server.listen(this._appConfig.HostPort, async () => 
-        {
-            console.log('SERVER STARTED @', this._appConfig.HostPort);
-        });
 
+        const clients: Socket[] = [];
+
+
+        socket.on('connection', (socket: Socket) =>
+        {
+            console.log('client connected', socket.id);
+            clients.push(socket);
+
+            socket.on('disconnect', () =>
+            {
+                // console.log('disconnected', socket.id);
+                const clientIndex = clients.indexOf(socket);
+
+                clients.splice(clientIndex, 1);
+            })
+
+            socket.on('get', (addr) =>
+            {
+                const value = this._driver.Read(addr);
+
+                socket.emit('update', addr, value);
+            });
+
+            socket.on('get-all', () =>
+            {
+                const state = this._driver.State;
+
+                socket.emit('update-all', state);
+            });
+
+            socket.on('set', (addr, value) =>
+            {
+                try
+                {
+                    this._driver.Set(addr, value);
+                }
+                catch (error)
+                {
+                    console.log(error.message);
+                    socket.emit('error', error.message);
+                }
+            });
+        });
 
         this._driver.OnUpdate((ioState: IoState) =>
         {
-            this._eventsExecutor.Execute(ioState);
+            if (ioState.addr === Addr.RTC) return;
+
+            clients.forEach((socket: Socket) =>
+            {
+                socket.emit('update', ioState);
+            });
         });
 
-        this._driver.Connect(this._appConfig.Usb);
+        const port = this._args.Args.port || 3000;
+        httpServer.listen(port, () => console.log(`SERVER STARTED @ ${port}`));
+
+        const usb = this._args.Args.usb || '/dev/ttyUSB1';
+        this._driver.Connect(usb);
 
         process.on('SIGINT', () =>
         {
-            this._server.close(() => console.log('SERVER CLOSED'));
+            httpServer.close(() => console.log('SERVER CLOSED'));
+            this._driver.Disconnect();
         });
     }
 }

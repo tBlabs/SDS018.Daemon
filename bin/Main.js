@@ -8,51 +8,91 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
 const inversify_1 = require("inversify");
-const Types_1 = require("./IoC/Types");
 const Driver_1 = require("./Driver/Driver");
-const AppConfig_1 = require("./Storage/AppConfig");
-const EventsExecutor_1 = require("./Events/EventsExecutor");
+const express = require("express");
+const http = require("http");
+const socketIo = require("socket.io");
+const Addr_1 = require("./Driver/Addr");
+const StartupArgs_1 = require("./services/environment/StartupArgs");
 let Main = class Main {
-    constructor(_appConfig, _server, _controllers, _driver, _eventsExecutor) {
-        this._appConfig = _appConfig;
-        this._server = _server;
-        this._controllers = _controllers;
+    constructor(_args, _driver) {
+        this._args = _args;
         this._driver = _driver;
-        this._eventsExecutor = _eventsExecutor;
     }
     async Run() {
-        this._server.get('/favicon.ico', (req, res) => res.status(204));
-        this._server.all('/ping', (req, res) => {
+        const server = express();
+        const httpServer = http.createServer(server);
+        const socket = socketIo(httpServer);
+        server.get('/favicon.ico', (req, res) => res.status(204));
+        server.all('/ping', (req, res) => {
             res.send('pong');
         });
-        this._controllers.forEach(c => c.RegisterRoutes());
-        this._server.use((err, req, res, next) => {
+        server.all('/:addr', (req, res) => {
+            const addr = parseInt(req.params.addr, 10);
+            const value = this._driver.Read(addr);
+            res.send(value.toString());
+        });
+        server.all('/:addr/:value', (req, res) => {
+            const addr = parseInt(req.params.addr, 10);
+            const value = parseInt(req.params.value, 10);
+            this._driver.Set(addr, value);
+            res.sendStatus(202);
+        });
+        server.use((err, req, res, next) => {
             console.log('Globally caught server error:', err.message);
             res.send(err.message);
         });
-        this._server.listen(this._appConfig.HostPort, async () => {
-            console.log('SERVER STARTED @', this._appConfig.HostPort);
+        const clients = [];
+        socket.on('connection', (socket) => {
+            console.log('client connected', socket.id);
+            clients.push(socket);
+            socket.on('disconnect', () => {
+                // console.log('disconnected', socket.id);
+                const clientIndex = clients.indexOf(socket);
+                clients.splice(clientIndex, 1);
+            });
+            socket.on('get', (addr) => {
+                const value = this._driver.Read(addr);
+                socket.emit('update', addr, value);
+            });
+            socket.on('get-all', () => {
+                const state = this._driver.State;
+                socket.emit('update-all', state);
+            });
+            socket.on('set', (addr, value) => {
+                try {
+                    this._driver.Set(addr, value);
+                }
+                catch (error) {
+                    console.log(error.message);
+                    socket.emit('error', error.message);
+                }
+            });
         });
         this._driver.OnUpdate((ioState) => {
-            this._eventsExecutor.Execute(ioState);
+            if (ioState.addr === Addr_1.Addr.RTC)
+                return;
+            clients.forEach((socket) => {
+                socket.emit('update', ioState);
+            });
         });
-        this._driver.Connect(this._appConfig.Usb);
+        const port = this._args.Args.port || 3000;
+        httpServer.listen(port, () => console.log(`SERVER STARTED @ ${port}`));
+        const usb = this._args.Args.usb || '/dev/ttyUSB1';
+        this._driver.Connect(usb);
         process.on('SIGINT', () => {
-            this._server.close(() => console.log('SERVER CLOSED'));
+            httpServer.close(() => console.log('SERVER CLOSED'));
+            this._driver.Disconnect();
         });
     }
 };
 Main = __decorate([
     inversify_1.injectable(),
-    __param(1, inversify_1.inject(Types_1.Types.ExpressServer)),
-    __param(2, inversify_1.multiInject(Types_1.Types.IController)),
-    __metadata("design:paramtypes", [AppConfig_1.AppConfig, Object, Array, Driver_1.Driver,
-        EventsExecutor_1.EventsExecutor])
+    __metadata("design:paramtypes", [StartupArgs_1.StartupArgs,
+        Driver_1.Driver])
 ], Main);
 exports.Main = Main;
 //# sourceMappingURL=Main.js.map

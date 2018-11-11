@@ -5,6 +5,17 @@ class Serial {
     constructor() {
         this.isConnected = false;
     }
+    async Disconnect() {
+        return new Promise((resolve, reject) => {
+            if (this.serial) {
+                this.serial.close((error) => {
+                    resolve();
+                });
+            }
+            else
+                reject();
+        });
+    }
     Connect(port, baudRate) {
         this.serial = new SerialPort(port, { baudRate: baudRate });
         this.serial.on('data', (data) => {

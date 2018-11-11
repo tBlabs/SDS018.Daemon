@@ -32,7 +32,7 @@
         "@types/lodash": "^4.14.92",
         "@types/node": "^7.0.18",
         "@types/serialport": "^6.0.4",
-        "@types/socket.io": "^1.4.38",
+        "@types/socket.io": "^1.4.39",
         "@types/uuid": "^2.0.30",
         "jest": "^21.2.1",
         "moq.ts": "^2.7.3",

@@ -1,0 +1,28 @@
+export enum Addr
+{
+    Input1 = 0,
+    Input2,
+    Input3,
+    Input4,
+    Input5,
+    Input6,
+    Input7,
+    Adc1,
+    Adc2,
+    Adc3,
+    Adc4,
+    RTC,
+    Output1,
+    Output2,
+    Output3,
+    Output4,
+    Output5,
+    Output6,
+    Output7,
+    Pwm1,
+    Pwm2,
+    Pwm3,
+    Pwm4,
+    Display1,
+    Display1Dot
+}

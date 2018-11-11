@@ -6,52 +6,58 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
 const FluentParserBuilder_1 = require("../utils/FluentParser/FluentParserBuilder");
 const FluentBuilder_1 = require("../utils/FluentBuilder/FluentBuilder");
 const inversify_1 = require("inversify");
-require("reflect-metadata");
 const IoCache_1 = require("./IoCache");
 const ResponseFrameType_1 = require("./ResponseFrameType");
 const RequestFrameType_1 = require("./RequestFrameType");
 const Serial_1 = require("./Serial");
+const Addr_1 = require("./Addr");
 let Driver = class Driver {
     constructor() {
         this.RequestHeader = 0xAABB;
         this.serial = new Serial_1.Serial();
         this.cache = new IoCache_1.IoCache(this.IoCount);
     }
+    get State() {
+        return this.cache.Entries;
+    }
     get Info() {
-        let addr = 0;
         return [
-            { addr: addr++, name: "Input1", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Input2", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Input3", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Input4", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Input5", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Input6", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Input7", type: "INPUT", readonly: true, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Adc1", type: "ADC", readonly: true, minValue: 0, maxValue: 409 },
-            { addr: addr++, name: "Adc2", type: "ADC", readonly: true, minValue: 0, maxValue: 409 },
-            { addr: addr++, name: "Adc3", type: "ADC", readonly: true, minValue: 0, maxValue: 409 },
-            { addr: addr++, name: "Adc4", type: "ADC", readonly: true, minValue: 0, maxValue: 409 },
-            { addr: addr++, name: "RTC", type: "RTC", readonly: true, minValue: 0, maxValue: 0xFFFFFFFF },
-            { addr: addr++, name: "Output1", type: "OUTPUT", readonly: false, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Output2", type: "OUTPUT", readonly: false, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Output3", type: "OUTPUT", readonly: false, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Output4", type: "OUTPUT", readonly: false, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Output5", type: "OUTPUT", readonly: false, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Output6", type: "OUTPUT", readonly: false, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Output7", type: "OUTPUT", readonly: false, minValue: 0, maxValue: 1 },
-            { addr: addr++, name: "Pwm1", type: "PWM", readonly: false, minValue: 0, maxValue: 1024 },
-            { addr: addr++, name: "Pwm2", type: "PWM", readonly: false, minValue: 0, maxValue: 1024 },
-            { addr: addr++, name: "Pwm3", type: "PWM", readonly: false, minValue: 0, maxValue: 1024 },
-            { addr: addr++, name: "Pwm4", type: "PWM", readonly: false, minValue: 0, maxValue: 1024 },
-            { addr: addr++, name: "Display1", type: "DISPLAY", readonly: false, minValue: 0, maxValue: 9999 },
-            { addr: addr++, name: "Display1Dot", type: "DISPLAY_DOT", readonly: false, minValue: 0, maxValue: 4 },
+            { addr: Addr_1.Addr.Input1, readonly: true, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Input2, readonly: true, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Input3, readonly: true, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Input4, readonly: true, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Input5, readonly: true, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Input6, readonly: true, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Input7, readonly: true, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Adc1, readonly: true, minValue: 0, maxValue: 409 },
+            { addr: Addr_1.Addr.Adc2, readonly: true, minValue: 0, maxValue: 409 },
+            { addr: Addr_1.Addr.Adc3, readonly: true, minValue: 0, maxValue: 409 },
+            { addr: Addr_1.Addr.Adc4, readonly: true, minValue: 0, maxValue: 409 },
+            { addr: Addr_1.Addr.RTC, readonly: true, minValue: 0, maxValue: 0xFFFFFFFF },
+            { addr: Addr_1.Addr.Output1, readonly: false, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Output2, readonly: false, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Output3, readonly: false, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Output4, readonly: false, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Output5, readonly: false, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Output6, readonly: false, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Output7, readonly: false, minValue: 0, maxValue: 1 },
+            { addr: Addr_1.Addr.Pwm1, readonly: false, minValue: 0, maxValue: 1024 },
+            { addr: Addr_1.Addr.Pwm2, readonly: false, minValue: 0, maxValue: 1024 },
+            { addr: Addr_1.Addr.Pwm3, readonly: false, minValue: 0, maxValue: 1024 },
+            { addr: Addr_1.Addr.Pwm4, readonly: false, minValue: 0, maxValue: 1024 },
+            { addr: Addr_1.Addr.Display1, readonly: false, minValue: 0, maxValue: 9999 },
+            { addr: Addr_1.Addr.Display1Dot, readonly: false, minValue: 0, maxValue: 4 },
         ];
     }
     get IoCount() {
         return this.Info.length;
+    }
+    async Disconnect() {
+        await this.serial.Disconnect();
     }
     Connect(port) {
         this.serial.OnConnection(() => {
@@ -64,7 +70,7 @@ let Driver = class Driver {
         const parser = parserBuilder
             .Is(0xAB)
             .If(ResponseFrameType_1.ResponseFrameType.Pong, 'type', _ => _)
-            .If(ResponseFrameType_1.ResponseFrameType.ConfigUpdate, 'type', _ => _.Get('push'))
+            .If(ResponseFrameType_1.ResponseFrameType.ConfigUpdate, 'type', _ => _.Get('pushMode').Get('samplingInterval'))
             .If(ResponseFrameType_1.ResponseFrameType.Error, 'type', _ => _.Get('err'))
             .If(ResponseFrameType_1.ResponseFrameType.Update, 'type', _ => _.Get('addr').Get4LE('value'))
             .If(ResponseFrameType_1.ResponseFrameType.UpdateAllSensors, 'type', _ => _
@@ -74,55 +80,59 @@ let Driver = class Driver {
             .IsXor()
             .Build();
         parser.OnComplete((out) => {
-            switch (out.type) {
-                case ResponseFrameType_1.ResponseFrameType.ConfigUpdate:
-                    switch (out.push) {
-                        case 0:
-                            console.log('PUSH IS OFF');
-                            break;
-                        case 1:
-                            console.log('PUSH ALL IS ON');
-                            break;
-                        case 2:
-                            console.log('PUSH SINGLE IS ON');
-                            break;
-                        default:
-                            console.log('PUSH IS IN INVALID STATE');
-                            break;
-                    }
-                    break;
-                case ResponseFrameType_1.ResponseFrameType.UpdateAllSensors:
-                    const sensors = [out.input1, out.input2, out.input3, out.input4, out.input5, out.input6, out.input7, out.adc1, out.adc2, out.adc3, out.adc4, out.rtc];
-                    sensors.forEach((value, addr) => {
-                        this.UpdateCache(addr, value);
-                    });
-                    break;
-                case ResponseFrameType_1.ResponseFrameType.Error:
-                    console.log('board error', out.err);
-                    break;
-                case ResponseFrameType_1.ResponseFrameType.Pong:
-                    console.log('pong from board');
-                    break;
-                case ResponseFrameType_1.ResponseFrameType.Update:
-                    this.UpdateCache(out.addr, out.value);
-                    break;
-                default:
-                    throw new Error('Unknown response');
-            }
+            this.ExecuteFrame(out);
         });
         parser.OnFault((reason, frame) => {
             console.log('FAULT', reason);
         });
         this.serial.Connect(port, 19200);
     }
+    ConfigAsString(out) {
+        switch (out.pushMode) {
+            case 0:
+                console.log('PUSH IS OFF');
+                break;
+            case 1:
+                console.log('PUSH ALL IS ON. Interval:', out.samplingInterval);
+                break;
+            case 2:
+                console.log('PUSH SINGLE IS ON. Interval:', out.samplingInterval);
+                break;
+            default:
+                console.log('PUSH IS IN INVALID STATE');
+                break;
+        }
+    }
+    ExecuteFrame(out) {
+        switch (out.type) {
+            case ResponseFrameType_1.ResponseFrameType.ConfigUpdate:
+                this.ConfigAsString(out);
+                break;
+            case ResponseFrameType_1.ResponseFrameType.UpdateAllSensors:
+                const sensors = [out.input1, out.input2, out.input3, out.input4, out.input5, out.input6, out.input7, out.adc1, out.adc2, out.adc3, out.adc4, out.rtc];
+                sensors.forEach((value, addr) => {
+                    this.UpdateCache(addr, value);
+                });
+                break;
+            case ResponseFrameType_1.ResponseFrameType.Error:
+                console.log('board error', out.err);
+                break;
+            case ResponseFrameType_1.ResponseFrameType.Pong:
+                console.log('pong from board');
+                break;
+            case ResponseFrameType_1.ResponseFrameType.Update:
+                this.UpdateCache(out.addr, out.value);
+                break;
+            default:
+                throw new Error('Unknown response');
+        }
+    }
     UpdateCache(addr, value) {
         if (this.cache.HasChanged(addr, value)) {
             this.cache.Update(addr, value);
             if (this.onUpdateCallback) {
                 const ioState = this.cache.GetIoState(addr);
-                if (ioState.IsNotInitialValue()) {
-                    this.onUpdateCallback(ioState);
-                }
+                this.onUpdateCallback(ioState);
             }
         }
     }
@@ -138,10 +148,10 @@ let Driver = class Driver {
             throw new Error(`IO ${addr} not found`);
         }
         if (io.readonly) {
-            throw new Error('Can not write to sensor');
+            throw new Error(`Can not write to sensor (addr: ${addr})`);
         }
         if (value > io.maxValue) {
-            throw new Error('Out of range. Max value is ' + io.maxValue.toString());
+            throw new Error(`Out of range. Max value is ${io.maxValue.toString()} but try to set ${value}`);
         }
         if (value < io.minValue) {
             throw new Error('Out of range. Min value is ' + io.minValue.toString());
@@ -157,6 +167,7 @@ let Driver = class Driver {
         this.serial.Send(frame);
     }
     Set(addr, value) {
+        value = Math.round(value);
         this.ValidateValue(addr, value);
         const frame = (new FluentBuilder_1.FluentBuilder())
             .Word2LE(this.RequestHeader)

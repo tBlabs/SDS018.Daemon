@@ -1,0 +1,31 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Addr;
+(function (Addr) {
+    Addr[Addr["Input1"] = 0] = "Input1";
+    Addr[Addr["Input2"] = 1] = "Input2";
+    Addr[Addr["Input3"] = 2] = "Input3";
+    Addr[Addr["Input4"] = 3] = "Input4";
+    Addr[Addr["Input5"] = 4] = "Input5";
+    Addr[Addr["Input6"] = 5] = "Input6";
+    Addr[Addr["Input7"] = 6] = "Input7";
+    Addr[Addr["Adc1"] = 7] = "Adc1";
+    Addr[Addr["Adc2"] = 8] = "Adc2";
+    Addr[Addr["Adc3"] = 9] = "Adc3";
+    Addr[Addr["Adc4"] = 10] = "Adc4";
+    Addr[Addr["RTC"] = 11] = "RTC";
+    Addr[Addr["Output1"] = 12] = "Output1";
+    Addr[Addr["Output2"] = 13] = "Output2";
+    Addr[Addr["Output3"] = 14] = "Output3";
+    Addr[Addr["Output4"] = 15] = "Output4";
+    Addr[Addr["Output5"] = 16] = "Output5";
+    Addr[Addr["Output6"] = 17] = "Output6";
+    Addr[Addr["Output7"] = 18] = "Output7";
+    Addr[Addr["Pwm1"] = 19] = "Pwm1";
+    Addr[Addr["Pwm2"] = 20] = "Pwm2";
+    Addr[Addr["Pwm3"] = 21] = "Pwm3";
+    Addr[Addr["Pwm4"] = 22] = "Pwm4";
+    Addr[Addr["Display1"] = 23] = "Display1";
+    Addr[Addr["Display1Dot"] = 24] = "Display1Dot";
+})(Addr = exports.Addr || (exports.Addr = {}));
+//# sourceMappingURL=Addr.js.map
