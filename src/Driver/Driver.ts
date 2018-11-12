@@ -88,7 +88,7 @@ export class Driver
                 .Get4LE('input1').Get4LE('input2').Get4LE('input3').Get4LE('input4').Get4LE('input5').Get4LE('input6').Get4LE('input7')
                 .Get4LE('adc1').Get4LE('adc2').Get4LE('adc3').Get4LE('adc4')
                 .Get4LE('rtc'))
-            .IsXor()
+            .IsXor() 
             .Build();
 
         parser.OnComplete((out: BluePillBoardParserData) =>
@@ -96,9 +96,13 @@ export class Driver
             this.ExecuteFrame(out);
         });
 
+        let faultsCounter = 0;
         parser.OnFault((reason, frame) =>
         {
-            console.log('FAULT', reason);
+            faultsCounter++;
+
+            if ((faultsCounter % 100) === 0)
+                console.log('FAULTs', faultsCounter);
         });
 
         this.serial.Connect(port, 19200);
@@ -122,7 +126,7 @@ export class Driver
                 break;
         }
     }
-    
+
     private ExecuteFrame(out: BluePillBoardParserData)
     {
         switch (out.type)

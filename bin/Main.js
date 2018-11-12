@@ -77,7 +77,6 @@ let Main = class Main {
             clients.DisconnectAll();
             httpServer.close(() => console.log('SERVER CLOSED'));
             await this._driver.Disconnect();
-            console.log('USB CLOSED');
         });
     }
 };

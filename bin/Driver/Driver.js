@@ -82,8 +82,11 @@ let Driver = class Driver {
         parser.OnComplete((out) => {
             this.ExecuteFrame(out);
         });
+        let faultsCounter = 0;
         parser.OnFault((reason, frame) => {
-            console.log('FAULT', reason);
+            faultsCounter++;
+            if ((faultsCounter % 100) === 0)
+                console.log('FAULTs', faultsCounter);
         });
         this.serial.Connect(port, 19200);
     }
