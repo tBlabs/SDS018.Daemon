@@ -28,6 +28,7 @@ export class Main
 
         server.all('/ping', (req, res) =>
         {
+            console.log('ping');
             res.send('pong');
         });
 
@@ -36,6 +37,8 @@ export class Main
             const addr: number = parseInt(req.params.addr, 10);
 
             const value = this._driver.Read(addr);
+            
+            console.log(`${addr}: ${value}`);
 
             res.send(value.toString());
         });
@@ -45,6 +48,8 @@ export class Main
             const addr: number = parseInt(req.params.addr, 10);
             const value = parseInt(req.params.value, 10);
 
+            console.log(`${addr} = ${value}`);
+            
             this._driver.Set(addr, value);
 
             res.sendStatus(202);

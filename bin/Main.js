@@ -28,16 +28,19 @@ let Main = class Main {
         const socket = socketIo(httpServer);
         server.get('/favicon.ico', (req, res) => res.status(204));
         server.all('/ping', (req, res) => {
+            console.log('ping');
             res.send('pong');
         });
         server.all('/:addr', (req, res) => {
             const addr = parseInt(req.params.addr, 10);
             const value = this._driver.Read(addr);
+            console.log(`${addr}: ${value}`);
             res.send(value.toString());
         });
         server.all('/:addr/:value', (req, res) => {
             const addr = parseInt(req.params.addr, 10);
             const value = parseInt(req.params.value, 10);
+            console.log(`${addr} = ${value}`);
             this._driver.Set(addr, value);
             res.sendStatus(202);
         });
