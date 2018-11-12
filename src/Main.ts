@@ -51,42 +51,44 @@ export class Main
             console.log(`${addr} = ${value}`);
             
             this._driver.Set(addr, value);
-
+            
             res.sendStatus(202);
         });
-
+        
         server.use((err, req, res, next) =>
         {
             console.log('Globally caught server error:', err.message);
-
+            
             res.send(err.message);
         });
-
-
+        
+        
         const clients = new Clients();
-
+        
         socket.on('connection', (socket: Socket) =>
         {
             clients.Add(socket);
-
+            
             socket.on('get', (addr) =>
             {
                 const value = this._driver.Read(addr);
-
+                console.log(`${addr}: ${value}`);
+                
                 socket.emit('update', addr, value);
             });
-
+            
             socket.on('get-all', () =>
             {
                 const state = this._driver.State;
-
+                
                 socket.emit('update-all', state);
             });
-
+            
             socket.on('set', (addr, value) =>
             {
                 try
                 {
+                    console.log(`${addr} = ${value}`);
                     this._driver.Set(addr, value);
                 }
                 catch (error)
@@ -96,8 +98,8 @@ export class Main
                 }
             });
         });
-
-
+        
+        
         this._driver.OnUpdate((ioState: IoState) =>
         {
             clients.SendToAll('update', ioState);

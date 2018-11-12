@@ -53,6 +53,7 @@ let Main = class Main {
             clients.Add(socket);
             socket.on('get', (addr) => {
                 const value = this._driver.Read(addr);
+                console.log(`${addr}: ${value}`);
                 socket.emit('update', addr, value);
             });
             socket.on('get-all', () => {
@@ -61,6 +62,7 @@ let Main = class Main {
             });
             socket.on('set', (addr, value) => {
                 try {
+                    console.log(`${addr} = ${value}`);
                     this._driver.Set(addr, value);
                 }
                 catch (error) {
