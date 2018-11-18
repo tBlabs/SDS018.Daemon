@@ -1,1 +1,1 @@
-{"version":3,"file":"GetOperation.js","sourceRoot":"","sources":["../../../../src/utils/FluentParser/Operations/GetOperation.ts"],"names":[],"mappings":";;AAAA,0DAAuD;AAGvD,MAAa,YAAY;IAIrB,YAAmB,OAAgB;QAAhB,YAAO,GAAP,OAAO,CAAS;QAF5B,SAAI,GAAG,6BAAa,CAAC,GAAG,CAAC;IAG9B,CAAC;CACN;AAND,oCAMC"}
+{"version":3,"file":"GetOperation.js","sourceRoot":"","sources":["../../../../src/utils/FluentParser/Operations/GetOperation.ts"],"names":[],"mappings":";;AAAA,0DAAuD;AAGvD;IAII,YAAmB,OAAgB;QAAhB,YAAO,GAAP,OAAO,CAAS;QAF5B,SAAI,GAAG,6BAAa,CAAC,GAAG,CAAC;IAG9B,CAAC;CACN;AAND,oCAMC"}

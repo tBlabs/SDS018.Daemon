@@ -86,8 +86,8 @@ let Driver = class Driver {
         let faultsCounter = 0;
         parser.OnFault((reason, frame) => {
             faultsCounter++;
-            if ((faultsCounter % 100) === 0)
-                console.log('FAULTs', faultsCounter);
+            // if ((faultsCounter % 100) === 0) console.log('FAULTs', faultsCounter);
+            console.log(`FAULT ${faultsCounter}: ${reason}`);
         });
         this.serial.Connect(port, 19200);
     }
@@ -119,7 +119,7 @@ let Driver = class Driver {
                 });
                 break;
             case ResponseFrameType_1.ResponseFrameType.Error:
-                console.log('BOARD PARSER ERROR', out.err);
+                console.log('BOARD ERROR', out.err);
                 break;
             case ResponseFrameType_1.ResponseFrameType.Pong:
                 console.log('PONG FROM BOARD');

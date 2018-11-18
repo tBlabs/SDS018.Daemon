@@ -132,7 +132,7 @@ export class Main
 
             await this._driver.Disconnect();
             this._logger.LogAlways(`BOARD DISCONNECTED`);
-            
+
             httpServer.close(() => this._logger.LogAlways(`SERVER CLOSED`));
         });
     }

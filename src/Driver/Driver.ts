@@ -65,7 +65,7 @@ export class Driver
         await this.serial.Disconnect();
     }
 
-    public Connect(port: string, onConnectionCallback?: ()=>void): void
+    public Connect(port: string, onConnectionCallback?: () => void): void
     {
         this.serial.OnConnection(() =>
         {
@@ -89,7 +89,7 @@ export class Driver
                 .Get4LE('input1').Get4LE('input2').Get4LE('input3').Get4LE('input4').Get4LE('input5').Get4LE('input6').Get4LE('input7')
                 .Get4LE('adc1').Get4LE('adc2').Get4LE('adc3').Get4LE('adc4')
                 .Get4LE('rtc'))
-            .IsXor() 
+            .IsXor()
             .Build();
 
         parser.OnComplete((out: BluePillBoardParserData) =>
@@ -102,8 +102,8 @@ export class Driver
         {
             faultsCounter++;
 
-            if ((faultsCounter % 100) === 0)
-                console.log('FAULTs', faultsCounter);
+            // if ((faultsCounter % 100) === 0) console.log('FAULTs', faultsCounter);
+            console.log(`FAULT ${faultsCounter}: ${ reason }`);
         });
 
         this.serial.Connect(port, 19200);
@@ -135,7 +135,7 @@ export class Driver
             case ResponseFrameType.ConfigUpdate:
                 this.ConfigAsString(out);
                 break;
-            
+
             case ResponseFrameType.UpdateAllSensors:
                 const sensors: number[] = [out.input1, out.input2, out.input3, out.input4, out.input5, out.input6, out.input7, out.adc1, out.adc2, out.adc3, out.adc4, out.rtc];
                 sensors.forEach((value, addr) =>
@@ -144,7 +144,7 @@ export class Driver
                 });
                 break;
             case ResponseFrameType.Error:
-                console.log('BOARD PARSER ERROR', out.err);
+                console.log('BOARD ERROR', out.err);
                 break;
             case ResponseFrameType.Pong:
                 console.log('PONG FROM BOARD');

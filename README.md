@@ -1,6 +1,6 @@
 #TODO
 - add operation timeouts (config set etc)
-- remove `fluent parser`, import it's package instead 
+- remove `fluent parser`|  import it's package instead 
 
 # BluePill.Daemon
 
@@ -16,7 +16,7 @@ Cooperates with [this firmware](https://github.com/tBlabs/BluePill.Firmware)).
 ## Start (production mode)
 
 - `cd {dir}`
-- modify `run.sh` (set `port`, `serial` and `log`)
+- modify `run.sh` (set `port`|  `serial` and `log`)
 - `./run`
 
 `[]` - optional stuff
@@ -51,15 +51,45 @@ You can change startup params in `autorun` script (in `package.json` > `scripts`
 
 | Action       | Event  | Args                    | Example                      | Side effects               |
 | ------------ | ------ | ----------------------- | ---------------------------- | -------------------------- |
-| Get IO value | `get`  | addr (address of IO)    | socket.emit('get', 4)        | *none*                     |
-| Set IO value | `set`  | addr, value (new value) | socket.emit('set', 4, 123)   | `update` to every client   |
+| Get IO value | `get`  | addr (address of IO)    | socket.emit('get'|  4)        | *none*                     |
+| Set IO value | `set`  | addr|  value (new value) | socket.emit('set'|  4|  123)   | `update` to every client   |
 
 ### Host --> Client
 
 | Event           | Args          |
 | --------------- | ------------- |
-| `update`        |  addr, value  |
-| `driver-error`  |  addr, value  |
+| `update`        |  addr|  value  |
+| `driver-error`  |  addr|  value  |
+
+# IO Addresses
+
+| IO Name | Addr | ,
+| ------- | ---- |
+| Input1  | 0    | 
+| Input2  | 1    | 
+| Input3 | 2| 
+| Input4 | 3| 
+| Input5 | 4| 
+| Input6 | 5| 
+| Input7 | 6| 
+| Adc1 | 7| 
+| Adc2 | 8| 
+| Adc3 | 9| 
+| Adc4 | 10| 
+| RTC | 11| 
+| Output1 | 12| 
+| Output2 | 13| 
+| Output3 | 14| 
+| Output4 | 15| 
+| Output5 | 16| 
+| Output6 | 17| 
+| Output7 | 18| 
+| Pwm1 | 19| 
+| Pwm2 | 20| 
+| Pwm3 | 21| 
+| Pwm4 | 22| 
+| Display1 | 23| 
+| Display1Dot | 24 |
 
 # Signals
 
