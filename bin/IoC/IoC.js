@@ -7,15 +7,12 @@ const inversify_1 = require("inversify");
 const Main_1 = require("../Main");
 const Driver_1 = require("../Driver/Driver");
 const express = require("express");
-const Environment_1 = require("../services/env/Environment");
 const StartupArgs_1 = require("../services/env/StartupArgs");
 const Config_1 = require("../Config");
 const Logger_1 = require("../services/logger/Logger");
 const IoC = new inversify_1.Container();
 exports.IoC = IoC;
 try {
-    IoC.bind(Types_1.Types.IEnvironment).to(Environment_1.Environment).inSingletonScope().whenTargetIsDefault();
-    IoC.bind(Environment_1.Environment).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(Main_1.Main).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(StartupArgs_1.StartupArgs).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(Config_1.Config).toSelf().inSingletonScope().whenTargetIsDefault();

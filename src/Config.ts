@@ -1,12 +1,10 @@
 import { injectable } from "inversify";
 import { StartupArgs } from "./services/env/StartupArgs";
-import { Environment } from "./services/env/Environment";
 
 @injectable()
 export class Config
 {
     constructor(
-        private _env: Environment,
         private _args: StartupArgs)
     { }
 

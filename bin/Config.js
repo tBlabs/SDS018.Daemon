@@ -11,10 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 const StartupArgs_1 = require("./services/env/StartupArgs");
-const Environment_1 = require("./services/env/Environment");
 let Config = class Config {
-    constructor(_env, _args) {
-        this._env = _env;
+    constructor(_args) {
         this._args = _args;
     }
     get Port() {
@@ -38,8 +36,7 @@ let Config = class Config {
 };
 Config = __decorate([
     inversify_1.injectable(),
-    __metadata("design:paramtypes", [Environment_1.Environment,
-        StartupArgs_1.StartupArgs])
+    __metadata("design:paramtypes", [StartupArgs_1.StartupArgs])
 ], Config);
 exports.Config = Config;
 //# sourceMappingURL=Config.js.map

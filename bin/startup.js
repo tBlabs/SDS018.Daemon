@@ -1,9 +1,6 @@
 #!/usr/bin/env node
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const dotenv = require("dotenv");
-dotenv.config(); // Loads variables from '.env' file to process.env
-// Error.stackTraceLimit = 0;
 const IoC_1 = require("./IoC/IoC");
 const Main_1 = require("./Main");
 (async () => {

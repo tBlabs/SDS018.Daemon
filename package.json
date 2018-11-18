@@ -38,7 +38,6 @@
     },
     "dependencies": {
         "asyncawait": "^1.0.6",
-        "dotenv": "^4.0.0",
         "express": "^4.16.3",
         "inversify": "^4.1.0",
         "jasmine-core": "^2.6.1",
