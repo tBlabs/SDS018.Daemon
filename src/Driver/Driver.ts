@@ -65,11 +65,12 @@ export class Driver
         await this.serial.Disconnect();
     }
 
-    public Connect(port: string): void
+    public Connect(port: string, onConnectionCallback?: ()=>void): void
     {
         this.serial.OnConnection(() =>
         {
-            // this.SetPush(true, 20);
+            if (onConnectionCallback)
+                onConnectionCallback();
         });
 
         this.serial.OnData((data) =>

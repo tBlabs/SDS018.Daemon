@@ -17,10 +17,12 @@ const http = require("http");
 const socketIo = require("socket.io");
 const Clients_1 = require("./Clients");
 const Config_1 = require("./Config");
+const Logger_1 = require("./services/logger/Logger");
 let Main = class Main {
-    constructor(_config, _driver) {
+    constructor(_config, _driver, _logger) {
         this._config = _config;
         this._driver = _driver;
+        this._logger = _logger;
     }
     async Run() {
         const server = express();
@@ -29,37 +31,37 @@ let Main = class Main {
         const clients = new Clients_1.Clients();
         server.get('/favicon.ico', (req, res) => res.status(204));
         server.all('/ping', (req, res) => {
-            console.log('PING');
+            this._logger.Log('PING');
             res.send('pong');
         });
         server.all('/:addr', (req, res) => {
             const addr = parseInt(req.params.addr, 10);
             const value = this._driver.Read(addr);
-            console.log(`HTTP | ${addr}: ${value}`);
+            this._logger.Log(`HTTP | ${addr}: ${value}`);
             res.send(value.toString());
         });
         server.all('/:addr/:value', (req, res) => {
             const addr = parseInt(req.params.addr, 10);
             const value = parseInt(req.params.value, 10);
-            console.log(`HTTP | ${addr} = ${value}`);
+            this._logger.Log(`HTTP | ${addr} = ${value}`);
             this._driver.Set(addr, value);
             res.sendStatus(202);
         });
         server.use((err, req, res, next) => {
-            console.log('Globally caught server error:', err.message);
+            this._logger.Log(`Globally caught server error: ${err.message}`);
             res.send(err.message);
         });
-        socket.on('error', (e) => console.log('SOCKET ERROR', e));
+        socket.on('error', (e) => this._logger.Log(`SOCKET ERROR ${e}`));
         socket.on('connection', (socket) => {
             clients.Add(socket);
             socket.on('get', (addr) => {
                 try {
                     const value = this._driver.Read(addr);
-                    console.log(`SOCKET | ${addr}: ${value}`);
+                    this._logger.Log(`SOCKET | ${addr}: ${value}`);
                     socket.emit('update', addr, value);
                 }
                 catch (error) {
-                    console.log(`DRIVER ERROR ${error.message}`);
+                    this._logger.Log(`DRIVER ERROR ${error.message}`);
                     socket.emit('driver-error', error.message);
                 }
             });
@@ -69,11 +71,11 @@ let Main = class Main {
             });
             socket.on('set', (addr, value) => {
                 try {
-                    console.log(`SOCKET | ${addr} = ${value}`);
+                    this._logger.Log(`SOCKET | ${addr} = ${value}`);
                     this._driver.Set(addr, value);
                 }
                 catch (error) {
-                    console.log(`DRIVER ERROR ${error.message}`);
+                    this._logger.Log(`DRIVER ERROR ${error.message}`);
                     socket.emit('driver-error', error.message);
                 }
             });
@@ -83,19 +85,21 @@ let Main = class Main {
         });
         const port = this._config.Port;
         const serial = this._config.Serial;
-        httpServer.listen(port, () => console.log(`SERVER STARTED @ ${port}`));
-        this._driver.Connect(serial);
+        httpServer.listen(port, () => this._logger.LogAlways(`SERVER STARTED @ ${port}`));
+        this._driver.Connect(serial, () => this._logger.LogAlways(`BOARD CONNECTED @ ${serial}`));
         process.on('SIGINT', async () => {
             clients.DisconnectAll();
-            httpServer.close(() => console.log('SERVER CLOSED'));
+            httpServer.close(() => this._logger.LogAlways(`SERVER CLOSED`));
             await this._driver.Disconnect();
+            this._logger.LogAlways(`BOARD DISCONNECTED`);
         });
     }
 };
 Main = __decorate([
     inversify_1.injectable(),
     __metadata("design:paramtypes", [Config_1.Config,
-        Driver_1.Driver])
+        Driver_1.Driver,
+        Logger_1.Logger])
 ], Main);
 exports.Main = Main;
 //# sourceMappingURL=Main.js.map

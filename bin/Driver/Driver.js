@@ -59,9 +59,10 @@ let Driver = class Driver {
     async Disconnect() {
         await this.serial.Disconnect();
     }
-    Connect(port) {
+    Connect(port, onConnectionCallback) {
         this.serial.OnConnection(() => {
-            // this.SetPush(true, 20);
+            if (onConnectionCallback)
+                onConnectionCallback();
         });
         this.serial.OnData((data) => {
             data.forEach(b => parser.Parse(b));

@@ -5,20 +5,28 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
-require("reflect-metadata");
-const minimist = require("minimist");
-let StartupArgs = class StartupArgs {
-    get RawArgs() {
-        return process.argv.slice(2);
+const Config_1 = require("../../Config");
+let Logger = class Logger {
+    constructor(_config) {
+        this._config = _config;
     }
-    get Args() {
-        return minimist(this.RawArgs);
+    Log(text) {
+        if (this._config.Log) {
+            console.log(text);
+        }
+    }
+    LogAlways(text) {
+        console.log(text);
     }
 };
-StartupArgs = __decorate([
-    inversify_1.injectable()
-], StartupArgs);
-exports.StartupArgs = StartupArgs;
-//# sourceMappingURL=StartupArgs.js.map
+Logger = __decorate([
+    inversify_1.injectable(),
+    __metadata("design:paramtypes", [Config_1.Config])
+], Logger);
+exports.Logger = Logger;
+//# sourceMappingURL=Logger.js.map

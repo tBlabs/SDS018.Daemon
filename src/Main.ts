@@ -8,13 +8,15 @@ import * as socketIo from 'socket.io';
 import { Socket } from 'socket.io';
 import { Clients } from './Clients';
 import { Config } from './Config';
+import { Logger } from './services/logger/Logger';
 
 @injectable()
 export class Main
 {
     constructor(
         private _config: Config,
-        private _driver: Driver)
+        private _driver: Driver,
+        private _logger: Logger)
     { }
 
     public async Run(): Promise<void>
@@ -28,7 +30,7 @@ export class Main
 
         server.all('/ping', (req, res) =>
         {
-            console.log('PING');
+            this._logger.Log('PING');
             res.send('pong');
         });
 
@@ -38,7 +40,7 @@ export class Main
 
             const value = this._driver.Read(addr);
 
-            console.log(`HTTP | ${ addr }: ${ value }`);
+            this._logger.Log(`HTTP | ${ addr }: ${ value }`);
 
             res.send(value.toString());
         });
@@ -48,7 +50,7 @@ export class Main
             const addr: number = parseInt(req.params.addr, 10);
             const value = parseInt(req.params.value, 10);
 
-            console.log(`HTTP | ${ addr } = ${ value }`);
+            this._logger.Log(`HTTP | ${ addr } = ${ value }`);
 
             this._driver.Set(addr, value);
 
@@ -57,13 +59,13 @@ export class Main
 
         server.use((err, req, res, next) =>
         {
-            console.log('Globally caught server error:', err.message);
+            this._logger.Log(`Globally caught server error: ${ err.message }`);
 
             res.send(err.message);
         });
 
 
-        socket.on('error', (e) => console.log('SOCKET ERROR', e));
+        socket.on('error', (e) => this._logger.Log(`SOCKET ERROR ${e}`));
 
         socket.on('connection', (socket: Socket) =>
         {
@@ -74,13 +76,13 @@ export class Main
                 try
                 {
                     const value = this._driver.Read(addr);
-                    console.log(`SOCKET | ${ addr }: ${ value }`);
+                    this._logger.Log(`SOCKET | ${ addr }: ${ value }`);
 
                     socket.emit('update', addr, value);
                 }
                 catch (error)
                 {
-                    console.log(`DRIVER ERROR ${ error.message }`);
+                    this._logger.Log(`DRIVER ERROR ${ error.message }`);
 
                     socket.emit('driver-error', error.message);
                 }
@@ -97,13 +99,13 @@ export class Main
             {
                 try
                 {
-                    console.log(`SOCKET | ${ addr } = ${ value }`);
+                    this._logger.Log(`SOCKET | ${ addr } = ${ value }`);
 
                     this._driver.Set(addr, value);
                 }
                 catch (error)
                 {
-                    console.log(`DRIVER ERROR ${ error.message }`);
+                    this._logger.Log(`DRIVER ERROR ${ error.message }`);
 
                     socket.emit('driver-error', error.message);
                 }
@@ -120,15 +122,16 @@ export class Main
         const port = this._config.Port;
         const serial = this._config.Serial;
 
-        httpServer.listen(port, () => console.log(`SERVER STARTED @ ${ port }`));
-        this._driver.Connect(serial);
+        httpServer.listen(port, () => this._logger.LogAlways(`SERVER STARTED @ ${ port }`));
+        this._driver.Connect(serial, ()=>this._logger.LogAlways(`BOARD CONNECTED @ ${serial}`));
 
 
         process.on('SIGINT', async () =>
         {
             clients.DisconnectAll();
-            httpServer.close(() => console.log('SERVER CLOSED'));
+            httpServer.close(() => this._logger.LogAlways(`SERVER CLOSED`));
             await this._driver.Disconnect();
+            this._logger.LogAlways(`BOARD DISCONNECTED`);
         });
     }
 }

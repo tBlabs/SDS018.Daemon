@@ -15,8 +15,8 @@ import { Main } from './Main';
         const main: Main = IoC.get(Main);
         await main.Run();
     }
-    catch (ex)
+    catch (error)
     {
-        console.log('Startup exception:', ex);
+        console.log('Startup exception:', error.message);
     }
 })();

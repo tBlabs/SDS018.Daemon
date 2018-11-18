@@ -1,6 +1,6 @@
 #TODO
-- extend Args class (add Port and USB option)
 - add operation timeouts (config set etc)
+- remove `fluent parser`, import it's package instead 
 
 # BluePill.Daemon
 
@@ -9,55 +9,67 @@ Cooperates with [this firmware](https://github.com/tBlabs/BluePill.Firmware)).
 
 ## Install 
 
-`cd {dir}`
-`npm i`
-`sudo chmod +x run.sh`
+- `cd {dir}`
+- `npm i`
+- `sudo chmod +x run.sh`
 
-## Start
+## Start (production mode)
 
-`cd {dir}`
-`./run [--port 3000 --serial /dev/ttyUSB0 --verbose]`
+- `cd {dir}`
+- modify `run.sh` (set `port`, `serial` and `log`)
+- `./run`
 
 `[]` - optional stuff
 
-| Param     | Usage     | Default  |
-| --------- | ----------------------------------------------- | ------------- |
-| port      | HTTP port for REST calls and socket connections | 3000               |
-| serial    | USB or UART "BluePill" is connected to          | *goto ENV section* |
-| verbose   | TODO  |
+| Param     | Usage                                           | Default value    |
+| --------- | ----------------------------------------------- | ---------------- |
+| port      | HTTP port for REST calls and socket connections | 3000             |
+| serial    | USB or UART "BluePill" is connected to          | From `.env` file |
+| log       | Let it talk                                     | Off              |
+
+## Development
+
+`npm run serve`  
+You can change startup params in `autorun` script (in `package.json` > `scripts` section). Remember to always restart `serve` tool after any changes in `package.json`.
 
 ## Stop
 
-## Client --> Host
+`Ctrl+C`
 
-| Action       | Method    | Event     | Args                   | Example |                           |
-| ------------ | --------- | --------- | ---------------------- | ------- | ------ |
-| Get IO value | HTTP GET  | /`addr`   | addr = address of IO   | /4      | `update` to all connected clients  |
-|              | SOCKET    | `get`     | addr                   | socket.emit('get', 4) | `update` to all connected clients  |
-| Set IO value | HTTP GET  |`get`     | addr          | `update` only for sender           |
+# Client API
 
-Where:  
-`addr` - address of IO (full list of address can be found in `Addr.ts` file)  
-`value` - value of/for IO
+## HTTP
 
-## Host --> Client
+| Action       | Method  | Url             | Example request | Example response | Side effects                          |
+| ------------ | ------- | --------------- | --------------- | ---------------- | ------------------------------------- |
+| Get IO value | GET     | /`addr`         | /4              | 123              | *none*                                |
+| Set IO value | GET     | /`addr`/`value` | /4/123          | *HTTP 200 OK*    | Sends `update` to every socket client |
 
-| Event     | Args          |
-| --------- | ------------- |
-| `update`  |  addr, value  |
+## SOCKET
+
+### Client --> Host
+
+| Action       | Event  | Args                    | Example                      | Side effects               |
+| ------------ | ------ | ----------------------- | ---------------------------- | -------------------------- |
+| Get IO value | `get`  | addr (address of IO)    | socket.emit('get', 4)        | *none*                     |
+| Set IO value | `set`  | addr, value (new value) | socket.emit('set', 4, 123)   | `update` to every client   |
+
+### Host --> Client
+
+| Event           | Args          |
+| --------------- | ------------- |
+| `update`        |  addr, value  |
 | `driver-error`  |  addr, value  |
 
-# Development
+# Signals
 
-## .env what for?
+## SIGINT
 
-It's easier to use just `npm run serve` during development without care of `serial` and `port`.
+When user press Ctrl+C in console....
 
-## When board is directly connected to PC via USB
+# Testing on PC
 
-Find out at which port you had connected (probably one of `/dev/ttyUSB?`).  
-Start app with param `--serial /dev/ttyUSBx` where `x` is a port number.  
-Default value of `serial` is `/dev/ttyUSB0` when `TARGET` is set to `PC` in `.env` file.
-
-
-
+- Connect "BluePill" board via USB
+- Run `run.sh` script (check it's args first)
+- Open browser and hit `http://localhost:3000/12/0` to turn build in led on. Hit `http://localhost:3000/12/1` to turn it off.  
+At `http://localhost:3000/11` RTC value can be found. Refresh page few times to see if it's growing.

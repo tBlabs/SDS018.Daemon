@@ -24,7 +24,7 @@ export class Clients
         this.clients.splice(clientIndex, 1);
     }
 
-    public SendToAll(event: string, ...args: any | any[])
+    public SendToAll(event: string, ...args: any[])
     {
         this.clients.forEach((socket: Socket) =>
         {

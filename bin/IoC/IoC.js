@@ -10,6 +10,7 @@ const express = require("express");
 const Environment_1 = require("../services/env/Environment");
 const StartupArgs_1 = require("../services/env/StartupArgs");
 const Config_1 = require("../Config");
+const Logger_1 = require("../services/logger/Logger");
 const IoC = new inversify_1.Container();
 exports.IoC = IoC;
 try {
@@ -20,6 +21,7 @@ try {
     IoC.bind(Config_1.Config).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(Types_1.Types.IStartupArgs).to(StartupArgs_1.StartupArgs).inSingletonScope().whenTargetIsDefault();
     IoC.bind(Driver_1.Driver).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind(Logger_1.Logger).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(Types_1.Types.ExpressServer).toConstantValue(express()).whenTargetIsDefault();
 }
 catch (ex) {
