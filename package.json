@@ -46,6 +46,6 @@
         "os": "^0.1.1",
         "reflect-metadata": "^0.1.10",
         "serialport": "^7.0.2",
-        "socket.io": "^2.1.1",
+        "socket.io": "^2.1.1"
     }
 }
