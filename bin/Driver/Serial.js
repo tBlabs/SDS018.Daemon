@@ -35,7 +35,7 @@ class Serial {
             this.isConnected = false;
         });
         this.serial.on('close', () => {
-            console.log('SERIAL CLOSE');
+            // console.log('SERIAL CLOSE');
             this.isConnected = false;
         });
     }

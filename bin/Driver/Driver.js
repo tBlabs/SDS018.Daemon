@@ -119,16 +119,16 @@ let Driver = class Driver {
                 });
                 break;
             case ResponseFrameType_1.ResponseFrameType.Error:
-                console.log('board error', out.err);
+                console.log('BOARD PARSER ERROR', out.err);
                 break;
             case ResponseFrameType_1.ResponseFrameType.Pong:
-                console.log('pong from board');
+                console.log('PONG FROM BOARD');
                 break;
             case ResponseFrameType_1.ResponseFrameType.Update:
                 this.UpdateCache(out.addr, out.value);
                 break;
             default:
-                throw new Error('Unknown response');
+                throw new Error('BOARD UNKNOWN RESPONSE');
         }
     }
     UpdateCache(addr, value) {

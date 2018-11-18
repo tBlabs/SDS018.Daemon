@@ -1,1 +1,1 @@
-{"version":3,"file":"Operation.js","sourceRoot":"","sources":["../../../../src/utils/FluentParser/Operations/Operation.ts"],"names":[],"mappings":";;AAAA;IAII,QAAQ;QAEJ,MAAM,CAAC,IAAI,CAAC,IAAI,CAAC;IACrB,CAAC;CACJ;AARD,8BAQC"}
+{"version":3,"file":"Operation.js","sourceRoot":"","sources":["../../../../src/utils/FluentParser/Operations/Operation.ts"],"names":[],"mappings":";;AAAA,MAAa,SAAS;IAIlB,QAAQ;QAEJ,OAAO,IAAI,CAAC,IAAI,CAAC;IACrB,CAAC;CACJ;AARD,8BAQC"}

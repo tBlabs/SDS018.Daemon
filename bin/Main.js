@@ -89,9 +89,9 @@ let Main = class Main {
         this._driver.Connect(serial, () => this._logger.LogAlways(`BOARD CONNECTED @ ${serial}`));
         process.on('SIGINT', async () => {
             clients.DisconnectAll();
-            httpServer.close(() => this._logger.LogAlways(`SERVER CLOSED`));
             await this._driver.Disconnect();
             this._logger.LogAlways(`BOARD DISCONNECTED`);
+            httpServer.close(() => this._logger.LogAlways(`SERVER CLOSED`));
         });
     }
 };

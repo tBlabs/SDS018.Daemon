@@ -65,7 +65,7 @@ export class Main
         });
 
 
-        socket.on('error', (e) => this._logger.Log(`SOCKET ERROR ${e}`));
+        socket.on('error', (e) => this._logger.Log(`SOCKET ERROR ${ e }`));
 
         socket.on('connection', (socket: Socket) =>
         {
@@ -123,15 +123,17 @@ export class Main
         const serial = this._config.Serial;
 
         httpServer.listen(port, () => this._logger.LogAlways(`SERVER STARTED @ ${ port }`));
-        this._driver.Connect(serial, ()=>this._logger.LogAlways(`BOARD CONNECTED @ ${serial}`));
+        this._driver.Connect(serial, () => this._logger.LogAlways(`BOARD CONNECTED @ ${ serial }`));
 
 
         process.on('SIGINT', async () =>
         {
             clients.DisconnectAll();
-            httpServer.close(() => this._logger.LogAlways(`SERVER CLOSED`));
+
             await this._driver.Disconnect();
             this._logger.LogAlways(`BOARD DISCONNECTED`);
+            
+            httpServer.close(() => this._logger.LogAlways(`SERVER CLOSED`));
         });
     }
 }

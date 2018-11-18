@@ -1,0 +1,1 @@
+node ./bin/startup.js --port 3000 --serial /dev/ttyUSB0 --log
