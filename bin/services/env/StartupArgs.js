@@ -6,20 +6,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const axios_1 = require("axios");
 const inversify_1 = require("inversify");
-let HttpRunner = class HttpRunner {
-    async Exe(cmd) {
-        try {
-            await axios_1.default.get(cmd);
-        }
-        catch (error) {
-            console.log(error.message);
-        }
+require("reflect-metadata");
+const minimist = require("minimist");
+let StartupArgs = class StartupArgs {
+    get RawArgs() {
+        return process.argv.slice(2);
+    }
+    get Args() {
+        return minimist(this.RawArgs);
     }
 };
-HttpRunner = __decorate([
+StartupArgs = __decorate([
     inversify_1.injectable()
-], HttpRunner);
-exports.HttpRunner = HttpRunner;
-//# sourceMappingURL=HttpRunner.js.map
+], StartupArgs);
+exports.StartupArgs = StartupArgs;
+//# sourceMappingURL=StartupArgs.js.map

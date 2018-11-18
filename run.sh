@@ -1,0 +1,1 @@
+./bin/startup.sh --port 3000 --serial /dev/ttyUSB0

@@ -21,8 +21,7 @@ class FluentParser {
     Parse(b) {
         this.frame.push(b);
         const op = this._operations.Current;
-        switch (op.type) // if switch by object type is possible then .type could be removed
-         {
+        switch (op.type) {
             case OperationType_1.OperationType.IsXor:
                 const dataForXor = this.frame.slice(0, this.frame.length - 1);
                 const xor = this.Xor(dataForXor);

@@ -15,32 +15,33 @@ const Driver_1 = require("./Driver/Driver");
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
-const StartupArgs_1 = require("./services/environment/StartupArgs");
 const Clients_1 = require("./Clients");
+const Config_1 = require("./Config");
 let Main = class Main {
-    constructor(_args, _driver) {
-        this._args = _args;
+    constructor(_config, _driver) {
+        this._config = _config;
         this._driver = _driver;
     }
     async Run() {
         const server = express();
         const httpServer = http.createServer(server);
         const socket = socketIo(httpServer);
+        const clients = new Clients_1.Clients();
         server.get('/favicon.ico', (req, res) => res.status(204));
         server.all('/ping', (req, res) => {
-            console.log('ping');
+            console.log('PING');
             res.send('pong');
         });
         server.all('/:addr', (req, res) => {
             const addr = parseInt(req.params.addr, 10);
             const value = this._driver.Read(addr);
-            console.log(`${addr}: ${value}`);
+            console.log(`HTTP | ${addr}: ${value}`);
             res.send(value.toString());
         });
         server.all('/:addr/:value', (req, res) => {
             const addr = parseInt(req.params.addr, 10);
             const value = parseInt(req.params.value, 10);
-            console.log(`${addr} = ${value}`);
+            console.log(`HTTP | ${addr} = ${value}`);
             this._driver.Set(addr, value);
             res.sendStatus(202);
         });
@@ -48,13 +49,19 @@ let Main = class Main {
             console.log('Globally caught server error:', err.message);
             res.send(err.message);
         });
-        const clients = new Clients_1.Clients();
+        socket.on('error', (e) => console.log('SOCKET ERROR', e));
         socket.on('connection', (socket) => {
             clients.Add(socket);
             socket.on('get', (addr) => {
-                const value = this._driver.Read(addr);
-                console.log(`${addr}: ${value}`);
-                socket.emit('update', addr, value);
+                try {
+                    const value = this._driver.Read(addr);
+                    console.log(`SOCKET | ${addr}: ${value}`);
+                    socket.emit('update', addr, value);
+                }
+                catch (error) {
+                    console.log(`DRIVER ERROR ${error.message}`);
+                    socket.emit('driver-error', error.message);
+                }
             });
             socket.on('get-all', () => {
                 const state = this._driver.State;
@@ -62,22 +69,22 @@ let Main = class Main {
             });
             socket.on('set', (addr, value) => {
                 try {
-                    console.log(`${addr} = ${value}`);
+                    console.log(`SOCKET | ${addr} = ${value}`);
                     this._driver.Set(addr, value);
                 }
                 catch (error) {
-                    console.log(error.message);
-                    socket.emit('error', error.message);
+                    console.log(`DRIVER ERROR ${error.message}`);
+                    socket.emit('driver-error', error.message);
                 }
             });
         });
         this._driver.OnUpdate((ioState) => {
             clients.SendToAll('update', ioState);
         });
-        const port = this._args.Args.port || 3000;
-        const usb = this._args.Args.usb || '/dev/ttyUSB0';
+        const port = this._config.Port;
+        const serial = this._config.Serial;
         httpServer.listen(port, () => console.log(`SERVER STARTED @ ${port}`));
-        this._driver.Connect(usb);
+        this._driver.Connect(serial);
         process.on('SIGINT', async () => {
             clients.DisconnectAll();
             httpServer.close(() => console.log('SERVER CLOSED'));
@@ -87,7 +94,7 @@ let Main = class Main {
 };
 Main = __decorate([
     inversify_1.injectable(),
-    __metadata("design:paramtypes", [StartupArgs_1.StartupArgs,
+    __metadata("design:paramtypes", [Config_1.Config,
         Driver_1.Driver])
 ], Main);
 exports.Main = Main;

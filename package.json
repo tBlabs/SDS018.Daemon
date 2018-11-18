@@ -1,7 +1,7 @@
 {
     "name": "node.ts-startup",
     "version": "1.0.0",
-    "description": "node.ts boilerplate",
+    "description": "BluePill driver and host",
     "main": "./bin/startup.js",
     "author": "tB",
     "license": "beerware",
@@ -13,15 +13,15 @@
         "xpreinstall": "sudo npm i -g typescript jest tslint npm-run-all",
         "start": "node ./bin/startup.js",
         "run": "npm run clean && npm run build && clear && npm run start",
-        "watch": "tsc --watch",
-        "monitor": "nodemon ./bin/startup.js",
-        "serve": "npm run clean && run-p watch monitor",
+        "continous_transpilation": "tsc --watch",
+        "continous_run": "nodemon ./bin/startup.js",
+        "serve": "npm run clean && run-p continous_transpilation continous_run",
         "lint": "tslint -c tslint.json './src/**/*.{ts,tsx}' --format msbuild",
         "test": "jest --runInBand",
         "build": "tsc -p .",
         "clean": "rm ./bin -rf",
         "autofix": "tslint --fix --project .",
-        "publish": "git push origin master"
+        "push": "git push origin master"
     },
     "devDependencies": {
         "@types/axios": "^0.14.0",

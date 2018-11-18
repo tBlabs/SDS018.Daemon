@@ -8,24 +8,36 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 require("reflect-metadata");
-const fs = require("fs");
-let Storage = class Storage {
-    constructor() {
-        this.File = '';
+let Environment = class Environment {
+    Exists(key) {
+        return (process.env[key] !== undefined);
     }
-    Read() {
-        if (fs.existsSync(this.File)) {
-            const configFileContent = fs.readFileSync(this.File, 'utf8');
-            return JSON.parse(configFileContent);
+    IsSet(key) {
+        if (!this.Exists(key)) {
+            return false;
         }
-        return {};
+        if (process.env[key] !== '') {
+            return true;
+        }
+        return false;
     }
-    Write(obj) {
-        fs.writeFileSync(this.File, JSON.stringify(obj));
+    ValueOf(key) {
+        if (!this.Exists(key)) {
+            throw new Error('Environment variable "' + key + '" not exists');
+        }
+        return process.env[key] || '';
+    }
+    ValueOrDefault(key, defaultValue) {
+        try {
+            return this.ValueOf(key);
+        }
+        catch (ex) {
+            return defaultValue;
+        }
     }
 };
-Storage = __decorate([
+Environment = __decorate([
     inversify_1.injectable()
-], Storage);
-exports.Storage = Storage;
-//# sourceMappingURL=Storage.js.map
+], Environment);
+exports.Environment = Environment;
+//# sourceMappingURL=Environment.js.map

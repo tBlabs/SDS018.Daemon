@@ -29,7 +29,7 @@ class IoCache {
     Get(addr) {
         const io = this.cache[addr];
         if (io === undefined) {
-            throw new Error(`Addr ${addr} not found in sensors cache`);
+            throw new Error(`Addr ${addr} not found in IO cache`);
         }
         return io.currentValue;
     }
