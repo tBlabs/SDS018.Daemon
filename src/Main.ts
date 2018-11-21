@@ -31,7 +31,18 @@ export class Main
         server.all('/ping', (req, res) =>
         {
             this._logger.Log('PING');
+            
             res.send('pong');
+        });
+
+        server.all('/iostate', (req, res) =>
+        {
+            const iosState = this._driver.State;
+
+            let state = {};
+            iosState.forEach((io: IoState) => state[io.addr] = io.currentValue);
+
+            res.send(state);
         });
 
         server.all('/:addr', (req, res) =>
