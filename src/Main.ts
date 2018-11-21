@@ -77,15 +77,14 @@ export class Main
 
         this._driver.OnUpdate((pm10, pm25) =>
         {
-            console.log(pm10, pm25);
             clients.SendToAll('update', pm10, pm25);
         });
 
 
         const port = this._config.Port;
-        const serial = this._config.Serial;
-
         httpServer.listen(port, () => this._logger.LogAlways(`SERVER STARTED @ ${ port }`));
+        
+        const serial = this._config.Serial;
         this._driver.Connect(serial, () => this._logger.LogAlways(`SENSOR CONNECTED @ ${ serial }`));
 
 
