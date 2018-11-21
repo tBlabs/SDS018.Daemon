@@ -8,6 +8,7 @@ interface FrameData
     val1: byte;
     val2: byte;
     val3: byte;
+    if: number;
 }
 
 interface TestCase

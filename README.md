@@ -2,10 +2,9 @@ TODO
 - add operation timeouts (config set etc)
 - remove `fluent parser`|  import it's package instead 
 
-# BluePill.Daemon
+# SDS010.Daemon (PM10 and PM25 air pollution sensor)
 
-(Serial/USB) Driver and HTTP host (REST+Socket) for "BluePill" development board.  
-Cooperates with [this firmware](https://github.com/tBlabs/BluePill.Firmware)).
+(Serial/USB) Driver and HTTP host (REST+Socket) for **SDS010 air pollution sensor** with serial output.  
 
 ## Install 
 
@@ -40,57 +39,28 @@ There are two options to "talk" to BluePill. Via HTTP (REST API) or TCP (Socket)
 
 ## HTTP
 
-| Action       | Method  | Url             | Example request | Example response | Side effects                          |
-| ------------ | ------- | --------------- | --------------- | ---------------- | ------------------------------------- |
-| Get IO value | GET     | /`addr`         | /4              | 123              | *none*                                |
-| Set IO value | GET     | /`addr`/`value` | /4/123          | *HTTP 200 OK*    | Sends `update` to every socket client |
+| Action            | Method  | Request url     | Example response | Side effects    |
+| ----------------- | ------- | --------------- | ---------------- | --------------- |
+| Get PM10 value    | GET     | /pm10           | 123              | *none*          |
+| Get PM25 value    | GET     | /pm25           | 123              | *none*          |
+| Connection test   | GET     | /ping           | pong             | *none*          |
 
 ## SOCKET
 
 ### Client --> Host
 
-| Action       | Event  | Args                    | Example                      | Side effects               |
-| ------------ | ------ | ----------------------- | ---------------------------- | -------------------------- |
-| Get IO value | `get`  | addr (address of IO)    | socket.emit('get',  4)       | *none*                     |
-| Set IO value | `set`  | addr|  value (new value) | socket.emit('set', 4, 123)  | `update` to every client   |
+| Action       | Event  | Args      | Example               | Side effects     |
+| ------------ | ------ | --------- | --------------------- | -----------------|
+| Get values   | `get`  | *none*    | socket.emit('get')    | *none*           |
 
 ### Host --> Client
 
 | Event           | Args          |
 | --------------- | ------------- |
-| `update`        |  addr, value  |
-| `driver-error`  |  addr, value  |
+| `update`        | pm10, pm25    |
 
-# IO Addresses
+`update` is send to every connected client at every sensor update (every one second).
 
-| IO Name     | Addr |
-| ----------- | ---- |
-| Input1      | 0    | 
-| Input2      | 1    | 
-| Input3      | 2    | 
-| Input4      | 3    | 
-| Input5      | 4    | 
-| Input6      | 5    | 
-| Input7      | 6    | 
-| Adc1        | 7    | 
-| Adc2        | 8    | 
-| Adc3        | 9    | 
-| Adc4        | 10   | 
-| RTC         | 11   | 
-| Output1     | 12   | 
-| Output2     | 13   | 
-| Output3     | 14   | 
-| Output4     | 15   | 
-| Output5     | 16   | 
-| Output6     | 17   | 
-| Output7     | 18   | 
-| Pwm1        | 19   | 
-| Pwm2        | 20   | 
-| Pwm3        | 21   | 
-| Pwm4        | 22   | 
-| Display1    | 23   | 
-| Display1Dot | 24   |
-  
 # Signals  
   
 ## SIGINT  
@@ -99,7 +69,6 @@ Press `Ctrl+C` to kill server and driver.
 
 # Testing on PC
 
-- Connect "BluePill" board to USB (via FTDI converter or something)
+- Connect sensor to USB (via FTDI converter or something)
 - Run `run.sh` script (check it's args first)
-- Open browser and hit `http://localhost:3000/12/0` to turn build in led on. Hit `http://localhost:3000/12/1` to turn it off.  
-At `http://localhost:3000/11` RTC value can be found. Refresh page few times to see if it's growing.
+- Open browser and hit `http://localhost:3000/pm10`. You should see value of pm10 particles in the air.

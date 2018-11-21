@@ -34,24 +34,15 @@ let Main = class Main {
             this._logger.Log('PING');
             res.send('pong');
         });
-        server.all('/iostate', (req, res) => {
-            const iosState = this._driver.State;
-            let state = {};
-            iosState.forEach((io) => state[io.addr] = io.currentValue);
-            res.send(state);
-        });
-        server.all('/:addr', (req, res) => {
-            const addr = parseInt(req.params.addr, 10);
-            const value = this._driver.Read(addr);
-            this._logger.Log(`HTTP | ${addr}: ${value}`);
+        server.all('/pm25', (req, res) => {
+            const value = this._driver.Pm25;
+            this._logger.Log(`HTTP | pm25: ${value}`);
             res.send(value.toString());
         });
-        server.all('/:addr/:value', (req, res) => {
-            const addr = parseInt(req.params.addr, 10);
-            const value = parseInt(req.params.value, 10);
-            this._logger.Log(`HTTP | ${addr} = ${value}`);
-            this._driver.Set(addr, value);
-            res.sendStatus(202);
+        server.all('/pm10', (req, res) => {
+            const value = this._driver.Pm10;
+            this._logger.Log(`HTTP | pm10: ${value}`);
+            res.send(value.toString());
         });
         server.use((err, req, res, next) => {
             this._logger.Log(`Globally caught server error: ${err.message}`);
@@ -60,39 +51,20 @@ let Main = class Main {
         socket.on('error', (e) => this._logger.Log(`SOCKET ERROR ${e}`));
         socket.on('connection', (socket) => {
             clients.Add(socket);
-            socket.on('get', (addr) => {
-                try {
-                    const value = this._driver.Read(addr);
-                    this._logger.Log(`SOCKET | ${addr}: ${value}`);
-                    socket.emit('update', addr, value);
-                }
-                catch (error) {
-                    this._logger.Log(`DRIVER ERROR ${error.message}`);
-                    socket.emit('driver-error', error.message);
-                }
-            });
-            socket.on('get-all', () => {
-                const state = this._driver.State;
-                socket.emit('update-all', state);
-            });
-            socket.on('set', (addr, value) => {
-                try {
-                    this._logger.Log(`SOCKET | ${addr} = ${value}`);
-                    this._driver.Set(addr, value);
-                }
-                catch (error) {
-                    this._logger.Log(`DRIVER ERROR ${error.message}`);
-                    socket.emit('driver-error', error.message);
-                }
+            socket.on('get', () => {
+                const pm10 = this._driver.Pm10;
+                const pm25 = this._driver.Pm25;
+                socket.emit('update', pm10, pm25);
             });
         });
-        this._driver.OnUpdate((ioState) => {
-            clients.SendToAll('update', ioState);
+        this._driver.OnUpdate((pm10, pm25) => {
+            console.log(pm10, pm25);
+            clients.SendToAll('update', pm10, pm25);
         });
         const port = this._config.Port;
         const serial = this._config.Serial;
         httpServer.listen(port, () => this._logger.LogAlways(`SERVER STARTED @ ${port}`));
-        this._driver.Connect(serial, () => this._logger.LogAlways(`BOARD CONNECTED @ ${serial}`));
+        this._driver.Connect(serial, () => this._logger.LogAlways(`SENSOR CONNECTED @ ${serial}`));
         process.on('SIGINT', async () => {
             clients.DisconnectAll();
             await this._driver.Disconnect();

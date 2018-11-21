@@ -21,7 +21,7 @@ export class FluentParserBuilder<T>
         return new FluentParser<T>(this.operations);
     }
 
-    public Is(b)
+    public Is(b: byte)
     {
         this.operations.Add(new IsOperation(b));
 
@@ -42,35 +42,25 @@ export class FluentParserBuilder<T>
         return this;
     }
 
-    public Get2LE(varName: string)
+    public Get2LE(varName: keyof T)
     {
-        this.operations.Add(new StartBufferingOperation(varName, 2, Endian.Little));
+        this.operations.Add(new StartBufferingOperation(varName.toString(), 2, Endian.Little));
         this.operations.Add(new BufferingOperation());
 
         return this;
     }
 
-    public Get2BE(varName: string)
+    public Get2BE(varName: keyof T)
     {
-        this.operations.Add(new StartBufferingOperation(varName, 2, Endian.Big));
+        this.operations.Add(new StartBufferingOperation(varName.toString(), 2, Endian.Big));
         this.operations.Add(new BufferingOperation());
 
         return this;
     }
 
-    public Get4LE(varName: string)
+    public Get4LE(varName: keyof T)
     {
-        this.operations.Add(new StartBufferingOperation(varName, 4, Endian.Little));
-        this.operations.Add(new BufferingOperation());
-        this.operations.Add(new BufferingOperation());
-        this.operations.Add(new BufferingOperation());
-
-        return this;
-    }
-
-    public Get4BE(varName: string)
-    {
-        this.operations.Add(new StartBufferingOperation(varName, 4, Endian.Big));
+        this.operations.Add(new StartBufferingOperation(varName.toString(), 4, Endian.Little));
         this.operations.Add(new BufferingOperation());
         this.operations.Add(new BufferingOperation());
         this.operations.Add(new BufferingOperation());
@@ -78,10 +68,20 @@ export class FluentParserBuilder<T>
         return this;
     }
 
-    public If(toCompare: byte, varName: string, builderCallback: (builder: FluentParserBuilder<T>) => FluentParserBuilder<T>)
+    public Get4BE(varName: keyof T)
+    {
+        this.operations.Add(new StartBufferingOperation(varName.toString(), 4, Endian.Big));
+        this.operations.Add(new BufferingOperation());
+        this.operations.Add(new BufferingOperation());
+        this.operations.Add(new BufferingOperation());
+
+        return this;
+    }
+
+    public If(toCompare: byte, varName: keyof T, builderCallback: (builder: FluentParserBuilder<T>) => FluentParserBuilder<T>)
     {
         const builder = builderCallback(new FluentParserBuilder());
-        this.operations.Add(new IfOperation(toCompare, varName, builder.List));
+        this.operations.Add(new IfOperation(toCompare, varName.toString(), builder.List));
 
         return this;
     }

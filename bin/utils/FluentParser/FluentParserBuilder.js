@@ -31,24 +31,24 @@ class FluentParserBuilder {
         return this;
     }
     Get2LE(varName) {
-        this.operations.Add(new StartBufferingOperation_1.StartBufferingOperation(varName, 2, Endian_1.Endian.Little));
+        this.operations.Add(new StartBufferingOperation_1.StartBufferingOperation(varName.toString(), 2, Endian_1.Endian.Little));
         this.operations.Add(new BufferingOperation_1.BufferingOperation());
         return this;
     }
     Get2BE(varName) {
-        this.operations.Add(new StartBufferingOperation_1.StartBufferingOperation(varName, 2, Endian_1.Endian.Big));
+        this.operations.Add(new StartBufferingOperation_1.StartBufferingOperation(varName.toString(), 2, Endian_1.Endian.Big));
         this.operations.Add(new BufferingOperation_1.BufferingOperation());
         return this;
     }
     Get4LE(varName) {
-        this.operations.Add(new StartBufferingOperation_1.StartBufferingOperation(varName, 4, Endian_1.Endian.Little));
+        this.operations.Add(new StartBufferingOperation_1.StartBufferingOperation(varName.toString(), 4, Endian_1.Endian.Little));
         this.operations.Add(new BufferingOperation_1.BufferingOperation());
         this.operations.Add(new BufferingOperation_1.BufferingOperation());
         this.operations.Add(new BufferingOperation_1.BufferingOperation());
         return this;
     }
     Get4BE(varName) {
-        this.operations.Add(new StartBufferingOperation_1.StartBufferingOperation(varName, 4, Endian_1.Endian.Big));
+        this.operations.Add(new StartBufferingOperation_1.StartBufferingOperation(varName.toString(), 4, Endian_1.Endian.Big));
         this.operations.Add(new BufferingOperation_1.BufferingOperation());
         this.operations.Add(new BufferingOperation_1.BufferingOperation());
         this.operations.Add(new BufferingOperation_1.BufferingOperation());
@@ -56,7 +56,7 @@ class FluentParserBuilder {
     }
     If(toCompare, varName, builderCallback) {
         const builder = builderCallback(new FluentParserBuilder());
-        this.operations.Add(new IfOperation_1.IfOperation(toCompare, varName, builder.List));
+        this.operations.Add(new IfOperation_1.IfOperation(toCompare, varName.toString(), builder.List));
         return this;
     }
     IsXor() {
