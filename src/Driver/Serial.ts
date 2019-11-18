@@ -13,7 +13,7 @@ export class Serial
         {
             if (this.serial)
             {
-                this.serial.close((error: Error) =>
+                this.serial.close((error) =>
                 {
                     resolve();
                 });

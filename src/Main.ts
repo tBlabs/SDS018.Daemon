@@ -27,10 +27,18 @@ export class Main
 
         server.get('/favicon.ico', (req, res) => res.status(204));
 
+        server.all('/', (req, res) =>
+        {
+            const pm10 = this._driver.Pm10;
+            const pm25 = this._driver.Pm25;
+
+            res.send(`SDS018 | PM 10: ${pm10} | PM 2.5: ${pm25}`);
+        });
+
         server.all('/ping', (req, res) =>
         {
             this._logger.Log('PING');
-            
+
             res.send('pong');
         });
 
@@ -47,7 +55,7 @@ export class Main
         {
             const value = this._driver.Pm10;
 
-            this._logger.Log(`HTTP | pm10: ${ value }`);
+            this._logger.Log(`HTTP HIT | pm10: ${ value }`);
 
             res.send(value.toString());
         });
@@ -75,6 +83,7 @@ export class Main
             });
         });
 
+
         this._driver.OnUpdate((pm10, pm25) =>
         {
             clients.SendToAll('update', pm10, pm25);
@@ -85,9 +94,17 @@ export class Main
         httpServer.listen(port, () => this._logger.LogAlways(`SERVER STARTED @ ${ port }`));
         
         const serial = this._config.Serial;
-        this._driver.Connect(serial, () => this._logger.LogAlways(`SENSOR CONNECTED @ ${ serial }`));
+        this._driver.Connect(serial, () => 
+        {
+            this._logger.LogAlways(`SENSOR CONNECTED @ ${ serial }`);
 
+            const pm10 = this._driver.Pm10;
+            const pm25 = this._driver.Pm25;
 
+            this._logger.Log(`SDS018 | PM 10: ${ pm10 } | PM 2.5: ${ pm25 }`);
+        });
+
+ 
         process.on('SIGINT', async () =>
         {
             clients.DisconnectAll();

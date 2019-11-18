@@ -1,7 +1,7 @@
 {
     "name": "bluepill.daemon",
     "version": "1.0.0",
-    "description": "BluePill driver and host",
+    "description": "SDS018 Driver and Host",
     "main": "./bin/startup.js",
     "author": "tB",
     "license": "beerware",

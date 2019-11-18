@@ -13,12 +13,12 @@ export class Driver
 {
     public get Pm25(): number
     {
-        return this.out.pm25;
+        return this.out.pm25 / 10;
     }
     
     public get Pm10(): number
     {
-        return this.out.pm10;
+        return this.out.pm10 / 10;
     }
 
     private out: ParserData = <ParserData>{};

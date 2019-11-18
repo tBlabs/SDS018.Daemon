@@ -16,10 +16,10 @@ let Driver = class Driver {
         this.serial = new Serial_1.Serial();
     }
     get Pm25() {
-        return this.out.pm25;
+        return this.out.pm25 / 10;
     }
     get Pm10() {
-        return this.out.pm10;
+        return this.out.pm10 / 10;
     }
     async Disconnect() {
         await this.serial.Disconnect();

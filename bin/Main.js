@@ -30,6 +30,11 @@ let Main = class Main {
         const socket = socketIo(httpServer);
         const clients = new Clients_1.Clients();
         server.get('/favicon.ico', (req, res) => res.status(204));
+        server.all('/', (req, res) => {
+            const pm10 = this._driver.Pm10;
+            const pm25 = this._driver.Pm25;
+            res.send(`SDS018 | PM 10: ${pm10} | PM 2.5: ${pm25}`);
+        });
         server.all('/ping', (req, res) => {
             this._logger.Log('PING');
             res.send('pong');
@@ -41,7 +46,7 @@ let Main = class Main {
         });
         server.all('/pm10', (req, res) => {
             const value = this._driver.Pm10;
-            this._logger.Log(`HTTP | pm10: ${value}`);
+            this._logger.Log(`HTTP HIT | pm10: ${value}`);
             res.send(value.toString());
         });
         server.use((err, req, res, next) => {
@@ -58,13 +63,17 @@ let Main = class Main {
             });
         });
         this._driver.OnUpdate((pm10, pm25) => {
-            console.log(pm10, pm25);
             clients.SendToAll('update', pm10, pm25);
         });
         const port = this._config.Port;
-        const serial = this._config.Serial;
         httpServer.listen(port, () => this._logger.LogAlways(`SERVER STARTED @ ${port}`));
-        this._driver.Connect(serial, () => this._logger.LogAlways(`SENSOR CONNECTED @ ${serial}`));
+        const serial = this._config.Serial;
+        this._driver.Connect(serial, () => {
+            this._logger.LogAlways(`SENSOR CONNECTED @ ${serial}`);
+            const pm10 = this._driver.Pm10;
+            const pm25 = this._driver.Pm25;
+            this._logger.Log(`SDS018 | PM 10: ${pm10} | PM 2.5: ${pm25}`);
+        });
         process.on('SIGINT', async () => {
             clients.DisconnectAll();
             await this._driver.Disconnect();

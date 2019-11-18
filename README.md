@@ -1,10 +1,10 @@
-TODO
+## TODO
 - add operation timeouts (config set etc)
-- remove `fluent parser`|  import it's package instead 
+- remove `fluent parser`. import that package instead 
 
 # SDS010.Daemon (PM10 and PM25 air pollution sensor)
 
-(Serial/USB) Driver and HTTP host (REST+Socket) for **SDS010 air pollution sensor** with serial output.  
+(Serial/USB) Driver and HTTP host (REST+Socket) for **SDS018 air pollution sensor**.  
 
 ## Install 
 
@@ -27,15 +27,16 @@ TODO
 ## Development
 
 `npm run serve`  
-You can change startup params in `autorun` script (in `package.json` > `scripts` section). Remember to always restart `serve` tool after any changes in `package.json`.
+You can change startup params in `autorun` script (in `package.json` > `scripts` section). 
+Remember to always restart `serve` tool after any changes in `package.json`.
 
 ## Stop
 
-`Ctrl+C`
+`Ctrl+C`, `Ctrl+Z` sometimes
 
 # Client API
 
-There are two options to "talk" to BluePill. Via HTTP (REST API) or TCP (Socket).
+There are two options to "talk" to sensor: via HTTP (REST API) or TCP (Socket).
 
 ## HTTP
 
