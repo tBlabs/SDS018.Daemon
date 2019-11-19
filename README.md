@@ -73,3 +73,10 @@ Press `Ctrl+C` to kill server and driver.
 - Connect sensor to USB (via FTDI converter or something)
 - Run `run.sh` script (check it's args first)
 - Open browser and hit `http://localhost:3000/pm10`. You should see value of pm10 particles in the air.
+
+# Troubleshuting
+
+In case of `npm i` problems on Windows:  
+https://github.com/nodejs/node-gyp
+`npm config set msvs_version 2012 --global`  
+`npm install --global --production windows-build-tools` (in Powershell as Admin)  
