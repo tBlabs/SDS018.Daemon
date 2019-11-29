@@ -63,6 +63,9 @@ let Main = class Main {
             });
         });
         this._driver.OnUpdate((pm10, pm25) => {
+            if (this._config.Talk) {
+                console.log(`PM25: ${(pm25 / 10).toFixed(1)} | PM10: ${(pm10 / 10).toFixed(1)}`);
+            }
             clients.SendToAll('update', pm10, pm25);
         });
         const port = this._config.Port;
@@ -72,7 +75,7 @@ let Main = class Main {
             this._logger.LogAlways(`SENSOR CONNECTED @ ${serial}`);
             const pm10 = this._driver.Pm10;
             const pm25 = this._driver.Pm25;
-            this._logger.Log(`SDS018 | PM 10: ${pm10} | PM 2.5: ${pm25}`);
+            // this._logger.Log(`SDS018 | PM 10: ${ pm10 } | PM 2.5: ${ pm25 }`);
         });
         process.on('SIGINT', async () => {
             clients.DisconnectAll();

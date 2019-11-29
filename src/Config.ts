@@ -38,4 +38,9 @@ export class Config
 
         return log;
     }
+
+    public get Talk(): boolean
+    {
+        return this._args.Args.talk || false;
+    }
 }

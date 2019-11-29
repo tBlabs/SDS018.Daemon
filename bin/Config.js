@@ -33,6 +33,9 @@ let Config = class Config {
         const log = this._args.Args.log || false;
         return log;
     }
+    get Talk() {
+        return this._args.Args.talk || false;
+    }
 };
 Config = __decorate([
     inversify_1.injectable(),

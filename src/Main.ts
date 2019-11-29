@@ -86,6 +86,11 @@ export class Main
 
         this._driver.OnUpdate((pm10, pm25) =>
         {
+            if (this._config.Talk)
+            {
+                console.log(`PM 2.5: ${(pm25/10).toFixed(1)} | PM 10: ${(pm10/10).toFixed(1)}`);
+            }
+
             clients.SendToAll('update', pm10, pm25);
         });
 
@@ -101,7 +106,7 @@ export class Main
             const pm10 = this._driver.Pm10;
             const pm25 = this._driver.Pm25;
 
-            this._logger.Log(`SDS018 | PM 10: ${ pm10 } | PM 2.5: ${ pm25 }`);
+            // this._logger.Log(`SDS018 | PM 10: ${ pm10 } | PM 2.5: ${ pm25 }`);
         });
 
  

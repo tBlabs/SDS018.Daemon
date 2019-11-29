@@ -2,7 +2,7 @@
 - add operation timeouts (config set etc)
 - remove `fluent parser`. import that package instead 
 
-# SDS010.Daemon (PM10 and PM25 air pollution sensor)
+# SDS018.Daemon (PM10 and PM25 air pollution sensor)
 
 (Serial/USB) Driver and HTTP host (REST+Socket) for **SDS018 air pollution sensor**.  
 
