@@ -46,7 +46,7 @@ export class Main
         {
             const value = this._driver.Pm25;
 
-            this._logger.Log(`HTTP | pm25: ${ value }`);
+            this._logger.Log(`HTTP | pm25: ${value}`);
 
             res.send(value.toString());
         });
@@ -55,20 +55,20 @@ export class Main
         {
             const value = this._driver.Pm10;
 
-            this._logger.Log(`HTTP HIT | pm10: ${ value }`);
+            this._logger.Log(`HTTP HIT | pm10: ${value}`);
 
             res.send(value.toString());
         });
 
         server.use((err, req, res, next) =>
         {
-            this._logger.Log(`Globally caught server error: ${ err.message }`);
+            this._logger.Log(`Globally caught server error: ${err.message}`);
 
             res.send(err.message);
         });
 
 
-        socket.on('error', (e) => this._logger.Log(`SOCKET ERROR ${ e }`));
+        socket.on('error', (e) => this._logger.Log(`SOCKET ERROR ${e}`));
 
         socket.on('connection', (socket: Socket) =>
         {
@@ -88,7 +88,7 @@ export class Main
         {
             if (this._config.Talk)
             {
-                console.log(`PM 2.5: ${(pm25/10).toFixed(1)} | PM 10: ${(pm10/10).toFixed(1)}`);
+                this._logger.Log(`PM 2.5: ${(pm25 / 10).toFixed(1)} | PM 10: ${(pm10 / 10).toFixed(1)}`);
             }
 
             clients.SendToAll('update', pm10, pm25);
@@ -96,28 +96,40 @@ export class Main
 
 
         const port = this._config.Port;
-        httpServer.listen(port, () => this._logger.LogAlways(`SERVER STARTED @ ${ port }`));
-        
+        httpServer.listen(port, () => this._logger.LogAlways(`SERVER STARTED @ ${port}`));
+
         const serial = this._config.Serial;
         this._driver.Connect(serial, () => 
         {
-            this._logger.LogAlways(`SENSOR CONNECTED @ ${ serial }`);
+            this._logger.LogAlways(`SENSOR CONNECTED @ ${serial}`);
 
-            const pm10 = this._driver.Pm10;
-            const pm25 = this._driver.Pm25;
+            // const pm10 = this._driver.Pm10;
+            // const pm25 = this._driver.Pm25;
 
             // this._logger.Log(`SDS018 | PM 10: ${ pm10 } | PM 2.5: ${ pm25 }`);
         });
 
- 
-        process.on('SIGINT', async () =>
+
+        const Dispose = async () =>
         {
             clients.DisconnectAll();
 
             await this._driver.Disconnect();
-            this._logger.LogAlways(`BOARD DISCONNECTED`);
+            this._logger.LogAlways(`BOARD DISCONNECTED @ ${serial}`);
 
-            httpServer.close(() => this._logger.LogAlways(`SERVER CLOSED`));
+            httpServer.close(() => this._logger.LogAlways(`SERVER CLOSED @ ${port}`));
+        };
+
+        process.on('SIGINT', async () =>
+        {
+            await Dispose();
+        });
+
+        server.all(['/die', '/exit', '/kill', '/detach', '/dispose'], async (req, res) =>
+        {
+            await Dispose();
+
+            res.sendStatus(202);
         });
     }
 }

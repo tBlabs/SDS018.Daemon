@@ -25,7 +25,7 @@ let Config = class Config {
     get Serial() {
         const serialFromArgs = this._args.Args.serial;
         if (serialFromArgs === undefined) {
-            throw new Error(`No "serial" defined (example: "--serial /dev/ttyUSB0" or "--serial /dev/ttyS0")`);
+            throw new Error(`No "serial" defined (example: "--serial /dev/ttyS0")`);
         }
         return serialFromArgs;
     }

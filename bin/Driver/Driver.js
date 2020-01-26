@@ -16,13 +16,10 @@ let Driver = class Driver {
         this.serial = new Serial_1.Serial();
     }
     get Pm25() {
-        return this.out.pm25 / 10;
+        return this.out.pm25;
     }
     get Pm10() {
-        return this.out.pm10 / 10;
-    }
-    async Disconnect() {
-        await this.serial.Disconnect();
+        return this.out.pm10;
     }
     Connect(port, onConnectionCallback) {
         this.serial.OnConnection(() => {
@@ -53,6 +50,9 @@ let Driver = class Driver {
     }
     OnUpdate(callback) {
         this.onUpdateCallback = callback;
+    }
+    async Disconnect() {
+        await this.serial.Disconnect();
     }
 };
 Driver = __decorate([

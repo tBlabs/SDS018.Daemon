@@ -64,7 +64,7 @@ let Main = class Main {
         });
         this._driver.OnUpdate((pm10, pm25) => {
             if (this._config.Talk) {
-                console.log(`PM25: ${(pm25 / 10).toFixed(1)} | PM10: ${(pm10 / 10).toFixed(1)}`);
+                console.log(`PM 2.5: ${(pm25 / 10).toFixed(1)} | PM 10: ${(pm10 / 10).toFixed(1)}`);
             }
             clients.SendToAll('update', pm10, pm25);
         });

@@ -12,6 +12,7 @@
         "autotranspilation": "tsc --watch",
         "autorun": "nodemon ./bin/startup.js --port 3005 --serial /dev/ttyUSB0 --log",
         "serve": "npm run clean && run-p autotranspilation autorun",
+        "serve:win": "run-p autotranspilation autorun",
         "lint": "tslint -c tslint.json './src/**/*.{ts,tsx}' --format msbuild",
         "test": "jest --runInBand",
         "build": "tsc -p .",
