@@ -43,7 +43,7 @@
         "express": "^4.17.1",
         "inversify": "^5.0.1",
         "jasmine-core": "^3.5.0",
-        "minimist": "^1.2.0",
+        "minimist": "^1.2.3",
         "os": "^0.1.1",
         "reflect-metadata": "^0.1.13",
         "serialport": "^8.0.5",
